@@ -3,6 +3,7 @@ package com.concordrobotics.stronghold;
 
 import com.concordrobotics.stronghold.subsystems.ExampleSubsystem;
 
+import brennan.brennan.robotlogger.RobotLogger;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -24,6 +25,8 @@ public class Robot extends IterativeRobot {
 
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
+	public static RobotLogger log = new RobotLogger();
+	
 
     Command autonomousCommand;
     SendableChooser chooser;
@@ -40,8 +43,11 @@ public class Robot extends IterativeRobot {
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
-    public void robotInit() {
+    @SuppressWarnings("static-access")
+	public void robotInit() {
 		oi = new OI();
+		log.init();
+		log.log("Robot Code Initialized...", "BOOT");
     }
 	
 	/**
@@ -49,8 +55,9 @@ public class Robot extends IterativeRobot {
      * You can use it to reset any subsystem information you want to clear when
 	 * the robot is disabled.
      */
-    public void disabledInit(){
-
+    @SuppressWarnings("static-access")
+	public void disabledInit(){
+    	log.log("Robot has been disabled!", "INFO");
     }
 	
 	public void disabledPeriodic() {
@@ -73,15 +80,17 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {}
 
-    public void teleopInit() {
+    @SuppressWarnings("static-access")
+	public void teleopInit() {
     	
     	dtvRight = new Victor(rm.dtRight);
     	dtvLeft = new Victor(rm.dtLeft);
     	drive = new RobotDrive(dtvRight, dtvLeft);
+    	log.log("Teleop has been initialized. Using VICTORS on ports: " + rm.dtRight + ", " + rm.dtLeft, "INFO");
     }
 
     /**
-     * This function is called persiodically during operator control
+     * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
