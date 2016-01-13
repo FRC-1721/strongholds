@@ -1,14 +1,17 @@
 
 package com.concordrobotics.stronghold;
 
+import com.concordrobotics.stronghold.subsystems.ExampleSubsystem;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import com.concordrobotics.stronghold.commands.ExampleCommand;
-import com.concordrobotics.stronghold.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,17 +27,21 @@ public class Robot extends IterativeRobot {
 
     Command autonomousCommand;
     SendableChooser chooser;
-
+    RobotMap rm;
+    Joystick stick1;
+    
+    /***************
+     * DRIVE TRAIN *
+     ***************/
+    Victor dtvLeft, dtvRight;
+    RobotDrive drive;
+    
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
 		oi = new OI();
-        chooser = new SendableChooser();
-        chooser.addDefault("Default Auto", new ExampleCommand());
-//        chooser.addObject("My Auto", new MyAutoCommand());
-        SmartDashboard.putData("Auto mode", chooser);
     }
 	
 	/**
@@ -59,44 +66,29 @@ public class Robot extends IterativeRobot {
 	 * You can add additional auto modes by adding additional commands to the chooser code above (like the commented example)
 	 * or additional comparisons to the switch structure below with additional strings & commands.
 	 */
-    public void autonomousInit() {
-        autonomousCommand = (Command) chooser.getSelected();
-        
-		/* String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
-		switch(autoSelected) {
-		case "My Auto":
-			autonomousCommand = new MyAutoCommand();
-			break;
-		case "Default Auto":
-		default:
-			autonomousCommand = new ExampleCommand();
-			break;
-		} */
-    	
-    	// schedule the autonomous command (example)
-        if (autonomousCommand != null) autonomousCommand.start();
-    }
+    public void autonomousInit() {}
 
     /**
      * This function is called periodically during autonomous
      */
-    public void autonomousPeriodic() {
-        Scheduler.getInstance().run();
-    }
+    public void autonomousPeriodic() {}
 
     public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to 
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
-        if (autonomousCommand != null) autonomousCommand.cancel();
+    	
+    	dtvRight = new Victor(rm.dtRight);
+    	dtvLeft = new Victor(rm.dtLeft);
+    	drive = new RobotDrive(dtvRight, dtvLeft);
     }
 
     /**
-     * This function is called periodically during operator control
+     * This function is called persiodically during operator control
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        while (isOperatorControl() && isEnabled()) {
+        	drive.arcadeDrive(stick1);
+        	Timer.delay(0.01);
+        }
     }
     
     /**
