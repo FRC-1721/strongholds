@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
-	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+	//public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
 	
 	final int gyroChan = 0;
@@ -56,13 +56,18 @@ public class Robot extends IterativeRobot {
      */
 	public void robotInit() {
 		gyro = new AnalogGyro(gyroChan);
+    	gyro.setSensitivity(voltsPerDegreePerSecond); //calibrates gyro values to equal degrees
+    	
     	oi = new OI();
     	stick1 = new Joystick(1);
     	stick2 = new Joystick(2);
-    	LiveWindow.setEnabled(true);
+    	//LiveWindow.setEnabled(true);
     	SmartDashboard.putData(Scheduler.getInstance());
     	SmartDashboard.putData("gyro", gyro);
     	//SmartDashboard.putData("gyro", gyro);
+		dtvRight = new Victor(2);
+    	dtvLeft = new Victor(1);
+    	drive = new RobotDrive(dtvRight, dtvLeft);
 //		log.init();
 //		log.log("Robot Code Initialized...", "BOOT");
     }
@@ -98,9 +103,7 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 //    	log.log("Teleop has been initialized. Using VICTORS on ports: " + rm.dtRight + ", " + rm.dtLeft, "INFO");
-		//dtvRight = new Victor(2);
-    	//dtvLeft = new Victor(1);
-    	//drive = new RobotDrive(dtvRight, dtvLeft);
+		gryo.reset();
     }
 
     /**
@@ -112,9 +115,11 @@ public class Robot extends IterativeRobot {
         	drive.tankDrive(stick1, stick2);
         	Timer.delay(0.01);
         }
-    	*/double turningValue;
-    	gyro.setSensitivity(voltsPerDegreePerSecond); //calibrates gyro values to equal degrees
+    	*/
+        double turningValue;
+
     	SmartDashboard.putNumber("Heading", gyro.getAngle());
+    	SmartDashboard.putData("gyro", gyro);
     	while (isOperatorControl() && isEnabled()) {
             
             turningValue =  (angleSetPoint - gyro.getAngle())*pGain;
@@ -127,6 +132,7 @@ public class Robot extends IterativeRobot {
         	drive.drive(stick1.getY(), -turningValue); 
             }
         }
+    	Timer.delay(0.01);
     }
     
     /**
