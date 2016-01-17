@@ -3,7 +3,8 @@ package com.concordrobotics.stronghold;
 
 import com.concordrobotics.stronghold.subsystems.ExampleSubsystem;
 
-import brennan.brennan.robotlogger.RobotLogger;
+import edu.wpi.first.wpilibj.AnalogGyro;
+//import brennan.brennan.robotlogger.RobotLogger;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -25,14 +26,22 @@ public class Robot extends IterativeRobot {
 
 	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
-	public static RobotLogger log = new RobotLogger();
+	
+	final int gyroChan = 0;
+	final int joystickChan = 1;
+	
+	double angleSetPoint = 0.0;
+	final double pGain = .024;
+	
+	final double voltsPerDegreePerSecond = .0128;
+//	public static RobotLogger log = new RobotLogger();
 	
 
     Command autonomousCommand;
     SendableChooser chooser;
     RobotMap rm;
     Joystick stick1;
-    
+    AnalogGyro gyro;
     /***************
      * DRIVE TRAIN *
      ***************/
@@ -45,9 +54,10 @@ public class Robot extends IterativeRobot {
      */
     @SuppressWarnings("static-access")
 	public void robotInit() {
-		oi = new OI();
-		log.init();
-		log.log("Robot Code Initialized...", "BOOT");
+		gyro = new AnalogGyro(gyroChan);
+    	oi = new OI();
+//		log.init();
+//		log.log("Robot Code Initialized...", "BOOT");
     }
 	
 	/**
@@ -57,7 +67,7 @@ public class Robot extends IterativeRobot {
      */
     @SuppressWarnings("static-access")
 	public void disabledInit(){
-    	log.log("Robot has been disabled!", "INFO");
+    	//log.log("Robot has been disabled!", "INFO");
     }
 	
 	public void disabledPeriodic() {
@@ -86,17 +96,31 @@ public class Robot extends IterativeRobot {
     	dtvRight = new Victor(rm.dtRight);
     	dtvLeft = new Victor(rm.dtLeft);
     	drive = new RobotDrive(dtvRight, dtvLeft);
-    	log.log("Teleop has been initialized. Using VICTORS on ports: " + rm.dtRight + ", " + rm.dtLeft, "INFO");
+//    	log.log("Teleop has been initialized. Using VICTORS on ports: " + rm.dtRight + ", " + rm.dtLeft, "INFO");
     }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        Scheduler.getInstance().run();
+        /*Scheduler.getInstance().run();
         while (isOperatorControl() && isEnabled()) {
         	drive.arcadeDrive(stick1);
         	Timer.delay(0.01);
+        }*/
+    	double turningValue;
+    	gyro.setSensitivity(voltsPerDegreePerSecond); //calibrates gyro values to equal degrees
+        while (isOperatorControl() && isEnabled()) {
+            
+            turningValue =  (angleSetPoint - gyro.getAngle())*pGain;
+            if(stick1.getY() <= 0)
+            {
+        	//forwards
+        	drive.drive(stick1.getY(), turningValue); 
+            } else {
+        	//backwards
+        	drive.drive(stick1.getY(), -turningValue); 
+            }
         }
     }
     
