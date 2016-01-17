@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.AnalogGyro;
 //import brennan.brennan.robotlogger.RobotLogger;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.NamedSendable;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
@@ -14,6 +15,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -33,14 +35,14 @@ public class Robot extends IterativeRobot {
 	double angleSetPoint = 0.0;
 	final double pGain = .024;
 	
-	final double voltsPerDegreePerSecond = .0128;
+	final double voltsPerDegreePerSecond = .007;
 //	public static RobotLogger log = new RobotLogger();
 	
 
     Command autonomousCommand;
     SendableChooser chooser;
     RobotMap rm;
-    Joystick stick1;
+    Joystick stick1, stick2;
     AnalogGyro gyro;
     /***************
      * DRIVE TRAIN *
@@ -52,10 +54,15 @@ public class Robot extends IterativeRobot {
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
-    @SuppressWarnings("static-access")
 	public void robotInit() {
 		gyro = new AnalogGyro(gyroChan);
     	oi = new OI();
+    	stick1 = new Joystick(1);
+    	stick2 = new Joystick(2);
+    	LiveWindow.setEnabled(true);
+    	SmartDashboard.putData(Scheduler.getInstance());
+    	SmartDashboard.putData("gyro", gyro);
+    	//SmartDashboard.putData("gyro", gyro);
 //		log.init();
 //		log.log("Robot Code Initialized...", "BOOT");
     }
@@ -65,7 +72,6 @@ public class Robot extends IterativeRobot {
      * You can use it to reset any subsystem information you want to clear when
 	 * the robot is disabled.
      */
-    @SuppressWarnings("static-access")
 	public void disabledInit(){
     	//log.log("Robot has been disabled!", "INFO");
     }
@@ -90,27 +96,26 @@ public class Robot extends IterativeRobot {
      */
     public void autonomousPeriodic() {}
 
-    @SuppressWarnings("static-access")
 	public void teleopInit() {
-    	
-    	dtvRight = new Victor(rm.dtRight);
-    	dtvLeft = new Victor(rm.dtLeft);
-    	drive = new RobotDrive(dtvRight, dtvLeft);
 //    	log.log("Teleop has been initialized. Using VICTORS on ports: " + rm.dtRight + ", " + rm.dtLeft, "INFO");
+		//dtvRight = new Victor(2);
+    	//dtvLeft = new Victor(1);
+    	//drive = new RobotDrive(dtvRight, dtvLeft);
     }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        /*Scheduler.getInstance().run();
-        while (isOperatorControl() && isEnabled()) {
-        	drive.arcadeDrive(stick1);
+        Scheduler.getInstance().run();
+        /*while (isOperatorControl() && isEnabled()) {
+        	drive.tankDrive(stick1, stick2);
         	Timer.delay(0.01);
-        }*/
-    	double turningValue;
+        }
+    	*/double turningValue;
     	gyro.setSensitivity(voltsPerDegreePerSecond); //calibrates gyro values to equal degrees
-        while (isOperatorControl() && isEnabled()) {
+    	SmartDashboard.putNumber("Heading", gyro.getAngle());
+    	while (isOperatorControl() && isEnabled()) {
             
             turningValue =  (angleSetPoint - gyro.getAngle())*pGain;
             if(stick1.getY() <= 0)
