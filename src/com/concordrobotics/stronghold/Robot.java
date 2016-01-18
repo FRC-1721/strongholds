@@ -1,19 +1,23 @@
 
 package com.concordrobotics.stronghold;
 
+import com.concordrobotics.stronghold.subsystems.CustomPIDOutput;
 import com.concordrobotics.stronghold.subsystems.ExampleSubsystem;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 //import brennan.brennan.robotlogger.RobotLogger;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.NamedSendable;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -26,7 +30,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
-	//public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
+	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
 	
 	final int gyroChan = 0;
@@ -34,6 +38,10 @@ public class Robot extends IterativeRobot {
 	
 	double angleSetPoint = 0.0;
 	final double pGain = .024;
+	final double iGain = 0;
+	final double dGain = 0;
+	final double fGain = 0;
+	
 	
 	final double voltsPerDegreePerSecond = .007;
 //	public static RobotLogger log = new RobotLogger();
@@ -41,9 +49,11 @@ public class Robot extends IterativeRobot {
 
     Command autonomousCommand;
     SendableChooser chooser;
+    PIDController gyroControl, gyroControl1;
     RobotMap rm;
     Joystick stick1, stick2;
     AnalogGyro gyro;
+    CustomPIDOutput gyroOut;
     /***************
      * DRIVE TRAIN *
      ***************/
@@ -57,17 +67,23 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		gyro = new AnalogGyro(gyroChan);
     	gyro.setSensitivity(voltsPerDegreePerSecond); //calibrates gyro values to equal degrees
-    	
+    	gyro.setPIDSourceType(PIDSourceType.kRate);
+    	gyroOut = new CustomPIDOutput();
     	oi = new OI();
     	stick1 = new Joystick(1);
     	stick2 = new Joystick(2);
     	//LiveWindow.setEnabled(true);
     	SmartDashboard.putData(Scheduler.getInstance());
     	SmartDashboard.putData("gyro", gyro);
-    	//SmartDashboard.putData("gyro", gyro);
 		dtvRight = new Victor(2);
     	dtvLeft = new Victor(1);
     	drive = new RobotDrive(dtvRight, dtvLeft);
+    	//gyroControl = new PIDController(pGain, iGain, dGain, gyro, gyroOut);
+    	//gyroControl1 = new PIDController(pGain, iGain, dGain, gyro, dtvRight);
+    	//gyroControl.setAbsoluteTolerance(5.0);
+    	//gyroControl1.setAbsoluteTolerance(5.0);
+    	//LiveWindow.addActuator("Controller 1", "test", gyroControl);
+    	//LiveWindow.addActuator("Controller 2", "Whatever", gyroControl1);
 //		log.init();
 //		log.log("Robot Code Initialized...", "BOOT");
     }
@@ -103,7 +119,7 @@ public class Robot extends IterativeRobot {
 
 	public void teleopInit() {
 //    	log.log("Teleop has been initialized. Using VICTORS on ports: " + rm.dtRight + ", " + rm.dtLeft, "INFO");
-		gryo.reset();
+		gyro.reset();
     }
 
     /**
@@ -111,34 +127,39 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
-        /*while (isOperatorControl() && isEnabled()) {
+        //double angle = gyro.getAngle();
+        
+        while (isOperatorControl() && isEnabled()) {
         	drive.tankDrive(stick1, stick2);
         	Timer.delay(0.01);
         }
-    	*/
-        double turningValue;
-
-    	SmartDashboard.putNumber("Heading", gyro.getAngle());
-    	SmartDashboard.putData("gyro", gyro);
+        //double turningValue;
+/*
     	while (isOperatorControl() && isEnabled()) {
             
-            turningValue =  (angleSetPoint - gyro.getAngle())*pGain;
+            turningValue =  stick1;
             if(stick1.getY() <= 0)
             {
         	//forwards
-        	drive.drive(stick1.getY(), turningValue); 
+        	drive.drive(stick1.getY(), -turningValue); 
             } else {
         	//backwards
-        	drive.drive(stick1.getY(), -turningValue); 
+        	drive.drive(stick1.getY(), turningValue); 
             }
         }
     	Timer.delay(0.01);
-    }
-    
+    	SmartDashboard.putNumber("Heading", gyro.getAngle());
+    	SmartDashboard.putData("gyro", gyro);
+    */} 
     /**
      * This function is called periodically during test mode
      */
+    public void testInit() {
+    	
+    }
     public void testPeriodic() {
+//    	gyroControl.calculate();
         LiveWindow.run();
+        
     }
 }
