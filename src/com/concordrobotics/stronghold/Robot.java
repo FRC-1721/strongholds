@@ -1,6 +1,8 @@
 
 package com.concordrobotics.stronghold;
 
+import com.concordrobotics.stronghold.subsystems.CustomEncoder;
+import com.concordrobotics.stronghold.subsystems.CustomPIDController;
 import com.concordrobotics.stronghold.subsystems.CustomPIDOutput;
 import com.concordrobotics.stronghold.subsystems.ExampleSubsystem;
 
@@ -11,13 +13,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.livewindow.LiveWindowSendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -36,11 +36,11 @@ public class Robot extends IterativeRobot {
 	final int gyroChan = 0;
 	final int joystickChan = 1;
 	
-	double angleSetPoint = 0.0;
+	double angleSetPoint = 0.5;
 	final double pGain = .024;
-	final double iGain = 0;
+	final double iGain = .04;
 	final double dGain = 0;
-	final double fGain = 0;
+	final double fGain = .1;
 	
 	
 	final double voltsPerDegreePerSecond = .007;
@@ -49,11 +49,16 @@ public class Robot extends IterativeRobot {
 
     Command autonomousCommand;
     SendableChooser chooser;
-    PIDController gyroControl, gyroControl1;
+//    PIDController gyroControl, gyroControl1;
+    CustomPIDController leftControl, rightControl;
     RobotMap rm;
     Joystick stick1, stick2;
     AnalogGyro gyro;
     CustomPIDOutput gyroOut;
+    
+    CustomEncoder leftEncoder;
+    CustomEncoder rightEncoder;
+    
     /***************
      * DRIVE TRAIN *
      ***************/
@@ -77,9 +82,26 @@ public class Robot extends IterativeRobot {
     	SmartDashboard.putData("gyro", gyro);
 		dtvRight = new Victor(2);
     	dtvLeft = new Victor(1);
+    	dtvRight.setInverted(true);
     	drive = new RobotDrive(dtvRight, dtvLeft);
+    	leftEncoder = new CustomEncoder(0, 1);
+    	rightEncoder = new CustomEncoder(2, 3);
     	//gyroControl = new PIDController(pGain, iGain, dGain, gyro, gyroOut);
     	//gyroControl1 = new PIDController(pGain, iGain, dGain, gyro, dtvRight);
+    	leftControl = new CustomPIDController(pGain, iGain, dGain, fGain, leftEncoder, dtvLeft);
+    	rightControl = new CustomPIDController(pGain, iGain, dGain, fGain, rightEncoder, dtvRight);
+    	leftEncoder.setPIDSourceType(PIDSourceType.kRate);
+    	rightEncoder.setPIDSourceType(PIDSourceType.kRate);
+//    	leftControl.setPercentTolerance(1);
+//    	rightControl.setPercentTolerance(1);
+    	leftEncoder.setDistancePerPulse(.013);
+    	rightEncoder.setDistancePerPulse(.0095);
+    	LiveWindow.addSensor("Left Encoder", "LEFT", leftEncoder);
+    	LiveWindow.addSensor("Right Encoder", "RIGHT", rightEncoder);
+    	LiveWindow.addActuator("Left CONTROL", "LEFT", leftControl);
+    	LiveWindow.addActuator("Right CONTROL", "RIGHT", rightControl);
+    	leftEncoder.reset();
+    	rightEncoder.reset();
     	//gyroControl.setAbsoluteTolerance(5.0);
     	//gyroControl1.setAbsoluteTolerance(5.0);
     	//LiveWindow.addActuator("Controller 1", "test", gyroControl);
