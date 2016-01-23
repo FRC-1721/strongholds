@@ -2,11 +2,11 @@
 package com.concordrobotics.stronghold;
 
 import com.concordrobotics.stronghold.subsystems.ExampleSubsystem;
+import com.concordrobotics.stronghold.subsystems.CustomRobotDrive;
 
 //import brennan.brennan.robotlogger.RobotLogger;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Command;
@@ -80,9 +80,10 @@ public class Robot extends IterativeRobot {
 //		kicker = new Victor(5);
 //		shootUpDown = new Victor(6);
 //    	dtvRight.setInverted(true);
-    	drive = new RobotDrive(dtvRight, dtvLeft);
-//    	leftEncoder = new CustomEncoder(0, 1);
-//    	rightEncoder = new CustomEncoder(2, 3);
+    	leftEncoder = new CustomEncoder(0, 1);
+     	rightEncoder = new CustomEncoder(2, 3);
+    	drive = new CustomRobotDrive(dtvLeft, dtvRight, leftEncoder, rightEncoder );
+
     	//gyroControl = new PIDController(pGain, iGain, dGain, gyro, gyroOut);
     	//gyroControl1 = new PIDController(pGain, iGain, dGain, gyro, dtvRight);
 //    	leftControl = new CustomPIDController(pGain, iGain, dGain, fGain, leftEncoder, dtvLeft);
@@ -139,6 +140,8 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 //    	log.log("Teleop has been initialized. Using VICTORS on ports: " + rm.dtRight + ", " + rm.dtLeft, "INFO");
 //		gyro.reset();
+		// Comment out below if PID not desired.  Should add a button to control this
+		drive.enablePID();
     }
 
     /**

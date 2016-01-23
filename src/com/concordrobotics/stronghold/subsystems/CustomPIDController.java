@@ -273,40 +273,21 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
           }
         }
 
-        if (m_pidInput.getPIDSourceType().equals(PIDSourceType.kRate)) {
-          if (m_P != 0) {
-            double potentialPGain = (m_totalError + m_error) * m_P;
-            if (potentialPGain < m_maximumOutput) {
-              if (potentialPGain > m_minimumOutput) {
-                m_totalError += m_error;
-              } else {
-                m_totalError = m_minimumOutput / m_P;
-              }
+        
+        if (m_I != 0) {
+          double potentialIGain = (m_totalError + m_error) * m_I;
+          if (potentialIGain < m_maximumOutput) {
+          	if (potentialIGain > m_minimumOutput) {
+              m_totalError += m_error;
             } else {
-              m_totalError = m_maximumOutput / m_P;
+              m_totalError = m_minimumOutput / m_I;
             }
-
-            m_result = m_P * m_totalError + m_D * m_error +
-                       calculateFeedForward();
+          } else {
+            m_totalError = m_maximumOutput / m_I;
           }
         }
-        else {
-          if (m_I != 0) {
-            double potentialIGain = (m_totalError + m_error) * m_I;
-            if (potentialIGain < m_maximumOutput) {
-              if (potentialIGain > m_minimumOutput) {
-                m_totalError += m_error;
-              } else {
-                m_totalError = m_minimumOutput / m_I;
-              }
-            } else {
-              m_totalError = m_maximumOutput / m_I;
-            }
-          }
-
-          m_result = m_P * m_error + m_I * m_totalError +
-                     m_D * (m_error - m_prevError) + calculateFeedForward();
-        }
+        m_result = m_P * m_error + m_I * m_totalError +
+                 m_D * (m_error - m_prevError) + calculateFeedForward();
         m_prevError = m_error;
 
         if (m_result > m_maximumOutput) {
@@ -346,15 +327,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
    * the default period in this class's constructor).
    */
   protected double calculateFeedForward() {
-//    if (m_pidInput.getPIDSourceType().equals(PIDSourceType.kRate)) {
       return m_F * getSetpoint();
-//    }
-//    else {
-//      double temp = m_F * getDeltaSetpoint();
-//      m_prevSetpoint = m_setpoint;
-//      m_setpointTimer.reset();
-//      return temp;
-//    }
   }
 
   /**
