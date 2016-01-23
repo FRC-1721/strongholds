@@ -7,6 +7,7 @@ import com.concordrobotics.stronghold.subsystems.CustomRobotDrive;
 //import brennan.brennan.robotlogger.RobotLogger;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.command.Command;
@@ -49,14 +50,14 @@ public class Robot extends IterativeRobot {
 //    AnalogGyro gyro;
 //    CustomPIDOutput gyroOut;
     
-//    CustomEncoder leftEncoder;
-//    CustomEncoder rightEncoder;
+    Encoder leftEncoder;
+    Encoder rightEncoder;
     
     /***************
      * DRIVE TRAIN *
      ***************/
     Victor dtvLeft, dtvRight,shootLeft, shootRight, kicker, shootUpDown;
-    RobotDrive drive;
+    CustomRobotDrive drive;
     
     /**
      * This function is run when the robot is first started up and should be
@@ -80,8 +81,11 @@ public class Robot extends IterativeRobot {
 //		kicker = new Victor(5);
 //		shootUpDown = new Victor(6);
 //    	dtvRight.setInverted(true);
-    	leftEncoder = new CustomEncoder(0, 1);
-     	rightEncoder = new CustomEncoder(2, 3);
+    	leftEncoder = new Encoder(0, 1);
+     	rightEncoder = new Encoder(2, 3);
+    	leftEncoder.setDistancePerPulse(.013);
+    	rightEncoder.setDistancePerPulse(.0095);	
+     	
     	drive = new CustomRobotDrive(dtvLeft, dtvRight, leftEncoder, rightEncoder );
 
     	//gyroControl = new PIDController(pGain, iGain, dGain, gyro, gyroOut);
@@ -92,8 +96,7 @@ public class Robot extends IterativeRobot {
 //    	rightEncoder.setPIDSourceType(PIDSourceType.kRate);
 //    	leftControl.setPercentTolerance(1);
 //    	rightControl.setPercentTolerance(1);
-//    	leftEncoder.setDistancePerPulse(.013);
-//    	rightEncoder.setDistancePerPulse(.0095);
+
 //    	LiveWindow.addSensor("Left Encoder", "LEFT", leftEncoder);
 //    	LiveWindow.addSensor("Right Encoder", "RIGHT", rightEncoder);
 //    	LiveWindow.addActuator("Left CONTROL", "LEFT", leftControl);

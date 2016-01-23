@@ -7,10 +7,11 @@
 
 package com.concordrobotics.stronghold.subsystems;
 
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tInstances;
 import edu.wpi.first.wpilibj.communication.FRCNetworkCommunicationsLibrary.tResourceType;
 import edu.wpi.first.wpilibj.communication.UsageReporting;
-import edu.wpi.first.wpilibj.*;
+
 
 
 /**
@@ -118,11 +119,7 @@ public class CustomRobotDrive implements MotorSafety {
   public void drive(double outputMagnitude, double curve) {
     double leftOutput, rightOutput;
 
-    if (!kArcadeRatioCurve_Reported) {
-      UsageReporting.report(tResourceType.kResourceType_CustomRobotDrive, getNumMotors(),
-          tInstances.kCustomRobotDrive_ArcadeRatioCurve);
-      kArcadeRatioCurve_Reported = true;
-    }
+
     if (curve < 0) {
       double value = Math.log(-curve);
       double ratio = (value - m_sensitivity) / (value + m_sensitivity);
@@ -242,12 +239,6 @@ public class CustomRobotDrive implements MotorSafety {
    */
   public void tankDrive(double leftValue, double rightValue, boolean squaredInputs) {
 
-    if (!kTank_Reported) {
-      UsageReporting.report(tResourceType.kResourceType_CustomRobotDrive, getNumMotors(),
-          tInstances.kCustomRobotDrive_Tank);
-      kTank_Reported = true;
-    }
-
     // square the inputs (while preserving the sign) to increase fine control
     // while permitting full power
     leftValue = limit(leftValue);
@@ -358,11 +349,7 @@ public class CustomRobotDrive implements MotorSafety {
    */
   public void arcadeDrive(double moveValue, double rotateValue, boolean squaredInputs) {
     // local variables to hold the computed PWM values for the motors
-    if (!kArcadeStandard_Reported) {
-      UsageReporting.report(tResourceType.kResourceType_CustomRobotDrive, getNumMotors(),
-          tInstances.kCustomRobotDrive_ArcadeStandard);
-      kArcadeStandard_Reported = true;
-    }
+
 
     double leftMotorSpeed;
     double rightMotorSpeed;
@@ -424,8 +411,8 @@ public class CustomRobotDrive implements MotorSafety {
     }
 
     if (m_PIDEnabled) {
-        m_leftController.setTarget(limit(leftOutput) * m_maxOutput * m_rateScale);
-        m_rightMotor.set(limit(rightOutput) * m_maxOutput * m_rateScale);
+        m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * m_rateScale);
+        m_rightController.setSetpoint(limit(rightOutput) * m_maxOutput * m_rateScale);
     } else {
         m_leftMotor.set(limit(leftOutput) * m_maxOutput, m_syncGroup);
         m_rightMotor.set(limit(rightOutput) * m_maxOutput, m_syncGroup); 	
