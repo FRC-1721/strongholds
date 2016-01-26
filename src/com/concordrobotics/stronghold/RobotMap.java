@@ -1,5 +1,6 @@
 package com.concordrobotics.stronghold;
 
+import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
 
@@ -10,19 +11,6 @@ import edu.wpi.first.wpilibj.VictorSP;
  * floating around.
  */
 public class RobotMap {
-	/**
-     * DRIVE TRAIN VARIABLES
-     */
-	public static final int spLeftPort = 0;
-	public static final int spRightPort = 1;
-	
-	/**
-	 * SHOOTER VARIABLES
-	 */
-	public static final int spShootLP = 2;
-	public static final int spShootLR = 3;
-	public static final int spShootAP = 4;
-	public static final int spShootKP = 5;
 	
 	/**
 	 * MOTORS, MOTOR CONTROLLERS, ETC.
@@ -34,8 +22,35 @@ public class RobotMap {
 	public static Servo shootK;
 	
 	/**
+     * DRIVE TRAIN VARIABLES
+     */
+	public static final int spLeftPort = 0;
+	public static final int spRightPort = 1;
+	
+	/**
+	 * ROBOTDRIVE OBJECTS FOR TANK, ARCADE.
+	 */
+	public static RobotDrive tank;
+	public static RobotDrive arcade;
+	
+	
+	/**
+	 * SHOOTER VARIABLES
+	 */
+	public static final int spShootLP = 2;
+	public static final int spShootLR = 3;
+	public static final int spShootAP = 4;
+	public static final int spShootKP = 5;
+	
+	/**
 	 * Joysticks, Input, and Buttons.
 	 */
 	public static final int jLeftPort = 1;
 	public static final int jRightPort = 2;
+	public static final int jOpPort = 3;
+	
+	/**
+	 * BUTTON MAPPING
+	 */
+	public static final int jTrigger = 1;
 }

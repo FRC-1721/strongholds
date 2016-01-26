@@ -1,6 +1,7 @@
 package com.concordrobotics.stronghold;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -8,10 +9,29 @@ import edu.wpi.first.wpilibj.Joystick;
  */
 public class OI {
 	
-    Joystick jLeft = new Joystick(RobotMap.jLeftPort);
-    Joystick jRight = new Joystick(RobotMap.jRightPort);
+    public final Joystick jLeft;
+    public final Joystick jRight;
+    public final Joystick operator;
     
+    public OI() {
+    	jLeft = new Joystick(RobotMap.jLeftPort);
+    	jRight = new Joystick(RobotMap.jRightPort);
+    	operator = new Joystick(RobotMap.jOpPort);
+    	
+    }
     
+    public JoystickButton getBtn(int joyid, int button) {
+    	switch (joyid) {
+    	case RobotMap.jLeftPort:
+    		return new JoystickButton(jLeft, button);
+    	case RobotMap.jRightPort:
+    		return new JoystickButton(jRight, button);
+    	case RobotMap.jOpPort:
+    		return new JoystickButton(operator, button);
+    	default:
+    		return null;
+    	}
+    }
     
     //// TRIGGERING COMMANDS WITH BUTTONS
     // Once you have a button, it's trivial to bind it to a button in one of
