@@ -1,0 +1,14 @@
+<<<<<<< HEAD
+bin/
+.classpath
+.project
+/bin/
+=======
+bin/*
+build.*
+*.properties
+*.xml
+*.class
+.project
+.classpath
+>>>>>>> 61982a39e542f18dee4f8b35955bda61cfe7a1c0
