@@ -39,10 +39,11 @@ public class RobotMap {
 	 * SHOOTER VARIABLES
 	 */
 	public static final int spShootLP = 2;
-	public static final int spShootLR = 3;
+	public static final int spShootRP = 3;
 	public static final int spShootAP = 4;
 	public static final int spShootKP = 5;
-
+	
+	public static final double sSpinupTime = 1.5;
 	/**
 	 *Joysticks, Input, and Buttons.
 	 */
