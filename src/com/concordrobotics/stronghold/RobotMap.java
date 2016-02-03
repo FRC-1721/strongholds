@@ -17,7 +17,7 @@ public class RobotMap {
 	/** 
 	 * dtLeft, dtRight = drivetrain.
 	 * shootL, shootR = shooter left/right CIMs.
-	 * shootA = shooter angle.
+	 * shootA = shooter angle.xc
 	 */
 	public static VictorSP dtLeft, dtRight, shootL, shootR, shootA;
 	public static Servo shootK;
