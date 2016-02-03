@@ -3,6 +3,7 @@ package com.concordrobotics.stronghold;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -26,6 +27,10 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtRight = new VictorSP(RobotMap.spRightPort);
 		RobotMap.tank = new RobotDrive(RobotMap.dtLeft, RobotMap.dtRight);
 		RobotMap.arcade = new RobotDrive(RobotMap.dtLeft, RobotMap.dtRight);
+		RobotMap.shootL = new VictorSP(RobotMap.spShootLP);
+		RobotMap.shootR = new VictorSP(RobotMap.spShootRP);
+		RobotMap.shootA = new VictorSP(RobotMap.spShootAP);
+		RobotMap.shootK = new Servo(RobotMap.spShootKP);
     }
 
     /**
