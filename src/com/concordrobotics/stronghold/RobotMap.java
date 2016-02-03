@@ -33,7 +33,7 @@ public class RobotMap {
 	 */
 	public static RobotDrive tank;
 	public static RobotDrive arcade;
-
+	public static OI oi;
 
 	/**
 	 * SHOOTER VARIABLES
@@ -44,7 +44,7 @@ public class RobotMap {
 	public static final int spShootKP = 5;
 
 	/**
-	 * Joysticks, Input, and Buttons.
+	 *Joysticks, Input, and Buttons.
 	 */
 	public static final int jLeftPort = 1;
 	public static final int jRightPort = 2;

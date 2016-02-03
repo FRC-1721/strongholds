@@ -17,13 +17,11 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class Robot extends IterativeRobot {
 
-	public static OI oi;
-
 	/**
 	 * Triggered when the robot is first initialized.
 	 */
     public void robotInit() {
-		oi = new OI();
+		RobotMap.oi = new OI();
 		RobotMap.dtLeft = new VictorSP(RobotMap.spLeftPort);
 		RobotMap.dtRight = new VictorSP(RobotMap.spRightPort);
 		RobotMap.tank = new RobotDrive(RobotMap.dtLeft, RobotMap.dtRight);
