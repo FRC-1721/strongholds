@@ -1,5 +1,8 @@
 package com.concordrobotics.stronghold;
 
+import com.concordrobotics.stronghold.subsystems.DriveTrain;
+import com.concordrobotics.stronghold.subsystems.Shooter;
+
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -28,6 +31,12 @@ public class RobotMap {
 	public static final int spLeftPort = 0;
 	public static final int spRightPort = 1;
 
+	/**
+     * SUBSYSTEMS
+     */
+	public static DriveTrain driveTrain;
+	public static Shooter shooter;
+	
 	/**
 	 * ROBOTDRIVE OBJECTS FOR TANK, ARCADE.
 	 */

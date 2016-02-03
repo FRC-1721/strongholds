@@ -5,13 +5,13 @@ import com.concordrobotics.stronghold.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class DriveCommand extends Command{
+public class ShootCommand extends Command{
 
-	public DriveCommand() {
-		requires(RobotMap.driveTrain); 
+	public ShootCommand() {
+		requires(RobotMap.shooter); 
 	}
-	protected void execute() { RobotMap.driveTrain.jInput(RobotMap.oi.jLeft, RobotMap.oi.jRight, 1); } // Just set to run tank.
-	protected void end() { RobotMap.driveTrain.stop(1); } // Just set to tank.
+	protected void execute() { RobotMap.shooter.shoot(); }
+	protected void end() {} //Fill in if motors are not stopped in shoot method
 	protected void interrupted() { end(); }
 	
 	/* Unused, required methods. Pfffft */
