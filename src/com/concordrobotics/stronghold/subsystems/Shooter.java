@@ -20,14 +20,16 @@ public class Shooter extends Subsystem {
 	 */
 	public void shoot() {
 		RobotMap.shootL.set(-1);
-		RobotMap.shootR.set(-1);
+		RobotMap.shootR.set(1);
 		// SLEEP THREAD
 		Timer.delay(RobotMap.sSpinupTime);
 		// ACTUATE SERVO FORWARD
 		// TODO: Servo
-		while (true) { if (/*servo ping*/) { break; }}
+		while (true) { if (true/*servo ping*/) { break; }}
 		// TODO: Bring servo back
-		while (true) { if (/*servo ping*/) { break; }}
+		while (true) { if (true/*servo ping*/) { break; }}
+		RobotMap.shootL.set(0);
+		RobotMap.shootR.set(0);
 	}
 	
 	/**
@@ -36,8 +38,13 @@ public class Shooter extends Subsystem {
 	 * @author Brennan
 	 */
 	public void suck() {
+		RobotMap.shootL.set(.4);
+		RobotMap.shootR.set(-5);
 		
-		
+	}
+	public void released() {
+		RobotMap.shootL.set(0);
+		RobotMap.shootR.set(0);
 	}
 }
 
