@@ -1,6 +1,9 @@
 
 package com.concordrobotics.stronghold;
 
+import com.concordrobotics.stronghold.subsystems.DriveTrain;
+import com.concordrobotics.stronghold.subsystems.Shooter;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Servo;
@@ -22,7 +25,12 @@ public class Robot extends IterativeRobot {
 	 * Triggered when the robot is first initialized.
 	 */
     public void robotInit() {
+    	//Init OI
 		RobotMap.oi = new OI();
+		//Init Subsystems
+		RobotMap.driveTrain = new DriveTrain();
+		RobotMap.shooter = new Shooter();
+		//Init motors
 		RobotMap.dtLeft = new VictorSP(RobotMap.spLeftPort);
 		RobotMap.dtRight = new VictorSP(RobotMap.spRightPort);
 		RobotMap.tank = new RobotDrive(RobotMap.dtLeft, RobotMap.dtRight);
