@@ -11,7 +11,7 @@ public class SuckCommand extends Command{
 		requires(RobotMap.shooter); 
 	}
 	protected void execute() { RobotMap.shooter.suck(); }
-	protected void end() {} //Fill in if motors are not stopped in suck method
+	protected void end() { RobotMap.shooter.release(); } //Fill in if motors are not stopped in suck method
 	protected void interrupted() { end(); }
 	
 	/* Unused, required methods. Pfffft */
