@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Shooter extends Subsystem {
 
+	public static boolean i = false;
 	protected void initDefaultCommand() {}
 	
 	/**
@@ -19,17 +20,30 @@ public class Shooter extends Subsystem {
 	 * @author Brennan
 	 */
 	public void shoot() {
-		RobotMap.shootL.set(-1);
-		RobotMap.shootR.set(1);
+//		RobotMap.shootL.set(-1);
+//		RobotMap.shootR.set(1);
 		// SLEEP THREAD
-		Timer.delay(RobotMap.sSpinupTime);
+//		Timer.delay(RobotMap.sSpinupTime);
 		// ACTUATE SERVO FORWARD
-		// TODO: Servo
-		while (true) { if (true/*servo ping*/) { break; }}
-		// TODO: Bring servo back
-		while (true) { if (true/*servo ping*/) { break; }}
+		RobotMap.shootK.setAngle(80);
+		Timer.delay(4.0);
+//		while (true) { 
+//			if (RobotMap.shootK.getAngle() <= 90) { 
+//				break; 
+//			} else {
+//				continue;
+//			}
+//		}
+		RobotMap.shootK.setAngle(0);
+//		while (true) { 
+//			if (RobotMap.shootK.getAngle() >=0) { 
+//				break; 
+//			} else {
+//				continue;
+//			}
+//		}
 		RobotMap.shootL.set(0);
-		RobotMap.shootR.set(0);
+		i = true;
 	}
 	
 	/**
@@ -42,7 +56,7 @@ public class Shooter extends Subsystem {
 		RobotMap.shootR.set(-5);
 		
 	}
-	public void released() {
+	public void release() {
 		RobotMap.shootL.set(0);
 		RobotMap.shootR.set(0);
 	}

@@ -25,11 +25,11 @@ public class Robot extends IterativeRobot {
 	 * Triggered when the robot is first initialized.
 	 */
     public void robotInit() {
-    	//Init OI
-		RobotMap.oi = new OI();
 		//Init Subsystems
 		RobotMap.driveTrain = new DriveTrain();
 		RobotMap.shooter = new Shooter();
+    	//Init OI
+		RobotMap.oi = new OI();
 		//Init motors
 		RobotMap.dtLeft = new VictorSP(RobotMap.spLeftPort);
 		RobotMap.dtRight = new VictorSP(RobotMap.spRightPort);

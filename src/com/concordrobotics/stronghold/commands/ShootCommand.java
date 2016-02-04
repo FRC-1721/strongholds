@@ -1,7 +1,7 @@
 package com.concordrobotics.stronghold.commands;
 
 import com.concordrobotics.stronghold.RobotMap;
-import com.concordrobotics.stronghold.subsystems.DriveTrain;
+import com.concordrobotics.stronghold.subsystems.Shooter;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -16,6 +16,14 @@ public class ShootCommand extends Command{
 	
 	/* Unused, required methods. Pfffft */
 	protected void initialize() {}
-	protected boolean isFinished() {return false;}
+	protected boolean isFinished() {
+		while (true) {
+			if (Shooter.i == true) {
+				return true;
+			} else {
+				continue;
+			}
+		}
+	}
 	
 }
