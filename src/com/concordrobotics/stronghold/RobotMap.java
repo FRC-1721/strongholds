@@ -2,11 +2,11 @@ package com.concordrobotics.stronghold;
 
 import com.concordrobotics.stronghold.subsystems.DriveTrain;
 import com.concordrobotics.stronghold.subsystems.Shooter;
+import com.concordrobotics.stronghold.subsystems.CustomRobotDrive;
 
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
-
+import edu.wpi.first.wpilibj.Encoder;
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -24,13 +24,20 @@ public class RobotMap {
 	 */
 	public static VictorSP dtLeft, dtRight, shootL, shootR, shootA;
 	public static Servo shootK;
+	public static Encoder dtLeftEnc, dtRightEnc;
 
 	/**
      * DRIVE TRAIN VARIABLES
      */
 	public static final int spLeftPort = 0;
 	public static final int spRightPort = 1;
-
+	public static final int dtLeftEncPortA = 0;
+	public static final int dtLeftEncPortB = 1;
+	public static final int dtRightEncPortA = 2;
+	public static final int dtRightEncPortB = 3;
+	public static final boolean dtLeftEncReversed = false;
+	public static final boolean dtRightEncReversed = false;	
+	
 	/**
      * SUBSYSTEMS
      */
@@ -40,8 +47,8 @@ public class RobotMap {
 	/**
 	 * ROBOTDRIVE OBJECTS FOR TANK, ARCADE.
 	 */
-	public static RobotDrive tank;
-	public static RobotDrive arcade;
+	public static CustomRobotDrive tank;
+	public static CustomRobotDrive arcade;
 	public static OI oi;
 
 	/**
