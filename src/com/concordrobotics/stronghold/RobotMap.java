@@ -1,12 +1,12 @@
 package com.concordrobotics.stronghold;
 
-import com.concordrobotics.stronghold.subsystems.DriveTrain;
-import com.concordrobotics.stronghold.subsystems.Shooter;
-import com.concordrobotics.stronghold.subsystems.CustomRobotDrive;
+import com.concordrobotics.stronghold.subsystems.*;
 
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.Encoder;
+import com.kauailabs.navx.frc.AHRS;
+
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
  * to a variable name. This provides flexibility changing wiring, makes checking
@@ -43,7 +43,14 @@ public class RobotMap {
      */
 	public static DriveTrain driveTrain;
 	public static Shooter shooter;
+	public static NavxController navController;
 	
+	/**
+	 * NAVX Gyro & PID
+	 * 
+	 */
+	public static AHRS navx;
+	public static final double navP = 0.001, navI = 0.0, navD = 0.0, navF = 0.0;
 	/**
 	 * ROBOTDRIVE OBJECTS FOR TANK, ARCADE.
 	 */

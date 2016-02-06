@@ -1,17 +1,18 @@
 
 package com.concordrobotics.stronghold;
 
-import com.concordrobotics.stronghold.subsystems.DriveTrain;
-import com.concordrobotics.stronghold.subsystems.Shooter;
-import com.concordrobotics.stronghold.subsystems.CustomRobotDrive;
+import com.concordrobotics.stronghold.subsystems.*;
+
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SPI;
+import com.kauailabs.navx.frc.AHRS;
 /**
  * Concord Robotics FRC Team 1721
  * 2016 - FIRST STRONGHOLD
@@ -42,6 +43,16 @@ public class Robot extends IterativeRobot {
 		RobotMap.shootR = new VictorSP(RobotMap.spShootRP);
 		RobotMap.shootA = new VictorSP(RobotMap.spShootAP);
 		RobotMap.shootK = new Servo(RobotMap.spShootKP);
+        try {
+            /* Communicate w/navX MXP via the MXP SPI Bus.                                     */
+            /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
+            /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
+            RobotMap.navx = new AHRS(SPI.Port.kMXP); 
+        } catch (RuntimeException ex ) {
+            DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+        }
+        RobotMap.navController = new NavxController("NavController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
+        		RobotMap.navF, RobotMap.navx);
     }
 
     /**
