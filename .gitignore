@@ -1,4 +1,7 @@
-bin/
-.classpath
+bin/*
+build.*
+*.properties
+*.xml
+*.class
 .project
-/bin/
+.classpath
