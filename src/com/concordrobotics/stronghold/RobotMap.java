@@ -16,11 +16,10 @@ import com.kauailabs.navx.frc.AHRS;
 public class RobotMap {
 	/**
 	 * MOTORS, MOTOR CONTROLLERS, ETC.
-	 */
-	/** 
+	 *  
 	 * dtLeft, dtRight = drivetrain.
 	 * shootL, shootR = shooter left/right CIMs.
-	 * shootA = shooter angle.xc
+	 * shootA = shooter angle
 	 */
 	public static VictorSP dtLeft, dtRight, shootL, shootR, shootA;
 	public static Servo shootK;
@@ -66,7 +65,7 @@ public class RobotMap {
 	public static final int spShootAP = 4;
 	public static final int spShootKP = 5;
 	
-	public static final double sSpinupTime = 1.5;
+	public static final double sSpinupTime = .75; // Spin-up time in seconds.
 	/**
 	 *Joysticks, Input, and Buttons.
 	 */
