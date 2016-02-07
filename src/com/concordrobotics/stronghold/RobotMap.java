@@ -54,7 +54,7 @@ public class RobotMap {
 	/**
 	 * ROBOTDRIVE OBJECTS FOR TANK, ARCADE.
 	 */
-	public static CustomRobotDrive tank;
+	public static CustomRobotDrive robotDrive;
 	public static CustomRobotDrive arcade;
 	public static OI oi;
 

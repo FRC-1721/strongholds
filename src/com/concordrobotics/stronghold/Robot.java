@@ -37,8 +37,6 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtRight = new VictorSP(RobotMap.spRightPort);
 		RobotMap.dtLeftEnc = new Encoder(RobotMap.dtLeftEncPortA, RobotMap.dtLeftEncPortB, RobotMap.dtLeftEncReversed);
 		RobotMap.dtRightEnc = new Encoder(RobotMap.dtRightEncPortA, RobotMap.dtRightEncPortA, RobotMap.dtRightEncReversed);
-		RobotMap.tank = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight, RobotMap.dtLeftEnc, RobotMap.dtRightEnc);
-		RobotMap.arcade = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight, RobotMap.dtLeftEnc, RobotMap.dtRightEnc);
 		RobotMap.shootL = new VictorSP(RobotMap.spShootLP);
 		RobotMap.shootR = new VictorSP(RobotMap.spShootRP);
 		RobotMap.shootA = new VictorSP(RobotMap.spShootAP);
@@ -53,6 +51,8 @@ public class Robot extends IterativeRobot {
         }
         RobotMap.navController = new NavxController("NavController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
         		RobotMap.navF, RobotMap.navx);
+		RobotMap.robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight, RobotMap.dtLeftEnc, RobotMap.dtRightEnc, RobotMap.navController);
+		
     }
 
     /**
@@ -86,6 +86,8 @@ public class Robot extends IterativeRobot {
      * Triggers when teleop starts.
      */
     public void teleopInit() {
+    	RobotMap.driveTrain = new DriveTrain();
+    	
     }
 
 

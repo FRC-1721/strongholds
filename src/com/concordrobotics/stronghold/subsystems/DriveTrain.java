@@ -1,6 +1,7 @@
 package com.concordrobotics.stronghold.subsystems;
 
 import com.concordrobotics.stronghold.RobotMap;
+import com.concordrobotics.stronghold.commands.DriveInTeleop;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -14,16 +15,20 @@ public class DriveTrain extends Subsystem {
 	
 	/* REQUIRED METHOD */
 	/* !!! UNUSED !!! */
-	protected void initDefaultCommand() {}
+	public enum DriveMode {
+		tankMode, arcadeMode
+	}
+	protected DriveMode mode = DriveMode.tankMode;
+	protected void initDefaultCommand() {new DriveInTeleop();}
 	
-	public void jInput(Joystick left, Joystick right, int mode) {
+	public void jInput(Joystick left, Joystick right) {
 		switch (mode) {
-		case 1:
+		case tankMode:
 			// TANK
-			RobotMap.tank.tankDrive(left, right);
+			RobotMap.robotDrive.tankDrive(left, right);
 			Timer.delay(.01);
 			break;
-		case 2:
+		case arcadeMode:
 			// ARCADE
 			// TODO: Grab this code from zachary.
 			break;
@@ -32,16 +37,20 @@ public class DriveTrain extends Subsystem {
 		}
 	}
 	
-	public void stop(int mode) {
+	public void stop() {
 		switch (mode) {
-		case 1:
-			RobotMap.tank.drive(0, 0);
+		case tankMode:
+			RobotMap.robotDrive.drive(0, 0);
 			break;
-		case 2:
+		case arcadeMode:
 			RobotMap.arcade.drive(0, 0);
 			break;
 		default:
 			break;
 		}
+	}
+	
+	public void setDriveMode(DriveMode dMode) {
+		mode = dMode;
 	}
 }

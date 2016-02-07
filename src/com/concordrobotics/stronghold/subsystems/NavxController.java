@@ -7,7 +7,7 @@
 
 package com.concordrobotics.stronghold.subsystems;
 
-import com.concordrobotics.stronghold.subsystems.CustomPIDController;
+import com.concordrobotics.stronghold.CustomPIDController;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.PIDOutput;
@@ -37,9 +37,9 @@ public class NavxController extends Subsystem implements Sendable {
   
   static final double kToleranceDegrees = 2.0f;
   
+  protected double pidOut;
   /** An output which calls {@link PIDCommand#usePIDOutput(double)} */
   private PIDOutput output = new PIDOutput() {
-
     public void pidWrite(double output) {
       usePIDOutput(output);
     }
@@ -87,6 +87,7 @@ public class NavxController extends Subsystem implements Sendable {
   protected void usePIDOutput(double output) {
       // Use output to drive your system, like a motor
       // e.g. yourMotor.set(output);
+	  pidOut = output;
   }
 
   /**
@@ -149,6 +150,10 @@ public class NavxController extends Subsystem implements Sendable {
     controller.setOutputRange(minimumOutput, maximumOutput);
   }
 
+  
+  public double getPIDOutput() {
+	  return pidOut;
+  }
   /**
    * Set the absolute error which is considered tolerable for use with OnTarget.
    * The value is in the same range as the PIDInput values.
