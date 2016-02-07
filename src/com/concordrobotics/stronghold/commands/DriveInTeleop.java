@@ -8,12 +8,9 @@ import edu.wpi.first.wpilibj.command.Command;
 public class DriveInTeleop extends Command{
 
 	public DriveInTeleop() {
-		requires(RobotMap.robotDrive); 
+		requires(RobotMap.driveTrain); 
 	}
-	private void requires(CustomRobotDrive tank) {
-		// TODO Auto-generated method stub
-		
-	}
+
 	protected void execute() { RobotMap.driveTrain.jInput(RobotMap.oi.jLeft, RobotMap.oi.jRight); } // Just set to run tank.
 	protected void end() { RobotMap.driveTrain.stop(); } // Just set to tank.
 	protected void interrupted() { end(); }
