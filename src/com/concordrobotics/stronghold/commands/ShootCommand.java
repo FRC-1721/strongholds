@@ -17,12 +17,10 @@ public class ShootCommand extends Command{
 	/* Unused, required methods. Pfffft */
 	protected void initialize() {}
 	protected boolean isFinished() {
-		while (true) {
-			if (Shooter.i == true) {
-				return true;
-			} else {
-				continue;
-			}
+		if (Shooter.shoot == true) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 	
