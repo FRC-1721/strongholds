@@ -1,11 +1,11 @@
 package com.concordrobotics.stronghold;
 
-import com.concordrobotics.stronghold.subsystems.DriveTrain;
-import com.concordrobotics.stronghold.subsystems.Shooter;
+import com.concordrobotics.stronghold.subsystems.*;
 
-import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.Encoder;
+import com.kauailabs.navx.frc.AHRS;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -24,24 +24,38 @@ public class RobotMap {
 	 */
 	public static VictorSP dtLeft, dtRight, shootL, shootR, shootA;
 	public static Servo shootK;
+	public static Encoder dtLeftEnc, dtRightEnc;
 
 	/**
      * DRIVE TRAIN VARIABLES
      */
 	public static final int spLeftPort = 0;
 	public static final int spRightPort = 1;
-
+	public static final int dtLeftEncPortA = 0;
+	public static final int dtLeftEncPortB = 1;
+	public static final int dtRightEncPortA = 2;
+	public static final int dtRightEncPortB = 3;
+	public static final boolean dtLeftEncReversed = false;
+	public static final boolean dtRightEncReversed = false;	
+	
 	/**
      * SUBSYSTEMS
      */
 	public static DriveTrain driveTrain;
 	public static Shooter shooter;
+	public static NavxController navController;
 	
+	/**
+	 * NAVX Gyro & PID
+	 * 
+	 */
+	public static AHRS navx;
+	public static final double navP = 0.001, navI = 0.0, navD = 0.0, navF = 0.0;
 	/**
 	 * ROBOTDRIVE OBJECTS FOR TANK, ARCADE.
 	 */
-	public static RobotDrive tank;
-	public static RobotDrive arcade;
+	public static CustomRobotDrive tank;
+	public static CustomRobotDrive arcade;
 	public static OI oi;
 
 	/**
