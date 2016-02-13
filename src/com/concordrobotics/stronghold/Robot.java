@@ -2,6 +2,7 @@
 package com.concordrobotics.stronghold;
 
 import com.concordrobotics.log.RobotLogger;
+import com.concordrobotics.stronghold.commands.DriveInTeleop;
 import com.concordrobotics.stronghold.subsystems.DriveTrain;
 import com.concordrobotics.stronghold.subsystems.NavxController;
 import com.concordrobotics.stronghold.subsystems.Shooter;
@@ -13,8 +14,10 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+
 /**
  * Concord Robotics FRC Team 1721
  * 2016 - FIRST STRONGHOLD
@@ -24,7 +27,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  * The VM is set to run this class before anything else.
  */
 public class Robot extends IterativeRobot {
-
+	Command driveInTeleop;
 	/**
 	 * Triggered when the robot is first initialized.
 	 */
@@ -64,7 +67,7 @@ public class Robot extends IterativeRobot {
         RobotMap.navController = new NavxController("NavController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
         		RobotMap.navF, RobotMap.navx);
 		RobotMap.robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight, RobotMap.dtLeftEnc, RobotMap.dtRightEnc, RobotMap.navController);
-		
+		RobotMap.driveTrain = new DriveTrain();
     }
 
     /**
@@ -97,8 +100,11 @@ public class Robot extends IterativeRobot {
     /**
      * Triggers when teleop starts.
      */
-    public void teleopInit() {}
-    
+    public void teleopInit() {
+    	driveInTeleop = new DriveInTeleop();
+    	
+    }
+
     /**
      * Loops during teleop.
      */

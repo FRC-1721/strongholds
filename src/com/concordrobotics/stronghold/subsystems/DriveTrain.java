@@ -1,8 +1,13 @@
 package com.concordrobotics.stronghold.subsystems;
 
+
 import com.concordrobotics.stronghold.RobotMap;
+<<<<<<< HEAD
 import com.concordrobotics.stronghold.commands.ArcadeDriveMath;
 import com.concordrobotics.stronghold.commands.DriveInTeleop;
+=======
+import com.concordrobotics.stronghold.commands.DriveStop;
+>>>>>>> 20b5b589c962e1d38e7d2b003f3aff2974c72207
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -14,6 +19,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class DriveTrain extends Subsystem {
 	
+<<<<<<< HEAD
 	public enum DriveMode {tankMode, arcadeMode}
 	
 	protected DriveMode mode = DriveMode.tankMode; //Starts in tank mode 
@@ -23,6 +29,19 @@ public class DriveTrain extends Subsystem {
 	boolean easyControl = true;
 	
 	protected void initDefaultCommand() {new DriveInTeleop();}
+=======
+	/* REQUIRED METHOD */
+	/* !!! UNUSED !!! */
+	public enum DriveMode {
+		tankMode, arcadeMode
+	}
+
+	protected DriveMode mode = DriveMode.tankMode;
+	
+	protected void initDefaultCommand() {
+		setDefaultCommand(new DriveStop());
+	}
+>>>>>>> 20b5b589c962e1d38e7d2b003f3aff2974c72207
 	
 	public void cSwith(boolean one, boolean two)
 	{
@@ -70,7 +89,7 @@ public class DriveTrain extends Subsystem {
 			RobotMap.robotDrive.drive(0, 0);
 			break;
 		case arcadeMode:
-			RobotMap.arcade.drive(0, 0);
+			RobotMap.robotDrive.drive(0, 0);
 			break;
 		default:
 			break;
