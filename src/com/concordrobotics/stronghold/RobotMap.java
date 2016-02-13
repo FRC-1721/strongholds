@@ -77,4 +77,5 @@ public class RobotMap {
 	 * BUTTON MAPPING
 	 */
 	public static final int jTrigger = 1;
+	public static final int jEasySwitch = -1; //TODO put the actual button number
 }

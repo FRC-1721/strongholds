@@ -60,7 +60,10 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   protected PIDOutput m_pidOutput;
   java.util.Timer m_controlLoop;
   Timer m_setpointTimer;
+  
+  @SuppressWarnings("unused")
   private boolean m_freed = false;
+  @SuppressWarnings("unused")
   private boolean m_usingPercentTolerance;
 
   /**

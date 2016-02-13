@@ -31,7 +31,8 @@ public class OI {
 
     }
 
-    public JoystickButton getBtn(int joyid, int button) {
+    public JoystickButton getBtn(int joyid, int button)
+    {
     	switch (joyid) {
     	case RobotMap.jLeftPort:
     		return new JoystickButton(jLeft, button);
