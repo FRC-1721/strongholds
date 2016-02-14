@@ -57,7 +57,6 @@ public class Robot extends IterativeRobot {
 		RobotMap.shootR = new VictorSP(RobotMap.spShootRP);
 		RobotMap.shootA = new VictorSP(RobotMap.spShootAP);
 		RobotMap.shootK = new Servo(RobotMap.spShootKP);
-		
 		//Gyro
 		RobotLogger.log("Attempting communication with Gyro via MXP", "BOOT");
         try {
