@@ -5,7 +5,7 @@ import com.concordrobotics.stronghold.subsystems.*;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.Encoder;
-import com.kauailabs.navx.frc.AHRS;
+//import com.kauailabs.navx.frc.AHRS;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -42,14 +42,14 @@ public class RobotMap {
      */
 	public static DriveTrain driveTrain;
 	public static Shooter shooter;
-	public static NavxController navController;
+//	public static NavxController navController;
 	
 	/**
 	 * NAVX Gyro & PID
 	 * 
 	 */
-	public static AHRS navx;
-	public static final double navP = 0.001, navI = 0.0, navD = 0.0, navF = 0.0;
+//	public static AHRS navx;
+//	public static final double navP = 0.001, navI = 0.0, navD = 0.0, navF = 0.0;
 	/**
 	 * ROBOTDRIVE OBJECTS FOR TANK, ARCADE.
 	 */
@@ -76,5 +76,4 @@ public class RobotMap {
 	 * BUTTON MAPPING
 	 */
 	public static final int jTrigger = 1;
-	public static final int jEasySwitch = -1; //TODO put the actual button number
 }

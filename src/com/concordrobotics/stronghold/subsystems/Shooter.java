@@ -50,7 +50,7 @@ public class Shooter extends Subsystem {
 	 */
 	public void suck() {
 		RobotMap.shootL.set(.4);
-		RobotMap.shootR.set(-5);
+		RobotMap.shootR.set(-.5);
 		
 	}
 	

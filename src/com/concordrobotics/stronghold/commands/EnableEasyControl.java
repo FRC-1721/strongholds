@@ -2,14 +2,12 @@ package com.concordrobotics.stronghold.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import com.concordrobotics.stronghold.RobotMap;
-/**
- *
- */
-public class EnableDriveHeadingLock extends Command {
 
+public class EnableEasyControl extends Command
+{
 	protected boolean complete = false;
 	
-    public EnableDriveHeadingLock() {
+    public EnableEasyControl() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }
@@ -21,7 +19,7 @@ public class EnableDriveHeadingLock extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-//    	RobotMap.robotDrive.enableHeadingLock();
+    	RobotMap.driveTrain.setEasyControl(true);;
     	complete = true;
     }
 

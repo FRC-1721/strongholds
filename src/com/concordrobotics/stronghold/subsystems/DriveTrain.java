@@ -4,6 +4,7 @@ package com.concordrobotics.stronghold.subsystems;
 import com.concordrobotics.stronghold.RobotMap;
 import com.concordrobotics.stronghold.commands.ArcadeDriveMath;
 import com.concordrobotics.stronghold.commands.DriveInTeleop;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -23,16 +24,17 @@ public class DriveTrain extends Subsystem {
 	double zMaxTwist = 1;
 	boolean easyControl = true;
 	
+	double ghettoTime = 0;
+	
 	protected void initDefaultCommand() {new DriveInTeleop();}
 	
 	public void cSwith(boolean one, boolean two)
 	{
-		//TODO This just inverts mode from tank drive to arcade mode.
-	}
-	
-	public void cEasyControl(boolean button)
-	{
-		//TODO this.
+		if (ghettoTime == 0 && one && two)
+		{
+			ghettoTime = 200;
+			this.switchDriveMode();
+		}
 	}
 	
 	public void jInput(Joystick left, Joystick right)
@@ -43,7 +45,7 @@ public class DriveTrain extends Subsystem {
 			// TANK
 			RobotMap.robotDrive.tankDrive(left, right, easyControl);
 			break;
-		case arcadeMode:
+		/*case arcadeMode:
 			// ARCADE
 			
 			ArcadeDriveMath aDrive = new ArcadeDriveMath(left, right);
@@ -53,29 +55,21 @@ public class DriveTrain extends Subsystem {
 					(aDrive.aMathAxis()),
 					(aDrive.aMathTwist()),
 					easyControl 
-					/*
+					*
 					 * This will change if moving the controller
 					 * more will cause the robot to move faster.
-					 */
+					 *
 			);
-			break;
+			break;*/
 		default:
 			break;
 		}
 		Timer.delay(.01);
 	}
 	
-	public void stop() {
-		switch (mode) {
-		case tankMode:
-			RobotMap.robotDrive.drive(0, 0);
-			break;
-		case arcadeMode:
-			RobotMap.robotDrive.drive(0, 0);
-			break;
-		default:
-			break;
-		}
+	public void stop()
+	{
+		RobotMap.robotDrive.drive(0, 0);
 	}
 	
 	/**
@@ -89,6 +83,19 @@ public class DriveTrain extends Subsystem {
 	public void setEasyControl(boolean easyControlActuator)
 	{
 		easyControl = easyControlActuator;
+	}
+	
+	private void switchDriveMode()
+	{
+		switch(mode)
+		{
+			case tankMode:
+				this.setDriveMode(DriveMode.arcadeMode);
+				break;
+			case arcadeMode:
+				this.setDriveMode(DriveMode.tankMode);
+				break;
+		}
 	}
 	
 	public void setDriveMode(DriveMode dMode) {
