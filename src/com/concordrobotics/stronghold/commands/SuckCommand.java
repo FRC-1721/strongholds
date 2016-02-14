@@ -15,23 +15,23 @@ import edu.wpi.first.wpilibj.command.Command;
  * @author Eli, Brennan
  */
 public class SuckCommand extends Command{
-
-	private boolean finished = false;
+	
+	private boolean sucker = false;
 	
 	public SuckCommand() {
 		requires(RobotMap.shooter); 
 	}
 	protected void execute() { 
 		RobotMap.shooter.suck(); 
-		finished = true;
+		sucker = true;
 	}
-	protected void end() { RobotMap.shooter.shootRelease(); } //Fill in if motors are not stopped in suck method
+	protected void end() {} //Fill in if motors are not stopped in suck method
 	protected void interrupted() { end(); }
 	
 	protected void initialize() {}
 	
 	protected boolean isFinished() {
-		return finished;
+		return sucker;
 	}
 	
 }

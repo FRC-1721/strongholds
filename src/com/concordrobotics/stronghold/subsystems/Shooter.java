@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class Shooter extends Subsystem {
+	
+	public static boolean pitchDown = false;
+	public static boolean pitchUp = false;
 	protected void initDefaultCommand() {}
 	
 	/**
@@ -43,9 +46,16 @@ public class Shooter extends Subsystem {
 	 * @author Brennan
 	 */
 	public void suck() {
-		RobotMap.shootL.set(.4);
-		RobotMap.shootR.set(-.5);
+		// Suck the ball in (.4 and -.5)
+		RobotMap.shootL.set(.3);
+		RobotMap.shootR.set(-.4);
 		
+		// Wait 3 seconds
+		Timer.delay(3.0);
+		
+		// Turn off them motors.
+		RobotMap.shootL.set(0);
+		RobotMap.shootR.set(0);
 	}
 	
 	/**
@@ -63,29 +73,31 @@ public class Shooter extends Subsystem {
 	 * Runs the motor so that the shooter aims up - speed defined in RobotMap
 	 * @author Brennan
 	 */
-	public void pitchUp() {
-		// TODO: Calibrate encoder and ad encoder-stop.
-		RobotMap.shootA.set(RobotMap.pitchUpVolts);
-	}
+//	public void pitchUp() {
+//		 TODO: Calibrate encoder and ad encoder-stop.
+//		RobotMap.shootA.set(RobotMap.pitchUpVolts);
+//	}
 	
 	/**
 	 * Angle the shooter towards the ground
 	 * Runs the motor so that the shooter aims down - speed defined in RobotMap.
 	 * @author Brennan
 	 */
-	public void pitchDown() {
+//	public void pitchDown() {
 		// TODO: Calibrate encoder and ad encoder-stop.
-		RobotMap.shootA.set(RobotMap.pitchDwnVolts);
-	}
+//		RobotMap.shootA.set(RobotMap.pitchDwnVolts);
+//	}
 	
 	/**
 	 * Stop the shooter angler from moving.
 	 * Runs after the command is done.
 	 * @author Brennan
 	 */
-	public void pitchRelease() {
-		RobotMap.shootA.set(0);
-	}
+//	public void pitchRelease() {
+//		RobotMap.shootA.set(0);
+//		pitchUp = true;
+//		pitchDown = true;
+//	}
 }
 
 		

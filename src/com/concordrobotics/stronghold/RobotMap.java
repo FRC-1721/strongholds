@@ -1,10 +1,10 @@
 package com.concordrobotics.stronghold;
 
-import com.concordrobotics.stronghold.general.CustomRobotDrive;
-import com.concordrobotics.stronghold.subsystems.DriveTrain;
-import com.concordrobotics.stronghold.subsystems.NavxController;
+//import com.concordrobotics.stronghold.general.CustomRobotDrive;
+//import com.concordrobotics.stronghold.subsystems.DriveTrain;
+//import com.concordrobotics.stronghold.subsystems.NavxController;
 import com.concordrobotics.stronghold.subsystems.Shooter;
-import com.kauailabs.navx.frc.AHRS;
+//import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
 //import com.kauailabs.navx.frc.AHRS;
@@ -46,21 +46,21 @@ public class RobotMap {
 	/**
      * SUBSYSTEMS
      */
-	public static DriveTrain driveTrain;
+//	public static DriveTrain driveTrain;
 	public static Shooter shooter;
-	public static NavxController navController;
+//	public static NavxController navController;
 	
-	/**
+	/**s
 	 * NAVX Gyro & PID
 	 * 
 	 */
-	public static AHRS navx;
+//	public static AHRS navx;
 	public static final double navP = 0.001, navI = 0.0, navD = 0.0, navF = 0.0;
 
 	/**
 	 * ROBOTDRIVE OBJECTS FOR TANK, ARCADE.
 	 */
-	public static CustomRobotDrive robotDrive;
+//	public static CustomRobotDrive robotDrive;
 	public static OI oi;
 
 	/**
@@ -73,8 +73,8 @@ public class RobotMap {
 	
 	public static final double sSpinupTime = .75; // Spin-up time in seconds.
 	
-	public static final double pitchUpVolts = .5; // Set the speed in volts of the up-pitch
-	public static final double pitchDwnVolts = -.5; // Set the speed in volts of the down-pitch
+	public static final double pitchUpVolts = -.5; // Set the speed in volts of the up-pitch
+	public static final double pitchDwnVolts = .5; // Set the speed in volts of the down-pitch
 	
 	/**
 	 *Joysticks, Input, and Buttons.
