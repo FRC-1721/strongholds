@@ -48,6 +48,7 @@ public class Robot extends IterativeRobot {
             /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
             /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
             RobotMap.navx = new AHRS(SPI.Port.kMXP); 
+            LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
         } catch (RuntimeException ex ) {
             DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
         }
