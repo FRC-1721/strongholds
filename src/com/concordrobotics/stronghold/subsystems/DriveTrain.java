@@ -2,7 +2,7 @@ package com.concordrobotics.stronghold.subsystems;
 
 
 import com.concordrobotics.stronghold.RobotMap;
-import com.concordrobotics.stronghold.commands.DriveStop;
+import com.concordrobotics.stronghold.commands.DriveInTeleop;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -23,7 +23,7 @@ public class DriveTrain extends Subsystem {
 	protected DriveMode mode = DriveMode.tankMode;
 	
 	protected void initDefaultCommand() {
-		setDefaultCommand(new DriveStop());
+		setDefaultCommand(new DriveInTeleop());
 	}
 	
 	public void jInput(Joystick left, Joystick right) {

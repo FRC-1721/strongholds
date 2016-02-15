@@ -2,6 +2,7 @@
 package com.concordrobotics.stronghold;
 
 import com.concordrobotics.stronghold.subsystems.*;
+import com.concordrobotics.stronghold.CustomRobotDrive.MotorType;
 import com.concordrobotics.stronghold.commands.*;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
@@ -24,7 +26,6 @@ import com.kauailabs.navx.frc.AHRS;
  * The VM is set to run this class before anything else.
  */
 public class Robot extends IterativeRobot {
-	Command driveInTeleop;
 	/**
 	 * Triggered when the robot is first initialized.
 	 */
@@ -43,18 +44,22 @@ public class Robot extends IterativeRobot {
 		RobotMap.shootR = new VictorSP(RobotMap.spShootRP);
 		RobotMap.shootA = new VictorSP(RobotMap.spShootAP);
 		RobotMap.shootK = new Servo(RobotMap.spShootKP);
-        try {
+        //try {
             /* Communicate w/navX MXP via the MXP SPI Bus.                                     */
             /* Alternatively:  I2C.Port.kMXP, SerialPort.Port.kMXP or SerialPort.Port.kUSB     */
             /* See http://navx-mxp.kauailabs.com/guidance/selecting-an-interface/ for details. */
             RobotMap.navx = new AHRS(SPI.Port.kMXP); 
             LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
-        } catch (RuntimeException ex ) {
+        /*} catch (RuntimeException ex ) {
             DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
-        }
+        } */
         RobotMap.navController = new NavxController("NavController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
         		RobotMap.navF, RobotMap.navx);
+        LiveWindow.addActuator("DriveTrain", "nav Controller", RobotMap.navController.getPIDController());
+
 		RobotMap.robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight, RobotMap.dtLeftEnc, RobotMap.dtRightEnc, RobotMap.navController);
+        LiveWindow.addActuator("DriveTrain", "LeftDriveController", RobotMap.robotDrive.getPIDController(MotorType.kLeft));
+        LiveWindow.addActuator("DriveTrain", "RightDriveController", RobotMap.robotDrive.getPIDController(MotorType.kRight));
 		RobotMap.driveTrain = new DriveTrain();
     }
 
@@ -89,7 +94,6 @@ public class Robot extends IterativeRobot {
      * Triggers when teleop starts.
      */
     public void teleopInit() {
-    	driveInTeleop = new DriveInTeleop();
     	
     }
 
@@ -98,6 +102,8 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        SmartDashboard.putNumber("heading", RobotMap.navx.getAngle());
+        SmartDashboard.putNumber("gyroPIDOutput", RobotMap.navController.getPIDOutput());
     }
 
     /**

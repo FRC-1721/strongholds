@@ -200,6 +200,7 @@ public class NavxController extends Subsystem implements Sendable {
     controller.disable();
   }
 
+
   public String getSmartDashboardType() {
     return "NavxController";
   }

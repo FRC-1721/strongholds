@@ -145,6 +145,14 @@ public class CustomRobotDrive implements MotorSafety {
     setLeftRightMotorOutputs(leftOutput, rightOutput);
   }
 
+  public CustomPIDController getPIDController(MotorType motorType) {
+	  if (motorType == MotorType.kLeft) {
+		  return m_leftController;
+	  } else {
+		  return m_rightController;
+	  }
+  }
+  
   public void enablePID() {
 	  m_PIDEnabled = true;
 	  m_leftController.enable();
