@@ -26,7 +26,7 @@ public class OI {
     public OI() {
     	jLeft = new Joystick(RobotMap.jLeftPort);
     	jRight = new Joystick(RobotMap.jRightPort);
-//    	operator = new Joystick(RobotMap.jOpPort);
+    	operator = new Joystick(RobotMap.jOpPort);
     	
 //    	angleUp = new JoystickButton(operator, 5);
 //    	angleDown = new JoystickButton(operator, 7);
