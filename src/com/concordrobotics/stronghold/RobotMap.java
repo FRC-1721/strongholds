@@ -1,5 +1,6 @@
 package com.concordrobotics.stronghold;
 
+import com.concordrobotics.stronghold.subsystems.DriveTrain;
 //import com.concordrobotics.stronghold.general.CustomRobotDrive;
 //import com.concordrobotics.stronghold.subsystems.DriveTrain;
 //import com.concordrobotics.stronghold.subsystems.NavxController;
@@ -7,10 +8,11 @@ import com.concordrobotics.stronghold.subsystems.Shooter;
 //import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotDrive;
 //import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.Encoder;
 //import com.kauailabs.navx.frc.AHRS;
 
 /**
@@ -46,7 +48,7 @@ public class RobotMap {
 	/**
      * SUBSYSTEMS
      */
-//	public static DriveTrain driveTrain;
+	public static DriveTrain driveTrain;
 	public static Shooter shooter;
 //	public static NavxController navController;
 	
@@ -60,7 +62,7 @@ public class RobotMap {
 	/**
 	 * ROBOTDRIVE OBJECTS FOR TANK, ARCADE.
 	 */
-//	public static CustomRobotDrive robotDrive;
+	public static RobotDrive robotDrive;
 	public static OI oi;
 
 	/**
@@ -79,6 +81,9 @@ public class RobotMap {
 	/**
 	 *Joysticks, Input, and Buttons.
 	 */
+	public static Joystick jLeft;
+	public static Joystick jRight;
+	public static Joystick jOperator;
 	public static final int jLeftPort = 1;
 	public static final int jRightPort = 2;
 	public static final int jOpPort = 3;

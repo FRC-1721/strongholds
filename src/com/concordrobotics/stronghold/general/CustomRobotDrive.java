@@ -276,22 +276,22 @@
 //        rightValue = -(rightValue * rightValue);
 //      }
 //    }
-////    if (m_headingLock) {
-//    	// Check if turn requested is in the deadzone, if so, use the PID control output on top
-//    	// of the average value
-////    	if (Math.abs(leftValue - rightValue) < m_turnDeadzone) {
-////    		double avgValue = 0.5*(leftValue + rightValue);
-////    		double pidOutput = 0.5*m_turnController.getPIDOutput();
-//    		
-////    		leftValue = limit(avgValue - pidOutput);
-////    		rightValue = limit(avgValue + pidOutput);
-////    	} else {
+//    if (m_headingLock) {
+////    	 Check if turn requested is in the deadzone, if so, use the PID control output on top
+////    	 of the average value
+//    	if (Math.abs(leftValue - rightValue) < m_turnDeadzone) {
+//    		double avgValue = 0.5*(leftValue + rightValue);
+//    		double pidOutput = 0.5*m_turnController.getPIDOutput();
+////    		
+//    		leftValue = limit(avgValue - pidOutput);
+//    		rightValue = limit(avgValue + pidOutput);
+//    	} else {
 //    		// A turn is requested, so set the setpoint to the current heading, and don't use the pidOutput.
-////    		m_turnController.setSetpointRelative(0.0);
+//    		m_turnController.setSetpointRelative(0.0);
 //    	}
-////    }
-////    setLeftRightMotorOutputs(leftValue, rightValue);
-////  }
+//    }
+//    setLeftRightMotorOutputs(leftValue, rightValue);
+//  }
 //
 //  /**
 //   * Provide tank steering using the stored robot configuration. This function

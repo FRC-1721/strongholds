@@ -114,8 +114,8 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         
-//        RobotMap.driveTrain.cSwith(RobotMap.oi.jLeft.getTrigger(), RobotMap.oi.jLeft.getTrigger());
-//        RobotMap.driveTrain.jInput(RobotMap.oi.jLeft, RobotMap.oi.jRight);
+        RobotMap.driveTrain.cSwith(RobotMap.oi.jLeft.getTrigger(), RobotMap.oi.jLeft.getTrigger());
+        RobotMap.driveTrain.jInput(RobotMap.oi.jLeft, RobotMap.oi.jRight);
     }
 
     /**
