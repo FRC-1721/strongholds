@@ -22,9 +22,9 @@ public class RobotMap {
 	public static Encoder dtLeftEnc, dtRightEnc;
 
 	
-	//##############
-	// DRIVE TRAIN.
-	//##############
+	//#############
+	// DRIVE TRAIN
+	//#############
 	public static final int spLeftP = 0;
 	public static final int spRightP = 0;
 	public static final int encLeftA = 0;

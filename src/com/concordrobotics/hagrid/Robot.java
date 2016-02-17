@@ -1,12 +1,17 @@
 
 package com.concordrobotics.hagrid;
 
+import com.concordrobotics.hagrid.commands.DriveCommand;
+import com.concordrobotics.hagrid.subsystems.DriveTrain;
+import com.concordrobotics.hagrid.subsystems.Shooter;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -18,13 +23,28 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	public static OI oi;
+	Command driveCommand;
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
+    	
+    	// Init subsystems
 		oi = new OI();
+		RobotMap.shooter = new Shooter();
+		RobotMap.driveTrain = new DriveTrain();
+		
+		// Init motors
+		RobotMap.shootA = new VictorSP(RobotMap.spShootA);
+		RobotMap.shootL = new VictorSP(RobotMap.spShootL);
+		RobotMap.shootR = new VictorSP(RobotMap.spShootR);
+		RobotMap.dtLeft = new VictorSP(RobotMap.spLeftP);
+		RobotMap.dtRight = new VictorSP(RobotMap.spRightP);
+		
+		RobotMap.drive = new RobotDrive(RobotMap.dtLeft, RobotMap.dtRight);
+		
     }
 	
 	/**
@@ -62,6 +82,7 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopInit() {
+    	driveCommand = new DriveCommand();
     	
     	
     }
@@ -71,6 +92,8 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        RobotMap.driveTrain.jInput(OI.jLeft, OI.jRight);
+        Timer.delay(0.01);
     }
     
     /**
