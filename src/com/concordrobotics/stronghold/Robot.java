@@ -39,7 +39,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtLeft = new VictorSP(RobotMap.spLeftPort);
 		RobotMap.dtRight = new VictorSP(RobotMap.spRightPort);
 		RobotMap.dtLeftEnc = new Encoder(RobotMap.dtLeftEncPortA, RobotMap.dtLeftEncPortB, RobotMap.dtLeftEncReversed);
-		RobotMap.dtRightEnc = new Encoder(RobotMap.dtRightEncPortA, RobotMap.dtRightEncPortA, RobotMap.dtRightEncReversed);
+		RobotMap.dtRightEnc = new Encoder(RobotMap.dtRightEncPortA, RobotMap.dtRightEncPortB, RobotMap.dtRightEncReversed);
 		RobotMap.shootL = new VictorSP(RobotMap.spShootLP);
 		RobotMap.shootR = new VictorSP(RobotMap.spShootRP);
 		RobotMap.shootA = new VictorSP(RobotMap.spShootAP);

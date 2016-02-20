@@ -4,3 +4,4 @@ build/*
 FRCUserProgram.jar
 /dist/
 /build/
+sysProps.xml
