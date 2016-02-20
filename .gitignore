@@ -1,8 +1,7 @@
 bin/*
-build.*
-*.properties
-*.xml
-*.class
+build/*
 .project
 .classpath
 FRCUserProgram.jar
+/dist/
+/build/
