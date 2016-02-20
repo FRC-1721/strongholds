@@ -1,6 +1,5 @@
 bin/*
 build/*
-.project
 .classpath
 FRCUserProgram.jar
 /dist/
