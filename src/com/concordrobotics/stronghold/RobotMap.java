@@ -36,25 +36,16 @@ public class RobotMap {
 	public static final int dtRightEncPortB = 3;
 	public static final boolean dtLeftEncReversed = false;
 	public static final boolean dtRightEncReversed = false;	
-	
-	/**
-     * SUBSYSTEMS
-     */
-	public static DriveTrain driveTrain;
-	public static Shooter shooter;
-	public static NavxController navController;
+	public static double dtP = 0.0, dtI = 0.01, dtD = 0.0, dtF = 0.0;
+	public static CustomPIDController dtLeftController;
+	public static CustomPIDController dtRightController;	
 	
 	/**
 	 * NAVX Gyro & PID
 	 * 
 	 */
 	public static AHRS navx;
-	public static final double navP = 0.001, navI = 0.0, navD = 0.0, navF = 0.0;
-	/**
-	 * ROBOTDRIVE OBJECTS FOR TANK, ARCADE.
-	 */
-	public static CustomRobotDrive robotDrive;
-	public static OI oi;
+	public static double navP = 0.06, navI = 0.0, navD = 0.0, navF = 0.0;
 
 	/**
 	 * SHOOTER VARIABLES

@@ -1,6 +1,6 @@
 package com.concordrobotics.stronghold.commands;
 
-import com.concordrobotics.stronghold.RobotMap;
+import com.concordrobotics.stronghold.Robot;
 import com.concordrobotics.stronghold.subsystems.DriveTrain;
 import com.concordrobotics.stronghold.subsystems.Shooter;
 
@@ -18,10 +18,10 @@ import edu.wpi.first.wpilibj.command.Command;
 public class SuckCommand extends Command{
 
 	public SuckCommand() {
-		requires(RobotMap.shooter); 
+		requires(Robot.shooter); 
 	}
-	protected void execute() { RobotMap.shooter.suck(); }
-	protected void end() { RobotMap.shooter.release(); } //Fill in if motors are not stopped in suck method
+	protected void execute() { Robot.shooter.suck(); }
+	protected void end() { Robot.shooter.release(); } //Fill in if motors are not stopped in suck method
 	protected void interrupted() { end(); }
 	
 	protected void initialize() {}

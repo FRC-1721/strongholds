@@ -8,9 +8,12 @@
 package com.concordrobotics.stronghold;
 
 
+import com.concordrobotics.stronghold.CustomRobotDrive.MotorType;
 import com.concordrobotics.stronghold.subsystems.NavxController;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.*;
 
 
 
@@ -63,26 +66,21 @@ public class CustomRobotDrive implements MotorSafety {
   protected double m_maxOutput;
   protected SpeedController m_leftMotor;
   protected SpeedController m_rightMotor;
-  protected boolean m_allocatedSpeedControllers;
+  protected boolean m_allocatedSpeedControllers = false;
   protected byte m_syncGroup = 0;
   protected static boolean kArcadeRatioCurve_Reported = false;
   protected static boolean kTank_Reported = false;
   protected static boolean kArcadeStandard_Reported = false;
-  protected static CustomPIDController m_leftController;
-  protected static CustomPIDController m_rightController;
-  protected static Encoder m_leftEncoder;
-  protected static Encoder m_rightEncoder;
+  public CustomPIDController m_leftController;
+  public CustomPIDController m_rightController;
   // Default PID parameters
   protected boolean m_PIDEnabled = false; 
-  protected double m_P = 0.0;
-  protected double m_I = 0.002;
-  protected double m_D = 0.0;
-  protected double m_F = 0.1;
   // Output from -1 to 1 scaled to give rate in ft/s for PID controller
   protected double m_rateScale = 2.0;
   protected NavxController m_turnController;
   protected double m_turnDeadzone = 0.1;
   protected boolean m_headingLock = false;
+ 
   /**
    * Constructor for CustomRobotDrive with 2 motors specified as SpeedController
    * objects. The SpeedController version of the constructor enables programs to
@@ -94,27 +92,27 @@ public class CustomRobotDrive implements MotorSafety {
    * @param rightMotor the right SpeedController object used to drive the robot.
    */
   public CustomRobotDrive(SpeedController leftMotor, SpeedController rightMotor, 
-		  Encoder leftEncoder, Encoder rightEncoder, NavxController turnController) {
+		  CustomPIDController leftController, CustomPIDController rightController, NavxController turnController) {
     if (leftMotor == null || rightMotor == null) {
       throw new NullPointerException("Null motor provided");
     }
-    if (leftEncoder == null || rightEncoder == null) {
-        throw new NullPointerException("Null encoders provided");
+    if (leftController == null || rightController == null) {
+        throw new NullPointerException("Null controllers provided");
       }
     m_leftMotor = leftMotor;
     m_rightMotor = rightMotor;
     m_sensitivity = kDefaultSensitivity;
     m_maxOutput = kDefaultMaxOutput;
-    m_allocatedSpeedControllers = false;
-    m_leftEncoder = leftEncoder;
-    m_rightEncoder = rightEncoder;
-    m_leftController = new CustomPIDController(m_P, m_I, m_D, m_F, m_leftEncoder, m_leftMotor);
+    m_leftController = leftController;
     m_leftController.disable();
-    m_rightController = new CustomPIDController(m_P, m_I, m_D, m_F, m_rightEncoder, m_rightMotor);
+    m_rightController = rightController;
     m_rightController.disable();
+    m_leftController.setPIDSourceType(PIDSourceType.kRate);
+    m_rightController.setPIDSourceType(PIDSourceType.kRate);
     m_turnController = turnController;
     setupMotorSafety();
     drive(0, 0);
+    
   }
 
  
@@ -155,10 +153,11 @@ public class CustomRobotDrive implements MotorSafety {
   
   public void enablePID() {
 	  m_PIDEnabled = true;
-	  m_leftController.enable();
-	  m_rightController.enable();
+
 	  m_leftController.reset();
 	  m_rightController.reset();
+	  m_leftController.enable();
+	  m_rightController.enable();
   }
   
   public void disablePID() {
@@ -633,5 +632,12 @@ public class CustomRobotDrive implements MotorSafety {
     if (m_rightMotor != null)
       motors++;
     return motors;
+  }
+  
+  public void updateSmartDashboard(){
+	  SmartDashboard.putNumber("RobotDriveLeft/PIDOut", m_leftController.get());
+	  SmartDashboard.putNumber("RobotDriveLeft/PIDTarget", m_leftController.getSetpoint());
+	  PIDSource pidSource = m_leftController.getPIDSource();
+	  SmartDashboard.putNumber("RobotDriveLeft/PIDSource", pidSource.pidGet());
   }
 }

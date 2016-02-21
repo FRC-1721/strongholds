@@ -1,5 +1,6 @@
 package com.concordrobotics.stronghold.subsystems;
 
+import com.concordrobotics.stronghold.CustomRobotDrive;
 import com.concordrobotics.stronghold.RobotMap;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -13,6 +14,11 @@ public class Shooter extends Subsystem {
 
 	public static boolean shoot = false;
 	public static boolean suck = false;
+	
+	public Shooter( ) {
+		super("Shooter");
+	}
+	
 	protected void initDefaultCommand() {}
 	
 	/**

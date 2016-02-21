@@ -1,7 +1,7 @@
 package com.concordrobotics.stronghold.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import com.concordrobotics.stronghold.RobotMap;
+import com.concordrobotics.stronghold.Robot;
 /**
  *
  */
@@ -21,7 +21,7 @@ public class DisableDriveHeadingLock extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	RobotMap.robotDrive.disableHeadingLock();
+    	Robot.robotDrive.disableHeadingLock();
     	complete = true;
     }
 

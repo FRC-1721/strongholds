@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.tables.ITable;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * This class is designed to handle the case where there is a {@link Subsystem}
  * which uses a single {@link PIDController} almost constantly (for instance, an
@@ -208,5 +208,14 @@ public class NavxController extends Subsystem implements Sendable {
   public void initTable(ITable table) {
     controller.initTable(table);
     super.initTable(table);
+  }
+  
+  public void updateSmartDashboard() {
+	  SmartDashboard.putNumber("NavController/Heading", mGyro.getAngle());
+	  SmartDashboard.putNumber("NavController/PIDOutput", pidOut);
+	  SmartDashboard.putNumber("NavControlelr/X", mGyro.getDisplacementX());
+	  SmartDashboard.putNumber("NavControlelr/Y", mGyro.getDisplacementX());
+	  SmartDashboard.putNumber("NavControlelr/Z", mGyro.getDisplacementX());
+	  
   }
 }

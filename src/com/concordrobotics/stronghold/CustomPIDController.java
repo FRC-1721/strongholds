@@ -420,6 +420,16 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   }
 
   /**
+   * Return the PID Source object
+   *$
+   * @return the pid source object
+   */
+  public synchronized PIDSource getPIDSource() {
+    return m_pidInput;
+  }
+  
+  
+  /**
    * Set the PID controller to consider the input to be continuous, Rather then
    * using the max and min in as constraints, it considers them to be the same
    * point and automatically calculates the shortest route to the setpoint.
