@@ -1,7 +1,8 @@
-/bin/
+bin/*
+build/*
+.classpath
+FRCUserProgram.jar
+.project
 /dist/
 /build/
-build.properties
-.classpath
-.project
 sysProps.xml

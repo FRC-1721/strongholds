@@ -14,12 +14,13 @@
   <!-- <property name="version" value=""/> -->
 
   <!-- By default the system team number is used -->
-  <!-- <property name="team-number" value=""/> -->
+  <!-- <property name="team-number" value=""/> --> 
 
   <!-- By default the target is set to 10.TE.AM.2 -->
   <!-- <property name="target" value=""/> -->
 
   <!-- Any other property in build.properties can also be overridden. -->
+<<<<<<< HEAD
   
   <property file="${user.home}/wpilib/wpilib.properties"/>
   <property file="build.properties"/>
@@ -28,3 +29,13 @@
   <import file="${wpilib.ant.dir}/build.xml"/>
 
 </project> 
+=======
+
+  <property file="${user.home}/wpilib/wpilib.properties"/>
+  <property file="build.properties"/>
+  <property file="${user.home}/wpilib/java/${version}/ant/build.properties"/>
+
+  <import file="${wpilib.ant.dir}/build.xml"/>
+
+</project>
+>>>>>>> jrf
