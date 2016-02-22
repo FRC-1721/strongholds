@@ -75,14 +75,14 @@ public class Robot extends IterativeRobot {
 	    LiveWindow.addActuator("RightRobotDrive", "Controller", RobotMap.dtRightController);	    
 		
 		driveTrain = new DriveTrain(robotDrive);
-		distanceDrivePID = new DistanceDrivePID(0.2, 0.01, 0.03);
+		distanceDrivePID = new DistanceDrivePID(1.0, 0.1, 0.03);
 		distanceDrivePID.disable();
 		
 		// Create a chooser for auto so it can be set from the DS
 		autonomousCommand = new AutoCrossMoat();
 		autoChooser = new SendableChooser();
-		autoChooser.addDefault("Cross Moat", new AutoCrossMoat());
-		autoChooser.addObject("Low Bar", new AutoLowBar());
+		autoChooser.addDefault("Low Bar", new AutoLowBar());
+		autoChooser.addObject("Cross Moat", new AutoCrossMoat());
 		SmartDashboard.putData("Auto Chooser", autoChooser);
     	//Init OI last so all systems initialized
 		oi = new OI();

@@ -34,7 +34,7 @@ public class RobotMap {
 	public static final int dtRightEncPortB = 3;
 	public static final boolean dtLeftEncReversed = false;
 	public static final boolean dtRightEncReversed = false;	
-	public static double dtP = 0.0, dtI = 0.01, dtD = 0.0, dtF = 0.0;
+	public static double dtP = 0.0, dtI = 0.04, dtD = 0.01, dtF = 0.0;
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;	
 	

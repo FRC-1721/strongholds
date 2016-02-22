@@ -46,8 +46,7 @@ public class DistanceDrivePID extends CustomPIDSubsystem {
     }
     
     public void reset() {
-    	CustomPIDController t_controller = this.getPIDController();
-    	t_controller.reset();
+    	controller.reset();
     }
     
     public double getPIDOutput() {
@@ -55,10 +54,9 @@ public class DistanceDrivePID extends CustomPIDSubsystem {
     }
     
     public void updateSmartDashboard() {
-    	CustomPIDController t_pidController = this.getPIDController();
     	SmartDashboard.putNumber("distanceDriveSetpoint", this.getSetpoint());
     	SmartDashboard.putNumber("DistanceDriveDistance", this.returnPIDInput());
     	SmartDashboard.putNumber("DistanceDriveOutput", pidOut);
-    	SmartDashboard.putNumber("DistanceDriveAvgError", t_pidController.getAvgError());
+    	SmartDashboard.putNumber("DistanceDriveAvgError", controller.getAvgError());
     }
 }

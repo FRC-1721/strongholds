@@ -700,6 +700,9 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
     m_prevError = 0;
     m_totalError = 0;
     m_result = 0;
+    m_bufTotal = 0.0;
+    m_buf.clear();
+    
   }
 
   @Override

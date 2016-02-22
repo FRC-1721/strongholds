@@ -18,13 +18,12 @@ public class DistanceDriveStraight extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.distanceDrivePID.reset();
     	Robot.distanceDrivePID.enable();
     	Robot.distanceDrivePID.setSetpointRelative(m_distance);
     	Robot.driveTrain.setDriveMode(DriveTrain.DriveMode.distanceMode);
-    	Robot.distanceDrivePID.setOutputRange(-0.7, 0.7);
-		Robot.navController.setAbsoluteTolerance(1.0);
+    	Robot.distanceDrivePID.setOutputRange(-1, 1.0);
 		Robot.navController.setToleranceBuffer(kToleranceIterations);
+		Robot.navController.setAbsoluteTolerance(1.0);	
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -34,16 +33,17 @@ public class DistanceDriveStraight extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
-        //return Robot.distanceDrivePID.onTarget();
+       return Robot.distanceDrivePID.onTarget();
     }
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.distanceDrivePID.disable();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	Robot.distanceDrivePID.disable();
     }
 }

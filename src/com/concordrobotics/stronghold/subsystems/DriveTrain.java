@@ -92,6 +92,7 @@ public class DriveTrain extends Subsystem {
 			SmartDashboard.putString("DriveTrainMode", "arcade");
 		} else {
 			SmartDashboard.putString("DriveTrainMode", "distance");
+			Robot.distanceDrivePID.updateSmartDashboard();
 		}
 		m_robotDrive.updateSmartDashboard();
 	}
