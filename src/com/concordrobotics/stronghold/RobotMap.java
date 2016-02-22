@@ -1,9 +1,11 @@
 package com.concordrobotics.stronghold;
 
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.Encoder;
-import com.kauailabs.navx.frc.AHRS;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -12,17 +14,22 @@ import com.kauailabs.navx.frc.AHRS;
  * floating around.
  */
 public class RobotMap {
-	/**
-	 * MOTORS, MOTOR CONTROLLERS, ETC.
-	 *  
-	 * dtLeft, dtRight = drivetrain.
-	 * shootL, shootR = shooter left/right CIMs.
-	 * shootA = shooter angle
-	 */
+	
+	//#################################
+	// MOTORS, SERVOS, ENCODERS, GYRO
+	//#################################
+	/** VictorSP */
 	public static VictorSP dtLeft, dtRight, shootL, shootR, shootA;
+	/** Servo */
 	public static Servo shootK;
-	public static Encoder dtLeftEnc, dtRightEnc;
+	/** Encoders */
+	public static Encoder dtLeftEnc, dtRightEnc, shootEnc;
 
+	//##############
+	// ROBOT VISION
+	//##############
+	public static CameraServer camera;
+	
 	/**
      * DRIVE TRAIN VARIABLES
      */
@@ -48,21 +55,28 @@ public class RobotMap {
 	/**
 	 * SHOOTER VARIABLES
 	 */
-	public static final int spShootLP = 2;
-	public static final int spShootRP = 3;
-	public static final int spShootAP = 4;
-	public static final int spShootKP = 5;
+	public static final int spShootL = 2;
+	public static final int spShootR = 3;
+	public static final int spShootA = 4;
+	public static final int kickerP = 5;
 	
-	public static final double sSpinupTime = .75; // Spin-up time in seconds.
+	public static final int encShootA = 4;
+	public static final int encShootB = 5;
+	
+	public static final double shooterP = 0.1;
+	public static final double shooterI = 0.002;
+	public static final double shooterD = 0.001;
+	
+	public static final double spinUp = .75;
+	public static final double pitchUpVolts = .3;  // NOTE: This is reversed!
+	public static final double pitchDownVolts = -.4; // NOTE: This is reversed!
+	public static final double suckLVolts = .3;
+	public static final double suckRVolts = -.3;
+	
 	/**
 	 *Joysticks, Input, and Buttons.
 	 */
 	public static final int jLeftPort = 1;
 	public static final int jRightPort = 2;
 	public static final int jOpPort = 3;
-
-	/**
-	 * BUTTON MAPPING
-	 */
-	public static final int jTrigger = 1;
 }

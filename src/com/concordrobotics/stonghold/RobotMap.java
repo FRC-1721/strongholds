@@ -22,10 +22,7 @@ public class RobotMap {
 	public static Encoder dtLeftEnc, dtRightEnc, shootEnc;
 	
 	
-	//##############
-	// ROBOT VISION
-	//##############
-	public static CameraServer camera;
+	
 	
 	//#############
 	// DRIVE TRAIN
