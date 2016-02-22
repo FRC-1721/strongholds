@@ -1,13 +1,20 @@
 
-package com.concordrobotics.stronghold;
+package com.concordrobotics.stonghold;
 
+import com.concordrobotics.stronghold.subsystems.DriveTrain;
+import com.concordrobotics.stronghold.subsystems.Shooter;
+import com.concordrobotics.strongholds.commands.DriveCommand;
+
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import com.concordrobotics.stronghold.commands.ExampleCommand;
-import com.concordrobotics.stronghold.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -19,22 +26,48 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
-	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
-
-    Command autonomousCommand;
-    SendableChooser chooser;
+	public static Shooter shooter;
+	public static DriveTrain driveTrain;
+	Command driveCommand;
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
+    	
+    	// Init subsystems
+		shooter = new Shooter(RobotMap.shooterP, RobotMap.shooterI, RobotMap.shooterD);
+		driveTrain = new DriveTrain();
+		
+		// Init motors
+		RobotMap.shootA = new VictorSP(RobotMap.spShootA);
+		RobotMap.shootL = new VictorSP(RobotMap.spShootL);
+		RobotMap.shootR = new VictorSP(RobotMap.spShootR);
+		RobotMap.dtLeft = new VictorSP(RobotMap.spLeftP);
+		RobotMap.dtRight = new VictorSP(RobotMap.spRightP);
+		RobotMap.shootK = new Servo(RobotMap.kickerP);
+		
+		// REVERSE DRIVE/PITCH MOTORS
+		RobotMap.dtLeft.setInverted(true);
+		RobotMap.dtRight.setInverted(true);
+		RobotMap.shootA.setInverted(true);
+		
+		// Init drive
+		RobotMap.drive = new RobotDrive(RobotMap.dtLeft, RobotMap.dtRight);
+		
+		// Init Robot Vision
+		RobotMap.camera = CameraServer.getInstance();
+		RobotMap.camera.setQuality(50);
+		RobotMap.camera.startAutomaticCapture(); // Start the video
+		
+		// Init encoder
+		RobotMap.shootEnc = new Encoder(RobotMap.encShootA, RobotMap.encShootB);
+		RobotMap.shootEnc.setDistancePerPulse(0.1052);
+		
+		// Init OI
 		oi = new OI();
-        chooser = new SendableChooser();
-        chooser.addDefault("Default Auto", new ExampleCommand());
-//        chooser.addObject("My Auto", new MyAutoCommand());
-        SmartDashboard.putData("Auto mode", chooser);
     }
 	
 	/**
@@ -60,21 +93,8 @@ public class Robot extends IterativeRobot {
 	 * or additional comparisons to the switch structure below with additional strings & commands.
 	 */
     public void autonomousInit() {
-        autonomousCommand = (Command) chooser.getSelected();
-        
-		/* String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
-		switch(autoSelected) {
-		case "My Auto":
-			autonomousCommand = new MyAutoCommand();
-			break;
-		case "Default Auto":
-		default:
-			autonomousCommand = new ExampleCommand();
-			break;
-		} */
     	
-    	// schedule the autonomous command (example)
-        if (autonomousCommand != null) autonomousCommand.start();
+    
     }
 
     /**
@@ -85,11 +105,9 @@ public class Robot extends IterativeRobot {
     }
 
     public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to 
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
-        if (autonomousCommand != null) autonomousCommand.cancel();
+    	driveCommand = new DriveCommand();
+    	
+    	
     }
 
     /**
@@ -97,12 +115,16 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+        SmartDashboard.putNumber("Shoot Encoder", RobotMap.shootEnc.getDistance());
+//        RobotMap.driveTrain.jInput(OI.jLeft, OI.jRight);
+        Timer.delay(0.01);
     }
     
     /**
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
+    	RobotMap.shootK.setAngle(20);
         LiveWindow.run();
     }
 }
