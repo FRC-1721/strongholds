@@ -5,10 +5,20 @@ import com.concordrobotics.stronghold.commands.*;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 public class OI {
-    public final Joystick jLeft;
-    public final Joystick jRight;
-    public final Joystick operator;
-    public static JoystickButton trig;
+	
+	public static Joystick jLeft;
+	public static Joystick jRight;
+	public static Joystick jOperator;
+	
+	// Shooter controls
+	public static JoystickButton sucker;
+	public static JoystickButton angleUp;
+	public static JoystickButton angleDown;
+	public static JoystickButton shooter;
+	public static JoystickButton setAngle25;
+	public static JoystickButton setAngle10;
+	
+	// Drive controls
     public static JoystickButton enableDrivePIDButton;
     public static JoystickButton disableDrivePIDButton;
     public static JoystickButton enableDriveHeadingLockButton;
@@ -17,9 +27,33 @@ public class OI {
     public OI() {
     	jLeft = new Joystick(RobotMap.jLeftPort);
     	jRight = new Joystick(RobotMap.jRightPort);
-    	operator = new Joystick(RobotMap.jOpPort);
-    	trig = new JoystickButton(jLeft, 1);
-    	trig.whenPressed(new ShootCommand());
+    	jOperator = new Joystick(RobotMap.jOpPort);
+    	
+    	//Shooter commands
+    	angleUp = new JoystickButton(jOperator, 5);
+		angleDown = new JoystickButton(jOperator, 7);
+		
+		sucker = new JoystickButton(jOperator, 6);
+		shooter = new JoystickButton(jOperator, 8);
+		
+		setAngle25 = new JoystickButton(jOperator, 4);
+		setAngle10 = new JoystickButton(jOperator, 2);
+		
+		
+		//####################
+		// COMMAND ACTIVATION 
+		//####################
+		angleUp.whenPressed(new PitchUpCommand());
+		angleDown.whenPressed(new PitchDownCommand());
+		angleUp.whenReleased(new PitchReleaseCommand());
+		angleDown.whenReleased(new PitchReleaseCommand());
+		sucker.whenPressed(new SuckBallCommand());
+		sucker.whenReleased(new ReleaseThrowerCommand());
+		shooter.whenPressed(new ThrowBallCommand());
+		setAngle25.whenPressed(new SetPitchAngle(25));
+		setAngle10.whenPressed(new SetPitchAngle(10));
+    	
+    	// Drive commands
     	enableDrivePIDButton = new JoystickButton(jLeft, 2);
     	enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
     	disableDrivePIDButton = new JoystickButton(jLeft, 3);
@@ -31,16 +65,4 @@ public class OI {
 
     }
 
-    public JoystickButton getBtn(int joyid, int button) {
-    	switch (joyid) {
-    	case RobotMap.jLeftPort:
-    		return new JoystickButton(jLeft, button);
-    	case RobotMap.jRightPort:
-    		return new JoystickButton(jRight, button);
-    	case RobotMap.jOpPort:
-    		return new JoystickButton(operator, button);
-    	default:
-    		return null;
-    	}
-    }
 }
