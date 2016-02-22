@@ -2,7 +2,9 @@ package com.concordrobotics.stronghold.subsystems;
 
 
 import com.concordrobotics.stronghold.CustomRobotDrive;
+import com.concordrobotics.stronghold.Robot;
 import com.concordrobotics.stronghold.commands.DriveInTeleop;
+import com.concordrobotics.stronghold.CustomPIDController;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -17,10 +19,12 @@ public class DriveTrain extends Subsystem {
 	
 	
 	protected static CustomRobotDrive m_robotDrive;
+	CustomPIDController distanceController;
+	
 	/* REQUIRED METHOD */
 	/* !!! UNUSED !!! */
 	public enum DriveMode {
-		tankMode, arcadeMode
+		tankMode, arcadeMode, distanceMode
 	}
 
 	protected DriveMode mode = DriveMode.tankMode;
@@ -50,6 +54,20 @@ public class DriveTrain extends Subsystem {
 		}
 	}
 	
+	public void rawDrive(double leftValue, double rightValue) {
+		switch (mode) {
+		case distanceMode:
+			double drivePower = Robot.distanceDrivePID.getPIDOutput();
+			m_robotDrive.tankDrive(drivePower,drivePower);
+			SmartDashboard.putNumber("DistanceRawDrive", drivePower);
+			break;
+		default:
+			m_robotDrive.tankDrive(leftValue, rightValue);
+			break;
+		}
+		
+	}
+	
 	public void stop() {
 		switch (mode) {
 		case tankMode:
@@ -69,9 +87,11 @@ public class DriveTrain extends Subsystem {
 	
 	public void updateSmartDashboard () {
 		if (mode == DriveMode.tankMode) {
-			SmartDashboard.putString("DriveTrain/mode", "tank");
+			SmartDashboard.putString("DriveTrainMode", "tank");
+		} else if (mode==DriveMode.arcadeMode) {
+			SmartDashboard.putString("DriveTrainMode", "arcade");
 		} else {
-			SmartDashboard.putString("DriveTrain/mode", "arcade");
+			SmartDashboard.putString("DriveTrainMode", "distance");
 		}
 		m_robotDrive.updateSmartDashboard();
 	}

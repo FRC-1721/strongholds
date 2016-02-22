@@ -1,6 +1,5 @@
 package com.concordrobotics.stronghold.subsystems;
 
-import com.concordrobotics.stronghold.CustomRobotDrive;
 import com.concordrobotics.stronghold.RobotMap;
 
 import edu.wpi.first.wpilibj.Timer;
@@ -68,6 +67,10 @@ public class Shooter extends Subsystem {
 	public void release() {
 		RobotMap.shootL.set(0);
 		RobotMap.shootR.set(0);
+	}
+	
+	public void updateSmartDashboard() {
+
 	}
 }
 

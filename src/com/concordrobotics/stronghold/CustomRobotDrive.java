@@ -8,11 +8,9 @@
 package com.concordrobotics.stronghold;
 
 
-import com.concordrobotics.stronghold.CustomRobotDrive.MotorType;
 import com.concordrobotics.stronghold.subsystems.NavxController;
 
 import edu.wpi.first.wpilibj.*;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 
 
@@ -78,7 +76,7 @@ public class CustomRobotDrive implements MotorSafety {
   // Output from -1 to 1 scaled to give rate in ft/s for PID controller
   protected double m_rateScale = 2.0;
   protected NavxController m_turnController;
-  protected double m_turnDeadzone = 0.1;
+  protected double m_turnDeadzone = 0.02;
   protected boolean m_headingLock = false;
  
   /**
@@ -190,7 +188,7 @@ public class CustomRobotDrive implements MotorSafety {
     if (leftStick == null || rightStick == null) {
       throw new NullPointerException("Null HID provided");
     }
-    tankDrive(leftStick.getY(), rightStick.getY(), true);
+    tankDrive(-leftStick.getY(), -rightStick.getY(), true);
   }
 
   /**
@@ -207,7 +205,7 @@ public class CustomRobotDrive implements MotorSafety {
     if (leftStick == null || rightStick == null) {
       throw new NullPointerException("Null HID provided");
     }
-    tankDrive(leftStick.getY(), rightStick.getY(), squaredInputs);
+    tankDrive(-leftStick.getY(), -rightStick.getY(), squaredInputs);
   }
 
   /**
@@ -226,7 +224,7 @@ public class CustomRobotDrive implements MotorSafety {
     if (leftStick == null || rightStick == null) {
       throw new NullPointerException("Null HID provided");
     }
-    tankDrive(leftStick.getRawAxis(leftAxis), rightStick.getRawAxis(rightAxis), true);
+    tankDrive(-leftStick.getRawAxis(leftAxis), -rightStick.getRawAxis(rightAxis), true);
   }
 
   /**
@@ -247,7 +245,7 @@ public class CustomRobotDrive implements MotorSafety {
     if (leftStick == null || rightStick == null) {
       throw new NullPointerException("Null HID provided");
     }
-    tankDrive(leftStick.getRawAxis(leftAxis), rightStick.getRawAxis(rightAxis), squaredInputs);
+    tankDrive(-leftStick.getRawAxis(leftAxis), -rightStick.getRawAxis(rightAxis), squaredInputs);
   }
 
   /**
@@ -282,10 +280,10 @@ public class CustomRobotDrive implements MotorSafety {
     	// of the average value
     	if (Math.abs(leftValue - rightValue) < m_turnDeadzone) {
     		double avgValue = 0.5*(leftValue + rightValue);
-    		double pidOutput = 0.5*m_turnController.getPIDOutput();
+    		double pidOutput = m_turnController.getPIDOutput();
     		
-    		leftValue = limit(avgValue - pidOutput);
-    		rightValue = limit(avgValue + pidOutput);
+    		leftValue = limit(avgValue + pidOutput);
+    		rightValue = limit(avgValue - pidOutput);
     	} else {
     		// A turn is requested, so set the setpoint to the current heading, and don't use the pidOutput.
     		m_turnController.setSetpointRelative(0.0);
@@ -319,7 +317,7 @@ public class CustomRobotDrive implements MotorSafety {
    */
   public void arcadeDrive(GenericHID stick, boolean squaredInputs) {
     // simply call the full-featured arcadeDrive with the appropriate values
-    arcadeDrive(stick.getY(), stick.getX(), squaredInputs);
+    arcadeDrive(-stick.getY(), -stick.getX(), squaredInputs);
   }
 
   /**
@@ -633,11 +631,23 @@ public class CustomRobotDrive implements MotorSafety {
       motors++;
     return motors;
   }
+ 
+  public void setDriveRate(double rate) {
+	  m_rateScale = rate;
+  }
   
   public void updateSmartDashboard(){
-	  SmartDashboard.putNumber("RobotDriveLeft/PIDOut", m_leftController.get());
-	  SmartDashboard.putNumber("RobotDriveLeft/PIDTarget", m_leftController.getSetpoint());
+	  // Left side
+	  SmartDashboard.putNumber("RobotDriveLeftPIDOut", m_leftController.get());
+	  SmartDashboard.putNumber("RobotDriveLeftPIDTarget", m_leftController.getSetpoint());
 	  PIDSource pidSource = m_leftController.getPIDSource();
-	  SmartDashboard.putNumber("RobotDriveLeft/PIDSource", pidSource.pidGet());
+	  SmartDashboard.putNumber("RobotDriveLeftPIDSource", pidSource.pidGet());
+	  SmartDashboard.putNumber("RobotDriveLeftEncoder", RobotMap.dtLeftEnc.getDistance());
+	  // Right Side
+	  SmartDashboard.putNumber("RobotDriveRightPIDOut", m_rightController.get());
+	  SmartDashboard.putNumber("RobotDriveRightPIDTarget", m_rightController.getSetpoint());
+	  pidSource = m_rightController.getPIDSource();
+	  SmartDashboard.putNumber("RobotDriveRightPIDSource", pidSource.pidGet());
+	  SmartDashboard.putNumber("RobotDriveRightEncoder", RobotMap.dtRightEnc.getDistance());
   }
 }

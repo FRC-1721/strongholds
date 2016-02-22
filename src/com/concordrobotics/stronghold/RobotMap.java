@@ -1,7 +1,5 @@
 package com.concordrobotics.stronghold;
 
-import com.concordrobotics.stronghold.subsystems.*;
-
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.Encoder;
@@ -45,7 +43,7 @@ public class RobotMap {
 	 * 
 	 */
 	public static AHRS navx;
-	public static double navP = 0.06, navI = 0.0, navD = 0.0, navF = 0.0;
+	public static double navP = 0.1, navI = 0.01, navD = 0.05, navF = 0.0;
 
 	/**
 	 * SHOOTER VARIABLES
