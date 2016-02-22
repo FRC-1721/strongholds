@@ -59,11 +59,15 @@ public class Robot extends IterativeRobot {
 				RobotMap.dtRightEnc, RobotMap.dtRight);
 	    
 		//Shooter 
-	    RobotMap.shootL = new VictorSP(RobotMap.spShootLP);
-		RobotMap.shootR = new VictorSP(RobotMap.spShootRP);
-		RobotMap.shootA = new VictorSP(RobotMap.spShootAP);
-		RobotMap.shootK = new Servo(RobotMap.spShootKP);
-		RobotMap.shootK.setAngle(20);
+		RobotMap.shootA = new VictorSP(RobotMap.spShootA);
+		RobotMap.shootL = new VictorSP(RobotMap.spShootL);
+		RobotMap.shootR = new VictorSP(RobotMap.spShootR);
+		RobotMap.shootK = new Servo(RobotMap.kickerP);
+		RobotMap.shootA.setInverted(true);
+		// Init encoder
+		RobotMap.shootEnc = new Encoder(RobotMap.encShootA, RobotMap.encShootB);
+		RobotMap.shootEnc.setDistancePerPulse(0.1052);
+		
 		// Gyro and controller
         RobotMap.navx = new AHRS(SPI.Port.kMXP); 
         LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
@@ -77,6 +81,11 @@ public class Robot extends IterativeRobot {
 		driveTrain = new DriveTrain(robotDrive);
 		distanceDrivePID = new DistanceDrivePID(1.0, 0.1, 0.03);
 		distanceDrivePID.disable();
+
+		// Init Robot Vision
+		RobotMap.camera = CameraServer.getInstance();
+		RobotMap.camera.setQuality(50);
+		RobotMap.camera.startAutomaticCapture(); // Start the video
 		
 		// Create a chooser for auto so it can be set from the DS
 		autonomousCommand = new AutoCrossMoat();
@@ -151,6 +160,7 @@ public class Robot extends IterativeRobot {
      * Loops during test.
      */
     public void testPeriodic() {
+    	RobotMap.shootK.setAngle(20);
         LiveWindow.run();
     }
     
