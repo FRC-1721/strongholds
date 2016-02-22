@@ -1,13 +1,13 @@
 package com.concordrobotics.stronghold.commands;
 
-import com.concordrobotics.stonghold.RobotMap;
+import com.concordrobotics.stronghold.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class PitchReleaseCommand extends Command {
 
 	protected void execute() {
-		RobotMap.shooter.pitchRelease(); // Zero out the motors
+		Robot.shooter.pitchRelease(); // Zero out the motors
 	}
 
 	protected boolean isFinished() {

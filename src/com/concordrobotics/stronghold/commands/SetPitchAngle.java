@@ -1,7 +1,7 @@
 package com.concordrobotics.stronghold.commands;
 
-import com.concordrobotics.stonghold.Robot;
-import com.concordrobotics.stonghold.RobotMap;
+import com.concordrobotics.stronghold.Robot;
+import com.concordrobotics.stronghold.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

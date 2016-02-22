@@ -1,6 +1,6 @@
 package com.concordrobotics.stronghold.subsystems;
 
-import com.concordrobotics.stonghold.RobotMap;
+import com.concordrobotics.stronghold.RobotMap;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
@@ -89,4 +89,9 @@ public class Shooter extends PIDSubsystem {
 	protected void usePIDOutput(double output) {
 		RobotMap.shootA.set(output);
 	}
+	
+	public void updateSmartDashboard() {
+
+	}
+	
 }

@@ -3,6 +3,7 @@ package com.concordrobotics.stronghold;
 
 import com.concordrobotics.stronghold.subsystems.*;
 import com.concordrobotics.stronghold.commands.*;
+import com.concordrobotics.stronghold.RobotMap;
 import com.concordrobotics.stronghold.CustomPIDController;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.CameraServer;
 
 /**
  * Concord Robotics FRC Team 1721
@@ -39,7 +41,7 @@ public class Robot extends IterativeRobot {
     private final double kMetersToFeet = 3.28084;
     public void robotInit() {
 		//Init Subsystems
-		shooter = new Shooter();
+    	
 
 		//Init motor and controllers
 		RobotMap.dtLeft = new VictorSP(RobotMap.spLeftPort);
@@ -59,6 +61,7 @@ public class Robot extends IterativeRobot {
 				RobotMap.dtRightEnc, RobotMap.dtRight);
 	    
 		//Shooter 
+	    shooter = new Shooter(RobotMap.shooterP, RobotMap.shooterI, RobotMap.shooterD);
 		RobotMap.shootA = new VictorSP(RobotMap.spShootA);
 		RobotMap.shootL = new VictorSP(RobotMap.spShootL);
 		RobotMap.shootR = new VictorSP(RobotMap.spShootR);

@@ -1,13 +1,13 @@
 package com.concordrobotics.stronghold.commands;
 
-import com.concordrobotics.stonghold.RobotMap;
+import com.concordrobotics.stronghold.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class PitchUpCommand extends Command {
 
 	protected void execute() {
-		RobotMap.shooter.pitch(true); // Pitch up (positive)
+		Robot.shooter.pitch(true); // Pitch up (positive)
 	}
 
 	protected boolean isFinished() {

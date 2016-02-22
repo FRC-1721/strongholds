@@ -1,13 +1,13 @@
 package com.concordrobotics.stronghold.commands;
 
-import com.concordrobotics.stonghold.RobotMap;
+import com.concordrobotics.stronghold.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class SuckBallCommand extends Command {
 
 	protected void execute() {
-		RobotMap.shooter.suck();
+		Robot.shooter.suck();
 	}
 
 	protected boolean isFinished() {

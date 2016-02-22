@@ -1,6 +1,6 @@
 package com.concordrobotics.stronghold.commands;
 
-import com.concordrobotics.stonghold.RobotMap;
+import com.concordrobotics.stronghold.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -9,7 +9,7 @@ public class ThrowBallCommand extends Command {
 	private boolean finished = false;
 	
 	protected void execute() {
-		RobotMap.shooter.shoot();
+		Robot.shooter.shoot();
 		finished = true;
 	}
 	protected boolean isFinished() {

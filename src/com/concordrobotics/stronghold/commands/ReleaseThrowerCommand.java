@@ -1,13 +1,13 @@
 package com.concordrobotics.stronghold.commands;
 
-import com.concordrobotics.stonghold.RobotMap;
+import com.concordrobotics.stronghold.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 public class ReleaseThrowerCommand extends Command {
 
 	protected void execute() {
-		RobotMap.shooter.throwerRelease();
+		Robot.shooter.throwerRelease();
 	}
 
 	protected boolean isFinished() {
