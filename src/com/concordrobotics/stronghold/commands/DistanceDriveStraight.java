@@ -8,7 +8,7 @@ import com.concordrobotics.stronghold.subsystems.DriveTrain;
  */
 public class DistanceDriveStraight extends Command {
 	double m_distance;
-	static int kToleranceIterations = 10;
+	static int kToleranceIterations = 1;
     public DistanceDriveStraight(double distance) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
@@ -21,7 +21,7 @@ public class DistanceDriveStraight extends Command {
     	Robot.distanceDrivePID.enable();
     	Robot.distanceDrivePID.setSetpointRelative(m_distance);
     	Robot.driveTrain.setDriveMode(DriveTrain.DriveMode.distanceMode);
-    	Robot.distanceDrivePID.setOutputRange(-1, 1.0);
+    	Robot.distanceDrivePID.setOutputRange(-0.3, 0.3);
 		Robot.navController.setToleranceBuffer(kToleranceIterations);
 		Robot.navController.setAbsoluteTolerance(1.0);	
     }
@@ -33,7 +33,7 @@ public class DistanceDriveStraight extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-       return Robot.distanceDrivePID.onTarget();
+       return Robot.distanceDrivePID.onTargetDuringTime(0.5);
     }
 
     // Called once after isFinished returns true

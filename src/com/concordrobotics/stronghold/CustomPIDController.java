@@ -59,6 +59,8 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   protected PIDSource m_pidInput;
   protected PIDOutput m_pidOutput;
   java.util.Timer m_controlLoop;
+  protected Timer m_tolTimer;
+  protected boolean m_onTarget = false;
   Timer m_setpointTimer;
 
 
@@ -169,6 +171,9 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
     m_tolerance = new NullTolerance();
 
     m_buf = new LinkedList<Double>();
+    m_tolTimer = new Timer();
+    m_tolTimer.start();
+    m_onTarget = false;
   }
 
   /**
@@ -306,9 +311,30 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
       }
 
       pidOutput.pidWrite(result);
+      //  Check if on target and start the timer
+      if (! m_onTarget) {
+    	  // Wasn't on target, but is now, so start the timer
+    	  if (onTarget()) {
+    		  m_tolTimer.reset();
+    		  m_onTarget = true;
+    	  }
+      } else {
+    	  // Was on target, make sure it still is
+    	  if (!onTarget()) {
+    		  m_onTarget = false;
+    	  }
+      }
     }
   }
 
+  protected boolean onTargetDuringTime (double period) {
+	  if (m_onTarget && m_tolTimer.hasPeriodPassed(period)) {
+		  return true;
+	  } else {
+		  return false;
+	  }
+  }
+  
   /**
    * Calculate the feed forward term
    *
@@ -557,10 +583,12 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
    * @return the current average of the error
    */
   public synchronized double getAvgError() {
+	return m_error;
+	  /* Old method, something wrong 
     double avgError = 0;
     // Don't divide by zero.
     if (m_buf.size() != 0) avgError = m_bufTotal / m_buf.size();
-    return avgError;
+    return avgError; */
   }
 
   /**

@@ -28,7 +28,7 @@ public class TurnAbsolute extends Command{
 	
 	/* Unused, required methods. Pfffft */
 	protected boolean isFinished() {
-		return Robot.navController.onTarget();
+		return Robot.navController.onTargetDuringTime(0.5);
 	}
 	
 }
