@@ -44,6 +44,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   private boolean m_enabled = false; // is the pid controller enabled
   private double m_prevError = 0.0; // the prior error (used to compute
                                     // velocity)
+  private double m_prevDxDt = 0.0;
   private double m_prevOutput = 0.0;
   private double m_prevPosition = 0.0;
   private Tolerance m_tolerance; // the tolerance object used to check if on
@@ -271,6 +272,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
       boolean t_onTarget;
       double dsdt;
       double dxdt;
+      double ddxdt;
       PIDOutput pidOutput = null;
       synchronized (this) {
         input = pidInput.pidGet();
@@ -302,8 +304,8 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
         	dsdt = dsdt/m_period;
         	dxdt = (input - m_prevPosition)/m_period;
         }
-        
-        newOutput = m_prevOutput + m_Pdt*(dsdt - dxdt) + m_Ddt*dxdt;
+        ddxdt = (dxdt - m_prevDxDt);
+        newOutput = m_prevOutput + m_Pdt*(dsdt - dxdt) - m_D*ddxdt;
         // Don't include the i term for rate control
         if (!rateControl) {
         	newOutput = newOutput + m_Idt*m_error;
@@ -319,7 +321,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
         m_prevError = m_error;
         m_prevOutput = newOutput;
         pidOutput = m_pidOutput;
-
+        m_prevDxDt = dxdt;
         // Update the buffer.
         m_buf.push(m_error);
         m_bufTotal += m_error;
@@ -730,6 +732,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   public synchronized void enable() {
     m_enabled = true;
     m_prevSetpoint = m_pidInput.pidGet();
+    m_prevDxDt = 0.0;
     if (table != null) {
       table.putBoolean("enabled", true);
     }
