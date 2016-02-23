@@ -52,10 +52,13 @@ public class NavxController extends CustomPIDSubsystem  {
 
   public void setPIDSourceType (PIDSourceType pidSourceType) {
 	  super.setPIDSourceType(pidSourceType);
+	  controller.setOutputRange(-0.3, 0.3);
 	  if (pidSourceType == PIDSourceType.kDisplacement) {
 		  controller.setInputRange(-180.0, 180.0);
+		  controller.setContinuous();
 	  } else {
 		  controller.setInputRange(0.0, 0.0);
+		  controller.setContinuous(false);
 	  }	  
   } 
   
@@ -74,6 +77,10 @@ public class NavxController extends CustomPIDSubsystem  {
   		return mGyro.getRawGyroZ();
   	}
   }
+  
+  public void setSetpointRelative(double deltaSetpoint) {
+	    setSetpoint(getPosition() + deltaSetpoint);
+	  }
   
   protected void usePIDOutput(double output) {
       // Use output to drive your system, like a motor

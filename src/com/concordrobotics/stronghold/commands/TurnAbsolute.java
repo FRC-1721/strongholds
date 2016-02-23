@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class TurnAbsolute extends Command{
 	double m_targetHeading;
-	static int kToleranceIterations = 10;
+	static int kToleranceIterations = 20;
 	public TurnAbsolute(double heading) {
 		requires(Robot.driveTrain);
 		m_targetHeading = heading;
@@ -28,7 +28,7 @@ public class TurnAbsolute extends Command{
 	
 	/* Unused, required methods. Pfffft */
 	protected boolean isFinished() {
-		return Robot.navController.onTargetDuringTime(0.5);
+		return Robot.navController.onTargetDuringTime();
 	}
 	
 }

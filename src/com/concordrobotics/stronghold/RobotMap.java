@@ -41,7 +41,7 @@ public class RobotMap {
 	public static final int dtRightEncPortB = 3;
 	public static final boolean dtLeftEncReversed = false;
 	public static final boolean dtRightEncReversed = false;	
-	public static double dtP = 0.0, dtI = 0.04, dtD = 0.01, dtF = 0.0;
+	public static double dtP = 0.0, dtI = 0.005, dtD = 0.12, dtF = 0.0;
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;	
 	
@@ -50,7 +50,8 @@ public class RobotMap {
 	 * 
 	 */
 	public static AHRS navx;
-	public static double navP = 0.1, navI = 0.01, navD = 0.05, navF = 0.0;
+	public static final byte kNavUpdateHz = 20;
+	public static double navP = 0.05, navI = 0.00, navD = 0.1, navF = 0.0;
 
 	/**
 	 * SHOOTER VARIABLES

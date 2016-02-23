@@ -162,6 +162,7 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    * @param deltaSetpoint the change in the setpoint
    */
   public void setSetpointRelative(double deltaSetpoint) {
+	 
     setSetpoint(getPosition() + deltaSetpoint);
   }
 
@@ -270,8 +271,12 @@ public abstract class CustomPIDSubsystem extends Subsystem implements Sendable {
    */
   protected abstract double returnPIDInput();
 
-  public boolean onTargetDuringTime (double period) {
-	  return controller.onTargetDuringTime(period);
+  public boolean onTargetDuringTime () {
+	  if( controller.onTargetDuringTime()) {
+		  return true;
+	  } else {
+		  return false;
+	  }
   }  
   
   /**

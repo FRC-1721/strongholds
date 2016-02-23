@@ -2,28 +2,33 @@ package com.concordrobotics.stronghold.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import com.concordrobotics.stronghold.Robot;
+import com.concordrobotics.stronghold.RobotMap;
 import com.concordrobotics.stronghold.subsystems.DriveTrain;
 /**
  *
  */
 public class DistanceDriveStraight extends Command {
 	double m_distance;
-	static int kToleranceIterations = 1;
-    public DistanceDriveStraight(double distance) {
+	boolean m_useGyro;
+	static int kToleranceIterations = 20;
+    public DistanceDriveStraight(double distance, boolean useGyro) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.driveTrain);
     	m_distance=distance;
+    	m_useGyro = useGyro;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	Robot.distanceDrivePID.enable();
+    	Robot.distanceDrivePID.useGyro(m_useGyro);
     	Robot.distanceDrivePID.setSetpointRelative(m_distance);
     	Robot.driveTrain.setDriveMode(DriveTrain.DriveMode.distanceMode);
-    	Robot.distanceDrivePID.setOutputRange(-0.3, 0.3);
-		Robot.navController.setToleranceBuffer(kToleranceIterations);
-		Robot.navController.setAbsoluteTolerance(1.0);	
+    	Robot.distanceDrivePID.setOutputRange(-0.5, 0.5);
+		Robot.distanceDrivePID.setToleranceBuffer(kToleranceIterations);
+		Robot.distanceDrivePID.setAbsoluteTolerance(1.0);	
+		if (m_useGyro) RobotMap.navx.resetDisplacement();
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -33,7 +38,11 @@ public class DistanceDriveStraight extends Command {
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-       return Robot.distanceDrivePID.onTargetDuringTime(0.5);
+      if ( Robot.distanceDrivePID.onTargetDuringTime() == true ) {
+    	   return true;
+       } else {
+    	   return false;
+       } 
     }
 
     // Called once after isFinished returns true

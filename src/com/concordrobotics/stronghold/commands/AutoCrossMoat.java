@@ -8,12 +8,18 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoCrossMoat extends CommandGroup {
     
     public  AutoCrossMoat() {
-    	addSequential(new DistanceDriveStraight(4));
-    	addSequential(new TurnRelative(90));
-    	addSequential(new DistanceDriveStraight(4));
-    	addSequential(new TurnRelative(90));
-    	addSequential(new DistanceDriveStraight(4));
-    	addSequential(new TurnRelative(90));    	
+    	addSequential(new EnableDrivePIDCommand());
+    	addSequential(new SetDriveRate(10.0));
+    	addParallel(new SetPitchAngle(50));
+    	addSequential(new TurnRelative(0));
+    	addSequential(new PitchDriveStraight(20.0,6.0, false));
+    	addSequential(new DistanceDriveStraight(-2.0, false));
+    	addSequential(new SetDriveRate(30.0));
+    	addSequential(new DistanceDriveStraight(8.0, true));
+    	addSequential(new SetDriveRate(4.0));
+    	//addSequential(new DistanceDriveStraight(3.0));
+    	addSequential(new DisableDrivePIDCommand());
+    	addSequential(new DriveStop());
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());

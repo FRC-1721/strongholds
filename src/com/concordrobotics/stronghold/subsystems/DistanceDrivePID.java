@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj.Encoder;
  *
  */
 public class DistanceDrivePID extends CustomPIDSubsystem {
-	Encoder m_leftEncoder;
-	Encoder m_rightEncoder;
+	private Encoder m_leftEncoder;
+	private Encoder m_rightEncoder;
+	private boolean m_useGyro;
+	private final double kMetersToFeet = 3.28084;
 	double pidOut = 0.0;;
 	
     // Initialize your subsystem here
@@ -21,10 +23,15 @@ public class DistanceDrivePID extends CustomPIDSubsystem {
     	super("DistanceDrive",p,i,d);
     	m_leftEncoder = RobotMap.dtLeftEnc;
     	m_rightEncoder = RobotMap.dtRightEnc;
+    	m_useGyro = false;
         // Use these to get going:
         // setSetpoint() -  Sets where the PID controller should move the system
         //                  to
         // enable() - Enables the PID controller.
+    }
+    
+    public void useGyro(boolean useGyro) {
+    	m_useGyro = useGyro;
     }
     
     public void initDefaultCommand() {
@@ -36,7 +43,11 @@ public class DistanceDrivePID extends CustomPIDSubsystem {
         // Return your input value for the PID loop
         // e.g. a sensor, like a potentiometer:
         // yourPot.getAverageVoltage() / kYourMaxVoltage;
-    	return 0.5*(m_leftEncoder.getDistance() + m_rightEncoder.getDistance());
+    	if (m_useGyro) {
+    		return RobotMap.navx.getDisplacementX()*kMetersToFeet;
+    	} else {
+    		return 0.5*(m_leftEncoder.getDistance() + m_rightEncoder.getDistance());
+    	}
     }
     
     protected void usePIDOutput(double output) {
@@ -58,5 +69,6 @@ public class DistanceDrivePID extends CustomPIDSubsystem {
     	SmartDashboard.putNumber("DistanceDriveDistance", this.returnPIDInput());
     	SmartDashboard.putNumber("DistanceDriveOutput", pidOut);
     	SmartDashboard.putNumber("DistanceDriveAvgError", controller.getAvgError());
+    	SmartDashboard.putNumber("DistanceDriveIters", controller.getIterOnTarget());
     }
 }

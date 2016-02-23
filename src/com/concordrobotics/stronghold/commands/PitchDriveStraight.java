@@ -8,30 +8,20 @@ import com.concordrobotics.stronghold.RobotMap;
 public class PitchDriveStraight extends DistanceDriveStraight {
 	double m_pitch;
 	static int kToleranceIterations = 10;
-    public PitchDriveStraight(double distance, double pitch) {
-    	super(distance);
+    public PitchDriveStraight(double distance, double pitch, boolean useGyro) {
+    	super(distance, useGyro);
     	m_pitch = pitch;
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        if (Robot.distanceDrivePID.onTarget()) return true;
+        if (Robot.distanceDrivePID.onTargetDuringTime()) return true;
         if( m_pitch > 0) {
-        	if (RobotMap.navx.getPitch() > m_pitch) return true;
+        	if (RobotMap.navx.getRoll() >= m_pitch) return true;
         } else {
-        	if (RobotMap.navx.getPitch() < m_pitch) return true;
+        	if (RobotMap.navx.getRoll() <= m_pitch) return true;
         }
         return false;
     }
 
-    // Called once after isFinished returns true
-    protected void end() {
-    	Robot.driveTrain.stop();
-    }
-
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
-    protected void interrupted() {
-    	Robot.driveTrain.stop();
-    }
 }

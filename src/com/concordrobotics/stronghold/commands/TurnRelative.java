@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TurnRelative extends Command{
 	double m_targetHeading;
 	double m_turnAngle;
-	static int kToleranceIterations = 10;
+	static int kToleranceIterations = 20;
 	public TurnRelative(double turnAngle) {
 		requires(Robot.driveTrain);
 		m_turnAngle =  turnAngle;
@@ -30,7 +30,7 @@ public class TurnRelative extends Command{
 	
 	/* Unused, required methods. Pfffft */
 	protected boolean isFinished() {
-		return Robot.navController.onTargetDuringTime(0.5);
+		return Robot.navController.onTargetDuringTime();
 	}
 	
 }

@@ -56,9 +56,9 @@ public class Robot extends IterativeRobot {
 		LiveWindow.addSensor("LeftRobotDrive", "Encoder", RobotMap.dtLeftEnc);
 	    LiveWindow.addSensor("RightRobotDrive", "Encoder", RobotMap.dtRightEnc);
 	    RobotMap.dtLeftController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
-	    												RobotMap.dtLeftEnc, RobotMap.dtLeft);
+	    												RobotMap.dtLeftEnc, RobotMap.dtLeft, 0.01);
 	    RobotMap.dtRightController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
-				RobotMap.dtRightEnc, RobotMap.dtRight);
+				RobotMap.dtRightEnc, RobotMap.dtRight, 0.01);
 	    
 		//Shooter 
 	    shooter = new Shooter(RobotMap.shooterP, RobotMap.shooterI, RobotMap.shooterD);
@@ -72,7 +72,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.shootEnc.setDistancePerPulse(0.1052);
 		
 		// Gyro and controller
-        RobotMap.navx = new AHRS(SPI.Port.kMXP); 
+        RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.kNavUpdateHz); 
         LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
         navController = new NavxController("HeadingController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
         		RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
@@ -149,6 +149,7 @@ public class Robot extends IterativeRobot {
      */
     public void teleopInit() {
     	autonomousCommand.cancel();
+    	RobotMap.navx.resetDisplacement();
     }
 
     /**

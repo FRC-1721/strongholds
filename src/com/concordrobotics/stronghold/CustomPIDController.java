@@ -59,9 +59,10 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   protected PIDSource m_pidInput;
   protected PIDOutput m_pidOutput;
   java.util.Timer m_controlLoop;
-  protected Timer m_tolTimer;
   protected boolean m_onTarget = false;
+  protected int m_iterOnTarget = 0;
   Timer m_setpointTimer;
+  protected double m_absTolerance = 0.0;
 
 
   /**
@@ -171,9 +172,8 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
     m_tolerance = new NullTolerance();
 
     m_buf = new LinkedList<Double>();
-    m_tolTimer = new Timer();
-    m_tolTimer.start();
     m_onTarget = false;
+    m_iterOnTarget = 0;
   }
 
   /**
@@ -260,6 +260,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
     if (enabled) {
       double input;
       double result;
+      boolean t_onTarget;
       PIDOutput pidOutput = null;
       synchronized (this) {
         input = pidInput.pidGet();
@@ -308,32 +309,48 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
         if (m_buf.size() > m_bufLength) {
           m_bufTotal -= m_buf.pop();
         }
+            if ( (m_absTolerance > 0.0) && (Math.abs(m_error) < m_absTolerance) ) {
+            	t_onTarget = true;
+            } else {
+            	t_onTarget = false;
+            }
+            //  Check if on target and start the timer
+            if (m_onTarget == false) {
+          	  // Wasn't on target, but is now, so start the timer
+          	  if (t_onTarget) {
+          		  m_onTarget = true;
+          		  m_iterOnTarget = 1;
+          	  }
+            } else {
+          	  // Was on target, make sure it still is
+          	  if (  t_onTarget == false) {
+          		  m_onTarget = false;
+          		  m_iterOnTarget = 0;
+          	  } else {
+          		  // Stayed on target, increment the timer
+          		  m_iterOnTarget++;
+          	  }
+            }
       }
 
       pidOutput.pidWrite(result);
-      //  Check if on target and start the timer
-      if (! m_onTarget) {
-    	  // Wasn't on target, but is now, so start the timer
-    	  if (onTarget()) {
-    		  m_tolTimer.reset();
-    		  m_onTarget = true;
-    	  }
-      } else {
-    	  // Was on target, make sure it still is
-    	  if (!onTarget()) {
-    		  m_onTarget = false;
-    	  }
-      }
+      
     }
   }
 
-  protected boolean onTargetDuringTime (double period) {
-	  if (m_onTarget && m_tolTimer.hasPeriodPassed(period)) {
+  public boolean onTargetDuringTime () {
+	  if (m_bufLength <= 1) return false;
+	  if (m_onTarget && (m_iterOnTarget >= m_bufLength) ) {
 		  return true;
 	  } else {
 		  return false;
 	  }
   }
+  
+  public int getIterOnTarget () {
+	  return m_iterOnTarget;
+  }
+  
   
   /**
    * Calculate the feed forward term
@@ -524,6 +541,8 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
 
     m_buf.clear();
     m_bufTotal = 0.0;
+    m_onTarget = false;
+    m_iterOnTarget = 0;
     if (table != null)
       table.putNumber("setpoint", m_setpoint);
   }
@@ -583,7 +602,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
    * @return the current average of the error
    */
   public synchronized double getAvgError() {
-	return m_error;
+	return m_prevError;
 	  /* Old method, something wrong 
     double avgError = 0;
     // Don't divide by zero.
@@ -636,6 +655,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
    */
   public synchronized void setAbsoluteTolerance(double absvalue) {
     m_tolerance = new AbsoluteTolerance(absvalue);
+    m_absTolerance = absvalue;
   }
 
   /**

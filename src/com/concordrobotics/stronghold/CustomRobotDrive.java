@@ -74,7 +74,7 @@ public class CustomRobotDrive implements MotorSafety {
   // Default PID parameters
   protected boolean m_PIDEnabled = false; 
   // Output from -1 to 1 scaled to give rate in ft/s for PID controller
-  protected double m_rateScale = 2.0;
+  protected double m_rateScale = 5.0;
   protected NavxController m_turnController;
   protected double m_turnDeadzone = 0.02;
   protected boolean m_headingLock = false;
