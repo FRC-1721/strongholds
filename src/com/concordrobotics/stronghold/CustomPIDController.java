@@ -31,10 +31,10 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
 
   public static final double kDefaultPeriod = .05;
   private static int instances = 0;
-  private double m_P; // factor for "proportional" control
-  private double m_I; // factor for "integral" control
-  private double m_D; // factor for "derivative" control
-  private double m_F; // factor for feedforward term
+  private double m_P, m_Pdt; // factor for "proportional" control
+  private double m_I, m_Idt; // factor for "integral" control
+  private double m_D, m_Ddt; // factor for "derivative" control
+  private double m_F; // not used
   private double m_maximumOutput = 1.0; // |maximum output|
   private double m_minimumOutput = -1.0; // |minimum output|
   private double m_maximumInput = 0.0; // maximum input - limit setpoint to this
@@ -44,8 +44,8 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   private boolean m_enabled = false; // is the pid controller enabled
   private double m_prevError = 0.0; // the prior error (used to compute
                                     // velocity)
-  private double m_totalError = 0.0; // the sum of the errors for use in the
-                                     // integral calc
+  private double m_prevOutput = 0.0;
+  private double m_prevPosition = 0.0;
   private Tolerance m_tolerance; // the tolerance object used to check if on
                                  // target
   private int m_bufLength = 1;
@@ -159,12 +159,14 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
     m_P = Kp;
     m_I = Ki;
     m_D = Kd;
-    m_F = Kf;
+    
 
     m_pidInput = source;
     m_pidOutput = output;
     m_period = period;
-
+    
+    scalePID();
+    
     m_controlLoop.schedule(new PIDTask(this), 0L, (long) (m_period * 1000));
 
     instances++;
@@ -223,6 +225,11 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
     this(Kp, Ki, Kd, Kf, source, output, kDefaultPeriod);
   }
 
+  private void scalePID() {
+	  m_Pdt = m_P*m_period;
+	  m_Idt = m_I*m_period;
+	  m_Ddt = m_D*m_period;
+  }
   /**
    * Free the PID object
    */
@@ -258,15 +265,20 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
     }
 
     if (enabled) {
+      boolean rateControl = (m_pidInput.getPIDSourceType() == PIDSourceType.kRate);
       double input;
-      double result;
+      double newOutput;
       boolean t_onTarget;
+      double dsdt;
+      double dxdt;
       PIDOutput pidOutput = null;
       synchronized (this) {
         input = pidInput.pidGet();
       }
       synchronized (this) {
         m_error = m_setpoint - input;
+        
+        dsdt = m_setpoint - m_prevSetpoint;
         if (m_continuous) {
           if (Math.abs(m_error) > (m_maximumInput - m_minimumInput) / 2) {
             if (m_error > 0) {
@@ -275,32 +287,38 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
               m_error = m_error + m_maximumInput - m_minimumInput;
             }
           }
-        }
-
-        
-        if (m_I != 0) {
-          double potentialIGain = (m_totalError + m_error) * m_I;
-          if (potentialIGain < m_maximumOutput) {
-          	if (potentialIGain > m_minimumOutput) {
-              m_totalError += m_error;
-            } else {
-              m_totalError = m_minimumOutput / m_I;
+          if (Math.abs(dsdt) > (m_maximumInput - m_minimumInput) / 2) {
+              if (dsdt > 0) {
+                dsdt = dsdt - m_maximumInput + m_minimumInput;
+              } else {
+                dsdt = dsdt + m_maximumInput - m_minimumInput;
+              }
             }
-          } else {
-            m_totalError = m_maximumOutput / m_I;
-          }
         }
-        m_result = m_P * m_error + m_I * m_totalError +
-                 m_D * (m_error - m_prevError) + calculateFeedForward();
+        if (rateControl) {
+        	dsdt = m_setpoint;
+        	dxdt = input;
+        } else {
+        	dsdt = dsdt/m_period;
+        	dxdt = (input - m_prevPosition)/m_period;
+        }
+        
+        newOutput = m_prevOutput + m_Pdt*(dsdt - dxdt) + m_Ddt*dxdt;
+        // Don't include the i term for rate control
+        if (!rateControl) {
+        	newOutput = newOutput + m_Idt*m_error;
+        }
+        if (newOutput > m_maximumOutput) {
+        	newOutput = m_maximumOutput;
+        } else if (newOutput < m_minimumOutput) {
+        	newOutput = m_minimumOutput;
+        }
+        m_prevSetpoint = m_setpoint;
+        m_prevPosition = input;
+        m_result = newOutput;
         m_prevError = m_error;
-
-        if (m_result > m_maximumOutput) {
-          m_result = m_maximumOutput;
-        } else if (m_result < m_minimumOutput) {
-          m_result = m_minimumOutput;
-        }
+        m_prevOutput = newOutput;
         pidOutput = m_pidOutput;
-        result = m_result;
 
         // Update the buffer.
         m_buf.push(m_error);
@@ -333,11 +351,17 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
             }
       }
 
-      pidOutput.pidWrite(result);
+      pidOutput.pidWrite(newOutput);
       
     }
   }
 
+  public void zeroOutput () {
+	  m_result = 0.0;
+	  m_prevOutput = 0.0;
+	  m_pidOutput.pidWrite(0.0);
+  }
+  
   public boolean onTargetDuringTime () {
 	  if (m_bufLength <= 1) return false;
 	  if (m_onTarget && (m_iterOnTarget >= m_bufLength) ) {
@@ -389,6 +413,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
       table.putNumber("i", i);
       table.putNumber("d", d);
     }
+    scalePID();
   }
 
   /**
@@ -412,6 +437,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
       table.putNumber("d", d);
       table.putNumber("f", f);
     }
+    scalePID();
   }
 
   /**
@@ -703,7 +729,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   @Override
   public synchronized void enable() {
     m_enabled = true;
-
+    m_prevSetpoint = m_pidInput.pidGet();
     if (table != null) {
       table.putBoolean("enabled", true);
     }
@@ -717,6 +743,8 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   public synchronized void disable() {
     m_pidOutput.pidWrite(0);
     m_enabled = false;
+    m_prevOutput = 0.0;
+   
 
     if (table != null) {
       table.putBoolean("enabled", false);
@@ -746,7 +774,6 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
   public synchronized void reset() {
     disable();
     m_prevError = 0;
-    m_totalError = 0;
     m_result = 0;
     m_bufTotal = 0.0;
     m_buf.clear();
