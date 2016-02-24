@@ -9,26 +9,22 @@ import com.concordrobotics.stronghold.subsystems.DriveTrain;
  */
 public class DistanceDriveStraight extends Command {
 	double m_distance;
-	boolean m_useGyro;
 	static int kToleranceIterations = 20;
-    public DistanceDriveStraight(double distance, boolean useGyro) {
+    public DistanceDriveStraight(double distance) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.driveTrain);
     	m_distance=distance;
-    	m_useGyro = useGyro;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	Robot.distanceDrivePID.enable();
-    	Robot.distanceDrivePID.useGyro(m_useGyro);
     	Robot.distanceDrivePID.setSetpointRelative(m_distance);
     	Robot.driveTrain.setDriveMode(DriveTrain.DriveMode.distanceMode);
     	Robot.distanceDrivePID.setOutputRange(-0.5, 0.5);
 		Robot.distanceDrivePID.setToleranceBuffer(kToleranceIterations);
 		Robot.distanceDrivePID.setAbsoluteTolerance(1.0);	
-		if (m_useGyro) RobotMap.navx.resetDisplacement();
     }
 
     // Called repeatedly when this Command is scheduled to run

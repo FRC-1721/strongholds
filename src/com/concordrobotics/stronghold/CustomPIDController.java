@@ -302,7 +302,17 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
         	dxdt = input;
         } else {
         	dsdt = dsdt/m_period;
-        	dxdt = (input - m_prevPosition)/m_period;
+        	dxdt = (input - m_prevPosition);
+        	if (m_continuous) {
+        		if (Math.abs(dxdt) > (m_maximumInput - m_minimumInput) / 2) {
+                    if (dxdt > 0) {
+                        dxdt = dxdt - m_maximumInput + m_minimumInput;
+                      } else {
+                        dxdt = dxdt + m_maximumInput - m_minimumInput;
+                      }
+        		}
+        	}
+        	dxdt = dxdt/m_period;
         }
         ddxdt = (dxdt - m_prevDxDt);
         newOutput = m_prevOutput + m_Pdt*(dsdt - dxdt) - m_D*ddxdt;
