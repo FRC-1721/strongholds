@@ -8,10 +8,16 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoLowBar extends CommandGroup {
     
     public  AutoLowBar() {
-    	//addSequential(new EnableDrivePIDCommand());
-    	//addSequential(new TurnRelative(0));
-    	//addSequential(new DistanceDriveStraight(4.0));
-    	
+    	addSequential(new EnableDrivePIDCommand());
+    	addSequential(new TurnRelative(0));
+    	addSequential(new DistanceDriveStraight(4.0, false));
+    	addSequential(new TurnRelative(90));
+    	addSequential(new DistanceDriveStraight(4.0, false));
+    	addSequential(new TurnRelative(90));
+    	addSequential(new DistanceDriveStraight(4.0, false));
+    	addSequential(new TurnRelative(90));
+    	addSequential(new DistanceDriveStraight(4.0, false));
+    	addSequential(new TurnRelative(90));
     	//addSequential(new DistanceDriveStraight(-3.0));
     	//addSequential(new TurnAbsolute(180.0));
     	//addSequential(new DistanceDriveStraight(2.0));
