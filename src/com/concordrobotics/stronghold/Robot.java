@@ -39,6 +39,7 @@ public class Robot extends IterativeRobot {
 	public static NavxController navController;
 	public static DistanceDrivePID distanceDrivePID;
     private final double kMetersToFeet = 3.28084;
+	public static PositionEstimator positionEstimator;
     public void robotInit() {
 		//Init Subsystems
     	
@@ -76,6 +77,8 @@ public class Robot extends IterativeRobot {
         LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
         navController = new NavxController("HeadingController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
         		RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
+        positionEstimator = new PositionEstimator();
+        
         // Drive system
 		robotDrive = new CustomRobotDrive(RobotMap.dtLeft, RobotMap.dtRight, RobotMap.dtLeftController, RobotMap.dtRightController, navController);
 	    LiveWindow.addActuator("LeftRobotDrive", "Controller", RobotMap.dtLeftController);
@@ -107,11 +110,12 @@ public class Robot extends IterativeRobot {
     }
 
     public void updateSmartDashboard() {
-        driveTrain.updateSmartDashboard();
-        shooter.updateSmartDashboard();
-        navController.updateSmartDashboard();	
-        distanceDrivePID.updateSmartDashboard();
-        navxUpdateSmartDashboard();
+        //driveTrain.updateSmartDashboard();
+        //shooter.updateSmartDashboard();
+        //navController.updateSmartDashboard();	
+        //distanceDrivePID.updateSmartDashboard();
+        //navxUpdateSmartDashboard();
+        positionEstimator.updateSmartDashboard();
     }
     
     /**
@@ -132,6 +136,8 @@ public class Robot extends IterativeRobot {
 	 * Triggers when auto starts.
 	 */
     public void autonomousInit() {
+    	// Zero the yaw angle
+    	RobotMap.navx.zeroYaw();
     	autonomousCommand = (Command) autoChooser.getSelected();
     	autonomousCommand.start();
     }
@@ -149,7 +155,6 @@ public class Robot extends IterativeRobot {
      */
     public void teleopInit() {
     	autonomousCommand.cancel();
-    	RobotMap.navx.resetDisplacement();
     }
 
     /**
