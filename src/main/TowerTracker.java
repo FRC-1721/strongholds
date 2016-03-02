@@ -85,7 +85,7 @@ public class TowerTracker {
 //				opens up the camera stream and tries to load it
 				videoCapture = new VideoCapture();
 //				replaces the ##.## with your team number
-				videoCapture.open("http://10.##.##.11/mjpg/video.mjpg");
+				videoCapture.open("http://10.17.21.11/mjpg/video.mjpg");
 //				Example
 //				cap.open("http://10.30.19.11/mjpg/video.mjpg");
 //				wait until it is opened
