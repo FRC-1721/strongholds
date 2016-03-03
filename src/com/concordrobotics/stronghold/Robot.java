@@ -110,7 +110,7 @@ public class Robot extends IterativeRobot {
     }
 
     public void updateSmartDashboard() {
-        //driveTrain.updateSmartDashboard();
+        driveTrain.updateSmartDashboard();
         //shooter.updateSmartDashboard();
         //navController.updateSmartDashboard();	
         //distanceDrivePID.updateSmartDashboard();
