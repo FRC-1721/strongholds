@@ -28,7 +28,9 @@ public class PositionEstimator {
 	private Encoder m_rtEncoder;
 	private AHRS m_navx;
 	private double encGain = 0.0;
-	private double m_rDelT;
+	private double rDeltaT;
+	private double m_lastTime;
+	private double deltaT = 0.0;
 	
 	public PositionEstimator (double period) {
 
@@ -41,7 +43,6 @@ public class PositionEstimator {
 	      m_resetTimer.start();
 	      
 	      m_period = period;
-	      m_rDelT = 1.0/period;
 	      // Initialize all arrays
 	      for ( int i = 0; i < 2; i++ ) {
 	    	  lastVelEst[i] = 0.0;
@@ -49,7 +50,7 @@ public class PositionEstimator {
 	    	  lastAccelEst[i] = 0.0;
 	      } 	      
 	      m_peLoop.schedule(new PositionEstimatorTask(this), 0L, (long) (m_period * 1000));
-
+	      
 	}
 	
 	public PositionEstimator ( ) {
@@ -77,67 +78,77 @@ public class PositionEstimator {
 
 	  private void calculate() {
 		  // Don't start taking data until calibration is done
-		  if (m_navx.isCalibrating()) return;
-		  // Treate the gyro heading as gospel
-		  double curHeading = Math.toRadians(m_navx.getYaw());
-		  
-		  // Calculate Encoders measurements
-		  double encS = 0.5*(m_rtEncoder.getDistance() + m_ltEncoder.getDistance());
-		  double encDelS =  encS - lastSEnc;
-		  lastSEnc = encS;
-		  double speedEnc = encDelS*m_rDelT;
-		  double velEnc[] = new double[2];
-
-		  velEnc[0] = Math.cos(lastHeading)*speedEnc;
-		  velEnc[1] = Math.sin(lastHeading)*speedEnc;
-		  double accelEnc[] = new double[2];
-		  double posEnc[] = new double[2];
-		  for ( int i = 0; i < 2; i++ ) {
-			  posEnc[i] = lastPosEst[i] + velEnc[i]*m_period + 0.5*m_period*m_period*accelEnc[i];
+		  deltaT = m_resetTimer.get();
+		  m_resetTimer.reset();
+		  if (m_navx.isCalibrating()) {
+			  m_resetTimer.reset();
+			  return;
 		  }
-		  
-		  // Calculate Gyro's measurements
-		  // Need to handle the sign properly
-		  double rawGyroX = m_navx.getWorldLinearAccelX()*kGravity;
-		 // double rawGyroY = m_navx.getRawAccelY()*kGravity;
-		  double accelGyro[] = new double[2];
-		  // Leave out side accel for now
-		  accelGyro[0] = rawGyroX*Math.cos(lastHeading);
-		  accelGyro[1] = rawGyroX*Math.sin(lastHeading);
-
-		  
-		  // Calculate the estimated quantities assuming no other changes
-		  double posEst[] = new double[2];
-		  double velEst[] = new double[2];
-		  double accelEst[] = new double[2];
-		  for ( int i = 0; i < 2; i++ ) {
-			  accelEst[i] = lastAccelEst[i];
-			  velEst[i] = lastVelEst[i] + lastAccelEst[i]*m_period;
-			  posEst[i] = lastPosEst[i] + lastVelEst[i]*m_period + 0.5*m_period*m_period*lastAccelEst[i];
-		  }
-		  
-		  // Update the estimates based on the gains
-		  for ( int i = 0; i < 2; i++ ) {
-			  // Use gyro directly for accelleration
-			  accelEst[i] = accelGyro[i];
-			  // Use encoders with gain to adjust the velocity and prevent velocity drift
-			  velEst[i] = velEst[i] + encGain*(velEnc[i] - velEst[i]);
-			  // Adjust position with the encoders
-			  posEst[i] = posEst[i] + encGain*(posEnc[i] - posEst[i]);
-			  lastAccelEst[i] = accelEst[i];
-			  lastVelEst[i] = velEst[i];
-			  lastPosEst[i] = posEst[i];
-					  
-			  // Update the gains
+		  synchronized(this) {
+			  rDeltaT = 1.0/deltaT;
+			  // Treate the gyro heading as gospel
+			  double curHeading = Math.toRadians(m_navx.getYaw());
 			  
+			  // Calculate Encoders measurements
+			  double encS = 0.5*(m_rtEncoder.getDistance() + m_ltEncoder.getDistance());
+			  double encDelS =  encS - lastSEnc;
+			  lastSEnc = encS;
+			  double speedEnc = encDelS*rDeltaT;
+			  double velEnc[] = new double[2];
+	
+			  velEnc[0] = Math.cos(lastHeading)*speedEnc;
+			  velEnc[1] = Math.sin(lastHeading)*speedEnc;
+			  
+			  double posEnc[] = new double[2];
+			  for ( int i = 0; i < 2; i++ ) {
+				  posEnc[i] = lastPosEst[i] + velEnc[i]*deltaT;
+			  }
+			  
+			  // Calculate Gyro's measurements
+			  // Need to handle the sign properly
+			  double rawGyroX = m_navx.getWorldLinearAccelX()*kGravity;
+			 // double rawGyroY = m_navx.getRawAccelY()*kGravity;
+			  double accelGyro[] = new double[2];
+			  // Leave out side accel for now
+			  accelGyro[0] = rawGyroX*Math.cos(curHeading);
+			  accelGyro[1] = rawGyroX*Math.sin(curHeading);
+	
+			  
+			  // Calculate the estimated quantities assuming no other changes
+			  double posEst[] = new double[2];
+			  double velEst[] = new double[2];
+			  double accelEst[] = new double[2];
+			  for ( int i = 0; i < 2; i++ ) {
+				  accelEst[i] = lastAccelEst[i];
+				  velEst[i] = lastVelEst[i] + lastAccelEst[i]*deltaT;
+				  posEst[i] = lastPosEst[i] + lastVelEst[i]*deltaT + 0.5*deltaT*deltaT*lastAccelEst[i];
+			  }
+			  
+			  // Update the estimates based on the gains
+			  for ( int i = 0; i < 2; i++ ) {
+				  // Use gyro directly for accelleration
+				  accelEst[i] = accelGyro[i];
+				  // Use encoders with gain to adjust the velocity and prevent velocity drift
+				  velEst[i] = velEst[i] + encGain*(velEnc[i] - velEst[i]);
+				  // Adjust position with the encoders
+				  posEst[i] = posEst[i] + encGain*(posEnc[i] - posEst[i]);
+				  lastAccelEst[i] = accelEst[i];
+				  lastVelEst[i] = velEst[i];
+				  lastPosEst[i] = posEst[i];
+						  
+				  // Update the gains
+				  
+			  }
+			  
+			  // Update the "last" values
+			  lastHeading = curHeading;
 		  }
-		  
-		  // Update the "last" values
-		  lastHeading = curHeading;
-		  
 	  }
 	  
-	  
+	  public void zeroVelocity(double gain) {
+		  lastVelEst[0] = (1.0 - gain)*lastVelEst[0];
+		  lastVelEst[1] = (1.0 - gain)*lastVelEst[1];
+	  }
 
 	    public double getVelocityX() {
 	        return lastVelEst[0];

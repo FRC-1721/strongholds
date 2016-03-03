@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoCrossMoat extends CommandGroup {
     
     public  AutoCrossMoat() {
-    	addSequential(new EnableDrivePIDCommand());
+    	//addSequential(new EnableDrivePIDCommand());
     	addSequential(new SetDriveRate(10.0));
     	addParallel(new SetPitchAngle(50));
     	addSequential(new TurnRelative(0));
