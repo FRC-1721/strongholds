@@ -27,7 +27,7 @@ public class PositionEstimator {
 	private Encoder m_ltEncoder;
 	private Encoder m_rtEncoder;
 	private AHRS m_navx;
-	private double encGain = 0.0;
+	private double encGain = 1.0;
 	private double rDeltaT;
 	private double m_lastTime;
 	private double deltaT = 0.0;
@@ -184,7 +184,8 @@ public class PositionEstimator {
 	  	  SmartDashboard.putNumber("PositionEstVelY", getVelocityY());
 	  	  SmartDashboard.putNumber("PositionEstAccelX", lastAccelEst[0]);
 	  	  SmartDashboard.putNumber("PositionEstAccelY", lastAccelEst[1]);	  	  
-	  	  SmartDashboard.putNumber("PositionEstDeltaT", deltaT);	 
+	  	  SmartDashboard.putNumber("PositionEstDeltaT", deltaT);	
+	  	  
 	    }	    
 	    
 }
