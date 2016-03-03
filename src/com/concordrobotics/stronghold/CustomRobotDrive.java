@@ -465,7 +465,7 @@ public class CustomRobotDrive implements MotorSafety {
         
     }
     if ( (Math.abs(leftOutput)  < 0.0001 ) && (Math.abs(rightOutput) < 0.0001 )) {
-    	Robot.positionEstimator.zeroVelocity(0.02);
+    	Robot.positionEstimator.zeroVelocity(0.05);
     }
 
     if (this.m_syncGroup != 0) {
