@@ -95,7 +95,7 @@ public class PositionEstimator {
 			  lastSEnc = encS;
 			  double speedEnc = encDelS*rDeltaT;
 			  double velEnc[] = new double[2];
-	
+
 			  velEnc[0] = Math.cos(lastHeading)*speedEnc;
 			  velEnc[1] = Math.sin(lastHeading)*speedEnc;
 			  
@@ -183,6 +183,7 @@ public class PositionEstimator {
 	  	  SmartDashboard.putNumber("PositionEstVelY", getVelocityY());
 	  	  SmartDashboard.putNumber("PositionEstAccelX", lastAccelEst[0]);
 	  	  SmartDashboard.putNumber("PositionEstAccelY", lastAccelEst[1]);	  	  
+	  	  SmartDashboard.putNumber("PositionEstDeltaT", deltaT);	 
 	    }	    
 	    
 }
