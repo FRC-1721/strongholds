@@ -111,9 +111,8 @@ public class PositionEstimator {
 			 // double rawGyroY = m_navx.getRawAccelY()*kGravity;
 			  double accelGyro[] = new double[2];
 			  // Leave out side accel for now
-			  accelGyro[0] = rawGyroX;//*Math.cos(curHeading);
-			  accelGyro[1] = rawGyroY;//*Math.sin(curHeading);
-	
+			  accelGyro[0] = rawGyroX; 
+			  accelGyro[1] = rawGyroY;
 			  
 			  // Calculate the estimated quantities assuming no other changes
 			  double posEst[] = new double[2];
