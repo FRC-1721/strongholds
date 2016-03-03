@@ -185,7 +185,7 @@ public class PositionEstimator {
 	  	  SmartDashboard.putNumber("PositionEstAccelX", lastAccelEst[0]);
 	  	  SmartDashboard.putNumber("PositionEstAccelY", lastAccelEst[1]);	  	  
 	  	  SmartDashboard.putNumber("PositionEstDeltaT", deltaT);	
-	  	  
+	  	  SmartDashboard.putNumber("PositionEstYaw", m_navx.getYaw());
 	    }	    
 	    
 }
