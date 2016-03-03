@@ -112,7 +112,7 @@ public class PositionEstimator {
 			  double accelGyro[] = new double[2];
 			  // Leave out side accel for now
 			  accelGyro[0] = rawGyroX;//*Math.cos(curHeading);
-			  accelGyro[1] = rawGyroX://*Math.sin(curHeading);
+			  accelGyro[1] = rawGyroY;//*Math.sin(curHeading);
 	
 			  
 			  // Calculate the estimated quantities assuming no other changes
