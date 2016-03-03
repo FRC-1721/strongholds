@@ -169,7 +169,15 @@ public class PositionEstimator {
 	    public double getDisplacementY() {
 	        return lastPosEst[1];
 	    }
+	    
+	    public double getAccelX() {
+	        return lastAccelEst[0];
+	    }
 
+	    public double getAccelY() {
+	        return lastAccelEst[1];
+	    }
+	    
 	    public double getDisplacementZ() {
 	         return 0;
 	    } 
