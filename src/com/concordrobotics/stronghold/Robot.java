@@ -1,23 +1,30 @@
 
 package com.concordrobotics.stronghold;
 
-import com.concordrobotics.stronghold.subsystems.*;
-import com.concordrobotics.stronghold.commands.*;
-import com.concordrobotics.stronghold.RobotMap;
-import com.concordrobotics.stronghold.CustomPIDController;
+import com.concordrobotics.stronghold.commands.AutoCrossMoat;
+import com.concordrobotics.stronghold.commands.AutoLowBar;
+import com.concordrobotics.stronghold.subsystems.DistanceDrivePID;
+import com.concordrobotics.stronghold.subsystems.DriveTrain;
+import com.concordrobotics.stronghold.subsystems.NavxController;
+import com.concordrobotics.stronghold.subsystems.Shooter;
+import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.*;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.PIDSourceType;
-import com.kauailabs.navx.frc.AHRS;
-import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Concord Robotics FRC Team 1721
@@ -39,10 +46,10 @@ public class Robot extends IterativeRobot {
 	public static NavxController navController;
 	public static DistanceDrivePID distanceDrivePID;
     private final double kMetersToFeet = 3.28084;
+    DriverStation ds;
     public void robotInit() {
 		//Init Subsystems
     	
-
 		//Init motor and controllers
 		RobotMap.dtLeft = new VictorSP(RobotMap.spLeftPort);
 		RobotMap.dtRight = new VictorSP(RobotMap.spRightPort);
@@ -96,14 +103,22 @@ public class Robot extends IterativeRobot {
 		autoChooser.addDefault("Low Bar", new AutoLowBar());
 		autoChooser.addObject("Cross Moat", new AutoCrossMoat());
 		SmartDashboard.putData("Auto Chooser", autoChooser);
-    	//Init OI last so all systems initialized
+    	
+		//Init OI last so all systems initialized
 		oi = new OI();
-		// Put all the systems onto smart dashboard
 		
+		// Put all the systems onto smart dashboard
         SmartDashboard.putData(driveTrain);
         SmartDashboard.putData(shooter);
         SmartDashboard.putData(navController);
 		updateSmartDashboard();
+		
+		// Set the alliance to invalid for now to make the LEDS have neutral color.
+		RobotMap.alliance = Alliance.Invalid;
+		
+		// Open the I2C wire
+		RobotMap.wire = new I2C(Port.kOnboard, 4);
+		
     }
 
     public void updateSmartDashboard() {
@@ -118,13 +133,42 @@ public class Robot extends IterativeRobot {
      * Triggered when the robot is disabled (every time).
      */
     public void disabledInit(){
-
+    	
+    	// Send waiting for command pattern to robot.
+    	LEDController.sendLED(RobotMap.patWait);
     }
     
     /**
      * Loops while the robot is disabled.
      */
 	public void disabledPeriodic() {
+		
+		// Test if driver station is connected
+		if (ds.isDSAttached()) {
+			// Try to get the alliance. There are three possibilities: blue, red, invalid.
+			RobotMap.alliance = ds.getAlliance();
+			switch (RobotMap.alliance) {
+				case Red:
+					// Set the LEDs to red
+					LEDController.sendLED(RobotMap.patRed);
+					break;
+				case Blue:
+					LEDController.sendLED(RobotMap.patBlue);
+					break;
+				case Invalid:
+					// The alliance is so far invalid... 
+					LEDController.sendLED(RobotMap.patWait);
+					break;
+				default:
+					// will never happen
+					LEDController.sendLED(RobotMap.patWait);
+					break;
+			}
+		} else {
+			// No DS attached yet.
+			RobotMap.alliance = Alliance.Invalid;
+		}
+		
 		Scheduler.getInstance().run();
 	}
 
@@ -134,6 +178,15 @@ public class Robot extends IterativeRobot {
     public void autonomousInit() {
     	autonomousCommand = (Command) autoChooser.getSelected();
     	autonomousCommand.start();
+    	
+    	switch (RobotMap.alliance) {
+    		case Invalid:
+    			LEDController.sendLED(RobotMap.patNone);
+    			break;
+    		default:
+    			break;
+    	}
+    	
     }
 
     /**
@@ -150,6 +203,14 @@ public class Robot extends IterativeRobot {
     public void teleopInit() {
     	autonomousCommand.cancel();
     	RobotMap.navx.resetDisplacement();
+    	
+    	switch (RobotMap.alliance) {
+    		case Invalid:
+    			LEDController.sendLED(RobotMap.patNone);
+    			break;
+    		default:
+    			break;
+    	}
     }
 
     /**
@@ -159,7 +220,14 @@ public class Robot extends IterativeRobot {
         Scheduler.getInstance().run();
         updateSmartDashboard();
     }
-
+    
+    /**
+     * Triggered when test mode is started.
+     */
+    public void testInit() {
+    	
+    }
+    
     /**
      * Loops during test.
      */
