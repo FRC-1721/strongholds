@@ -103,7 +103,7 @@ public class RobotMap {
 	public static final int jRightPort = 2;
 	public static final int jOpPort = 3;
 	
-	public static final boolean encoderBroken = false;
+	public static final boolean encoderBroken = true;
 	
 	// Logging
 	public static final boolean loggingEnabled = false;
