@@ -23,6 +23,7 @@ public class OI {
     public static JoystickButton disableDrivePIDButton;
     public static JoystickButton enableDriveHeadingLockButton;
     public static JoystickButton disableDriveHeadingLockButton;
+    public static JoystickButton disablePIDShooter;
     
     public OI() {
     	jLeft = new Joystick(RobotMap.jLeftPort);
@@ -38,7 +39,7 @@ public class OI {
 		
 		setAngle25 = new JoystickButton(jOperator, 4);
 		lowGoal = new JoystickButton(jOperator, 2);
-		
+		disablePIDShooter = new JoystickButton(jOperator, 3);
 		
 		//####################
 		// COMMAND ACTIVATION 
@@ -54,7 +55,7 @@ public class OI {
 		shooter.whenPressed(new ThrowBallCommand()); //MULTITHREAD THIS.  I WILL FIX YOUR BRACES AFTER
 		
 		
-		setAngle25.whenPressed(new SetPitchAngle(25));
+		setAngle25.whenPressed(new SetPitchAngle(65));
     	
     	// Drive commands
     	enableDrivePIDButton = new JoystickButton(jLeft, 2);
