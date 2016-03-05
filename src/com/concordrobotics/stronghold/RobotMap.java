@@ -1,7 +1,11 @@
 package com.concordrobotics.stronghold;
 
+import com.kauailabs.navx.frc.AHRS;
+import com.concordrobotics.stronghold.PositionEstimator;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -32,6 +36,18 @@ public class RobotMap {
 	// ROBOT VISION
 	//##############
 	public static CameraServer camera;
+	
+	//############
+	// LED COLORS
+	//############
+	public static Alliance alliance;
+	public static I2C wire;
+	
+	public static final String patWait = "rainbow"; // Swirling rainbow, white chaser
+	public static final String patBlue = "blue"; // Solid blue
+	public static final String patRed = "red"; // Solid red
+	public static final String patTest = "orangeBlink"; // Orange<-->off slow fade
+	public static final String patNone = "greenBlink";// Green<-->off slow fade
 	
 	/**
      * DRIVE TRAIN VARIABLES
@@ -86,4 +102,7 @@ public class RobotMap {
 	public static final int jLeftPort = 1;
 	public static final int jRightPort = 2;
 	public static final int jOpPort = 3;
+	
+	// Logging
+	public static final boolean loggingEnabled = false;
 }
