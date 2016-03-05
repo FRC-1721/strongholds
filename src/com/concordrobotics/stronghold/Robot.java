@@ -165,6 +165,7 @@ public class Robot extends IterativeRobot {
 		autoChooser.addDefault("Low Bar", new AutoLowBar());
 		autoChooser.addObject("Cross Terrain", new AutoCrossMoat());
 		autoChooser.addObject("TeeterTotter", new AutoCrossTeeterTotter());
+		autoChooser.addObject("DO NOTHING", new AutoDoNothing());
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 		
 		// Create a chooser for field position

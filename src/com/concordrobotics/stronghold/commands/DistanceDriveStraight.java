@@ -24,7 +24,7 @@ public class DistanceDriveStraight extends Command {
     	Robot.driveTrain.setDriveMode(DriveTrain.DriveMode.distanceMode);
     	Robot.distanceDrivePID.setOutputRange(-0.5, 0.5);
 		Robot.distanceDrivePID.setToleranceBuffer(kToleranceIterations);
-		Robot.distanceDrivePID.setAbsoluteTolerance(1.0);	
+		Robot.distanceDrivePID.setAbsoluteTolerance(1.0);
     }
 
     // Called repeatedly when this Command is scheduled to run
