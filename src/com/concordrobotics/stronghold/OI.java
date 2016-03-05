@@ -16,7 +16,7 @@ public class OI {
 	public static JoystickButton angleDown;
 	public static JoystickButton shooter;
 	public static JoystickButton setAngle25;
-	public static JoystickButton setAngle10;
+	public static JoystickButton lowGoal;
 	
 	// Drive controls
     public static JoystickButton enableDrivePIDButton;
@@ -37,7 +37,7 @@ public class OI {
 		shooter = new JoystickButton(jOperator, 8);
 		
 		setAngle25 = new JoystickButton(jOperator, 4);
-		setAngle10 = new JoystickButton(jOperator, 2);
+		lowGoal = new JoystickButton(jOperator, 2);
 		
 		
 		//####################
@@ -55,7 +55,6 @@ public class OI {
 		
 		
 		setAngle25.whenPressed(new SetPitchAngle(25));
-		setAngle10.whenPressed(new SetPitchAngle(10));
     	
     	// Drive commands
     	enableDrivePIDButton = new JoystickButton(jLeft, 2);
