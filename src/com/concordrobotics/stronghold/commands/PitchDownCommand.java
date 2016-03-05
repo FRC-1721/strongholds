@@ -6,6 +6,12 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class PitchDownCommand extends Command {
 
+	public PitchDownCommand() {
+		requires(Robot.shooter);
+	}
+	protected void initialize() {
+		Robot.shooter.disable();
+	}
 	protected void execute() {
 		Robot.shooter.pitch(false); // Pitch down (negative)
 	}
@@ -16,6 +22,6 @@ public class PitchDownCommand extends Command {
 	
 	protected void end() {}
 	protected void interrupted() {}
-	protected void initialize() {}
+
 	
 }

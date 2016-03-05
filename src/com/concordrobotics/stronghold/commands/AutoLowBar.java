@@ -1,5 +1,7 @@
 package com.concordrobotics.stronghold.commands;
 
+import com.concordrobotics.stronghold.RobotMap;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -9,7 +11,10 @@ public class AutoLowBar extends CommandGroup {
     
     public  AutoLowBar() {
     	addSequential(new SetCurrentYaw(180));
-    	addSequential(new EnableDrivePIDCommand());
+    	if (!RobotMap.encoderBroken) {
+    		addSequential(new EnableDrivePIDCommand());
+    	}
+    	addParallel(new SetPitchAngle(5));
     	addSequential(new TurnRelative(0.0));
     	addSequential(new SetDriveRate(10.0));
     	addSequential(new DistanceDriveStraight(-5.0));

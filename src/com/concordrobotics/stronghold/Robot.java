@@ -115,7 +115,7 @@ public class Robot extends IterativeRobot {
 		LiveWindow.addActuator("RightRobotDrive", "Victor", RobotMap.dtRight);
 		RobotMap.dtLeftEnc = new Encoder(RobotMap.dtLeftEncPortA, RobotMap.dtLeftEncPortB, RobotMap.dtLeftEncReversed);	  
 		RobotMap.dtRightEnc = new Encoder(RobotMap.dtRightEncPortA, RobotMap.dtRightEncPortB, RobotMap.dtRightEncReversed);
-		RobotMap.dtLeftEnc.setDistancePerPulse(0.00825);
+		RobotMap.dtLeftEnc.setDistancePerPulse(0.00618);
 		RobotMap.dtRightEnc.setDistancePerPulse(0.0134);
 		LiveWindow.addSensor("LeftRobotDrive", "Encoder", RobotMap.dtLeftEnc);
 	    LiveWindow.addSensor("RightRobotDrive", "Encoder", RobotMap.dtRightEnc);
@@ -190,11 +190,11 @@ public class Robot extends IterativeRobot {
     }
 
     public void updateSmartDashboard() {
-        driveTrain.updateSmartDashboard();
-        //shooter.updateSmartDashboard();
+        //driveTrain.updateSmartDashboard();
+        shooter.updateSmartDashboard();
         //navController.updateSmartDashboard();	
         //distanceDrivePID.updateSmartDashboard();
-        navxUpdateSmartDashboard();
+        //navxUpdateSmartDashboard();
         SmartDashboard.putNumber("Left_Encoder_Distance", RobotMap.dtLeftEnc.getDistance());
         SmartDashboard.putNumber("Left_Encoder_Rate", RobotMap.dtLeftEnc.getRate());
         
@@ -258,8 +258,8 @@ public class Robot extends IterativeRobot {
     	allInit(RobotMode.AUTONOMOUS);
     	autonomousCommand = (Command) autoChooser.getSelected();
     	/*positionSetter = (PositionSetter) positionChooser.getSelected();
-    	positionSetter.set();
-    	autonomousCommand.start();*/
+    	positionSetter.set(); */
+    	autonomousCommand.start();
     	
     }
 
@@ -276,6 +276,8 @@ public class Robot extends IterativeRobot {
      */
     public void teleopInit() {
     	autonomousCommand.cancel();
+    	Robot.robotDrive.disablePID();
+    	Robot.robotDrive.disableHeadingLock();
     	allInit(RobotMode.TELEOP);
     	
     }

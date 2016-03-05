@@ -1,5 +1,7 @@
 package com.concordrobotics.stronghold.commands;
 
+import com.concordrobotics.stronghold.RobotMap;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -8,7 +10,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoCrossTeeterTotter extends CommandGroup {
     
     public  AutoCrossTeeterTotter() {
-    	addSequential(new EnableDrivePIDCommand());
+    	if (!RobotMap.encoderBroken) {
+		addSequential(new EnableDrivePIDCommand());
+	}
     	addSequential(new SetDriveRate(4.0));
     	addParallel(new SetPitchAngle(50));
     	addSequential(new TurnRelative(0));

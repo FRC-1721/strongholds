@@ -4,6 +4,7 @@ import com.concordrobotics.stronghold.RobotMap;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter extends PIDSubsystem {
 	
@@ -101,7 +102,7 @@ public class Shooter extends PIDSubsystem {
 	}
 	
 	public void updateSmartDashboard() {
-
+		SmartDashboard.putNumber("ShooterEncoder", RobotMap.shootEnc.getDistance());
 	}
 	
 }

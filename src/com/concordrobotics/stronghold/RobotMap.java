@@ -62,7 +62,7 @@ public class RobotMap {
 	public static final boolean dtRightEncReversed = false;	
 	// start with this dtP.  Crank up if unresponsive, down if noise.  
 	// Then add dtD to eliminate noise.  dtI doesn't do anything
-	public static double dtP = 0.1, dtI = 0.0, dtD = 0.0, dtF = 0.0;
+	public static double dtP = 0.7, dtI = 0.0, dtD = 0.0, dtF = 0.0;
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;	
 	
@@ -93,8 +93,8 @@ public class RobotMap {
 	public static final double spinUp = .75;
 	public static final double pitchUpVolts = .3;  // NOTE: This is reversed!
 	public static final double pitchDownVolts = -.4; // NOTE: This is reversed!
-	public static final double suckLVolts = .3;
-	public static final double suckRVolts = -.3;
+	public static final double suckLVolts = .5;
+	public static final double suckRVolts = -.5;
 	
 	/**
 	 *Joysticks, Input, and Buttons.
@@ -103,7 +103,7 @@ public class RobotMap {
 	public static final int jRightPort = 2;
 	public static final int jOpPort = 3;
 	
-	public static final boolean encoderBroken = true;
+	public static final boolean encoderBroken = false;
 	
 	// Logging
 	public static final boolean loggingEnabled = false;
