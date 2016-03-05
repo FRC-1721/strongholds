@@ -16,6 +16,14 @@ import java.util.TimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
@@ -53,6 +61,7 @@ public class Robot extends IterativeRobot {
 	public static NavxController navController;
 	public static DistanceDrivePID distanceDrivePID;
     private final double kMetersToFeet = 3.28084;
+    DriverStation ds;
 	public static PositionEstimator positionEstimator;
 	
 	static Logger logger = LoggerFactory.getLogger(Robot.class);
@@ -65,6 +74,7 @@ public class Robot extends IterativeRobot {
 	DriverStation driverStation = DriverStation.getInstance();
 	
 	
+
     public void robotInit() {
 		// Init loggin
     	File logDirectory = null;
@@ -157,6 +167,13 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData(shooter);
         SmartDashboard.putData(navController);
 		updateSmartDashboard();
+
+		// Set the alliance to invalid for now to make the LEDS have neutral color.
+		RobotMap.alliance = Alliance.Invalid;
+		
+		// Open the I2C wire
+		RobotMap.wire = new I2C(Port.kOnboard, 4);
+		
 		logger.info ("End robotInit");
     }
 
@@ -174,13 +191,42 @@ public class Robot extends IterativeRobot {
      * Triggered when the robot is disabled (every time).
      */
     public void disabledInit(){
-
+    	
+    	// Send waiting for command pattern to robot.
+    	LEDController.sendLED(RobotMap.patWait);
     }
     
     /**
      * Loops while the robot is disabled.
      */
 	public void disabledPeriodic() {
+		
+		// Test if driver station is connected
+		if (ds.isDSAttached()) {
+			// Try to get the alliance. There are three possibilities: blue, red, invalid.
+			RobotMap.alliance = ds.getAlliance();
+			switch (RobotMap.alliance) {
+				case Red:
+					// Set the LEDs to red
+					LEDController.sendLED(RobotMap.patRed);
+					break;
+				case Blue:
+					LEDController.sendLED(RobotMap.patBlue);
+					break;
+				case Invalid:
+					// The alliance is so far invalid... 
+					LEDController.sendLED(RobotMap.patWait);
+					break;
+				default:
+					// will never happen
+					LEDController.sendLED(RobotMap.patWait);
+					break;
+			}
+		} else {
+			// No DS attached yet.
+			RobotMap.alliance = Alliance.Invalid;
+		}
+		
 		Scheduler.getInstance().run();
 	}
 
@@ -193,6 +239,15 @@ public class Robot extends IterativeRobot {
     	allInit(RobotMode.AUTONOMOUS);
     	autonomousCommand = (Command) autoChooser.getSelected();
     	autonomousCommand.start();
+    	
+    	switch (RobotMap.alliance) {
+    		case Invalid:
+    			LEDController.sendLED(RobotMap.patNone);
+    			break;
+    		default:
+    			break;
+    	}
+    	
     }
 
     /**
@@ -209,6 +264,14 @@ public class Robot extends IterativeRobot {
     public void teleopInit() {
     	autonomousCommand.cancel();
     	allInit(RobotMode.TELEOP);
+    	
+    	switch (RobotMap.alliance) {
+    		case Invalid:
+    			LEDController.sendLED(RobotMap.patNone);
+    			break;
+    		default:
+    			break;
+    	}
     }
 
     public void testInit() {
@@ -226,6 +289,7 @@ public class Robot extends IterativeRobot {
      * Loops during test.
      */
     public void testPeriodic() {
+    	RobotMap.shootK.setAngle(20);
         LiveWindow.run();
         allEndOfPeriodic();
     }

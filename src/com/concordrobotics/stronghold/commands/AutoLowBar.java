@@ -38,5 +38,10 @@ public class AutoLowBar extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
+    	
+    	addSequential(new EnableDrivePIDCommand());
+    	addSequential(new TurnRelative(0));
+    	addSequential(new DistanceDriveStraight(10.0, false));
+    	
     }
 }
