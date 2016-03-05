@@ -80,6 +80,9 @@ public class PositionEstimator {
 		  double encS[] = new double[2];
 		  encS[0] = m_ltEncoder.getDistance();
 		  encS[1] = m_rtEncoder.getDistance();
+		  if (RobotMap.encoderBroken) {
+			  encS[0] = encS[1];
+		  }
 		  vel[0] = (encS[0] - lastEncS[0]);
 		  vel[1] = (encS[1] - lastEncS[1]);
 		  lastEncS[0] = encS[0];

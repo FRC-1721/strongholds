@@ -29,8 +29,8 @@ public class RobotMap {
 	public static Encoder dtLeftEnc, dtRightEnc, shootEnc;
 	/** Ultrasonic */
 	public static Ultrasonic ultrasonic;
-	public static int uIn = 6;
-	public static int uOut = 7;
+	public static int uIn = 8;
+	public static int uOut = 9;
 
 	//##############
 	// ROBOT VISION
@@ -62,7 +62,7 @@ public class RobotMap {
 	public static final boolean dtRightEncReversed = false;	
 	// start with this dtP.  Crank up if unresponsive, down if noise.  
 	// Then add dtD to eliminate noise.  dtI doesn't do anything
-	public static double dtP = 0.5, dtI = 0.0, dtD = 0.0, dtF = 0.0;
+	public static double dtP = 0.1, dtI = 0.0, dtD = 0.0, dtF = 0.0;
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;	
 	
@@ -70,10 +70,10 @@ public class RobotMap {
 	 * NAVX Gyro & PID
 	 * 
 	 */
-	public static AHRS navx;
+	public static CustomAHRS navx;
 	public static final byte kNavUpdateHz = 20;
 	// Might want to try some I term in here with new method.
-	public static double navP = 0.02, navI = 0.00, navD = 0.1, navF = 0.0;
+	public static double navP = 0.05, navI = 0.00, navD = 0.1, navF = 0.0;
 
 	/**
 	 * SHOOTER VARIABLES
@@ -102,6 +102,8 @@ public class RobotMap {
 	public static final int jLeftPort = 1;
 	public static final int jRightPort = 2;
 	public static final int jOpPort = 3;
+	
+	public static final boolean encoderBroken = true;
 	
 	// Logging
 	public static final boolean loggingEnabled = false;

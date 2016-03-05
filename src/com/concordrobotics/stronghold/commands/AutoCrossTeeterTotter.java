@@ -5,22 +5,21 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class AutoLowBar extends CommandGroup {
+public class AutoCrossTeeterTotter extends CommandGroup {
     
-    public  AutoLowBar() {
-    	addSequential(new SetCurrentYaw(180));
+    public  AutoCrossTeeterTotter() {
     	addSequential(new EnableDrivePIDCommand());
-    	addSequential(new TurnRelative(0.0));
-    	addSequential(new SetDriveRate(10.0));
-    	addSequential(new DistanceDriveStraight(-5.0));
-    	addSequential(new SetDriveRate(1.5));
-    	addSequential(new DistanceDriveStraight(-5.0));
-    	addSequential(new TurnAbsolute(45.0));
-    	
-    	//addSequential(new DistanceDriveStraight(-3.0));
-    	//addSequential(new TurnAbsolute(180.0));
-    	//addSequential(new DistanceDriveStraight(2.0));
-    	//addSequential(new TurnAbsolute(-90.0));    	
+    	addSequential(new SetDriveRate(4.0));
+    	addParallel(new SetPitchAngle(50));
+    	addSequential(new TurnRelative(0));
+    	addSequential(new PitchDriveStraight(8.0, 6.0));
+    	addSequential(new DistanceDriveStraight(1.0));
+    	addSequential(new SetPitchAngle(3.0));
+    	addSequential(new SetDriveRate(1.0));
+    	addSequential(new DistanceDriveStraight(4.0));
+    	addParallel(new SetPitchAngle(50));
+    	addSequential(new DisableDrivePIDCommand());
+    	addSequential(new DriveStop());
         // Add Commands here:
         // e.g. addSequential(new Command1());
         //      addSequential(new Command2());
@@ -37,6 +36,5 @@ public class AutoLowBar extends CommandGroup {
         // e.g. if Command1 requires chassis, and Command2 requires arm,
         // a CommandGroup containing them would require both the chassis and the
         // arm.
-    	
     }
 }

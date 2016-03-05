@@ -136,7 +136,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.shootEnc.setDistancePerPulse(0.1052);
 		
 		// Gyro and controller
-        RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.kNavUpdateHz); 
+        RobotMap.navx = new CustomAHRS(SPI.Port.kMXP, RobotMap.kNavUpdateHz); 
         LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
         navController = new NavxController("HeadingController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
         		RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
@@ -163,7 +163,8 @@ public class Robot extends IterativeRobot {
 		autonomousCommand = new AutoCrossMoat();
 		autoChooser = new SendableChooser();
 		autoChooser.addDefault("Low Bar", new AutoLowBar());
-		autoChooser.addObject("Cross Moat", new AutoCrossMoat());
+		autoChooser.addObject("Cross Terrain", new AutoCrossMoat());
+		autoChooser.addObject("TeeterTotter", new AutoCrossTeeterTotter());
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 		
 		// Create a chooser for field position
@@ -202,7 +203,8 @@ public class Robot extends IterativeRobot {
 
         positionEstimator.updateSmartDashboard();
         SmartDashboard.putString("Ultrasonic_Distance", Math.floor(RobotMap.ultrasonic.getRangeInches()/12) + "f, " + Math.floor((RobotMap.ultrasonic.getRangeInches() % 12)) + "i");
-   
+        SmartDashboard.putNumber("Ultrasonic_DistanceIn", RobotMap.ultrasonic.getRangeInches() );
+        
         allEndOfPeriodic();
     }
     
@@ -212,7 +214,7 @@ public class Robot extends IterativeRobot {
     public void disabledInit(){
     	
     	// Send waiting for command pattern to robot.
-    	LEDController.sendLED(RobotMap.patWait);
+    	//LEDController.sendLED(RobotMap.patWait);
     }
     
     /**
@@ -221,9 +223,9 @@ public class Robot extends IterativeRobot {
 	public void disabledPeriodic() {
 		
 		// Test if driver station is connected
-		if (ds.isDSAttached()) {
+		/*if (ds.isDSAttached()) {
 			// Try to get the alliance. There are three possibilities: blue, red, invalid.
-			RobotMap.alliance = ds.getAlliance();
+			 RobotMap.alliance = ds.getAlliance();
 			switch (RobotMap.alliance) {
 				case Red:
 					// Set the LEDs to red
@@ -244,7 +246,7 @@ public class Robot extends IterativeRobot {
 		} else {
 			// No DS attached yet.
 			RobotMap.alliance = Alliance.Invalid;
-		}
+		} */
 		
 		Scheduler.getInstance().run();
 	}
@@ -253,13 +255,11 @@ public class Robot extends IterativeRobot {
 	 * Triggers when auto starts.
 	 */
     public void autonomousInit() {
-    	// Zero the yaw angle
-    	RobotMap.navx.zeroYaw();
     	allInit(RobotMode.AUTONOMOUS);
     	autonomousCommand = (Command) autoChooser.getSelected();
-    	positionSetter = (PositionSetter) positionChooser.getSelected();
+    	/*positionSetter = (PositionSetter) positionChooser.getSelected();
     	positionSetter.set();
-    	autonomousCommand.start();
+    	autonomousCommand.start();*/
     	
     }
 
@@ -295,7 +295,7 @@ public class Robot extends IterativeRobot {
      * Loops during test.
      */
     public void testPeriodic() {
-    	RobotMap.shootK.setAngle(20);
+    	RobotMap.shootK.setAngle(5);
         LiveWindow.run();
         allEndOfPeriodic();
     }

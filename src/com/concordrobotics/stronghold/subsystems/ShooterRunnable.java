@@ -32,7 +32,7 @@ public class ShooterRunnable implements Runnable
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		RobotMap.shootK.setAngle(10);
+		RobotMap.shootK.setAngle(5);
 		
 		// Reset both of the ball throwing motors.
 		RobotMap.shootL.set(0);

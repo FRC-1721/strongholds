@@ -455,6 +455,11 @@ public class CustomRobotDrive implements MotorSafety {
 
     if (m_PIDEnabled) {
         m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * m_rateScale);
+        if (RobotMap.encoderBroken) {
+        	m_leftController.disable();
+        	m_leftMotor.set(limit(leftOutput*m_rateScale/10.0) * m_maxOutput, m_syncGroup);
+        }
+        
         m_rightController.setSetpoint(limit(rightOutput) * m_maxOutput * m_rateScale);
         // Provide some deadband to keep motors off when stopped.
         if (Math.abs(leftOutput) < 0.001) m_leftController.zeroOutput();
