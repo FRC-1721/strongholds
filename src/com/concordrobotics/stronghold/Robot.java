@@ -115,7 +115,7 @@ public class Robot extends IterativeRobot {
 		LiveWindow.addActuator("RightRobotDrive", "Victor", RobotMap.dtRight);
 		RobotMap.dtLeftEnc = new Encoder(RobotMap.dtLeftEncPortA, RobotMap.dtLeftEncPortB, RobotMap.dtLeftEncReversed);	  
 		RobotMap.dtRightEnc = new Encoder(RobotMap.dtRightEncPortA, RobotMap.dtRightEncPortB, RobotMap.dtRightEncReversed);
-		RobotMap.dtLeftEnc.setDistancePerPulse(0.00618);
+		RobotMap.dtLeftEnc.setDistancePerPulse(0.0112);
 		RobotMap.dtRightEnc.setDistancePerPulse(0.0134);
 		LiveWindow.addSensor("LeftRobotDrive", "Encoder", RobotMap.dtLeftEnc);
 	    LiveWindow.addSensor("RightRobotDrive", "Encoder", RobotMap.dtRightEnc);
@@ -148,7 +148,7 @@ public class Robot extends IterativeRobot {
 	    LiveWindow.addActuator("RightRobotDrive", "Controller", RobotMap.dtRightController);	    
 		
 		driveTrain = new DriveTrain(robotDrive);
-		distanceDrivePID = new DistanceDrivePID(1.0, 0.1, 0.03);
+		distanceDrivePID = new DistanceDrivePID(4.0, 1.0, 0.03);
 		distanceDrivePID.disable();
 
 		// Init Robot Vision
@@ -165,6 +165,7 @@ public class Robot extends IterativeRobot {
 		autoChooser.addDefault("Low Bar", new AutoLowBar());
 		autoChooser.addObject("Cross Terrain", new AutoCrossMoat());
 		autoChooser.addObject("TeeterTotter", new AutoCrossTeeterTotter());
+		autoChooser.addObject("None", new AutoNone());
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 		
 		// Create a chooser for field position

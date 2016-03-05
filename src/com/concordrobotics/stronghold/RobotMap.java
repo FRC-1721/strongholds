@@ -62,7 +62,7 @@ public class RobotMap {
 	public static final boolean dtRightEncReversed = false;	
 	// start with this dtP.  Crank up if unresponsive, down if noise.  
 	// Then add dtD to eliminate noise.  dtI doesn't do anything
-	public static double dtP = 0.7, dtI = 0.0, dtD = 0.0, dtF = 0.0;
+	public static double dtP = 2.0, dtI = 0.0, dtD = 0.0, dtF = 0.0;
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;	
 	
@@ -73,7 +73,7 @@ public class RobotMap {
 	public static CustomAHRS navx;
 	public static final byte kNavUpdateHz = 20;
 	// Might want to try some I term in here with new method.
-	public static double navP = 0.05, navI = 0.00, navD = 0.1, navF = 0.0;
+	public static double navP = 0.02, navI = 0.0, navD = 0.1, navF = 0.0;
 
 	/**
 	 * SHOOTER VARIABLES
@@ -93,8 +93,8 @@ public class RobotMap {
 	public static final double spinUp = .75;
 	public static final double pitchUpVolts = .3;  // NOTE: This is reversed!
 	public static final double pitchDownVolts = -.4; // NOTE: This is reversed!
-	public static final double suckLVolts = .5;
-	public static final double suckRVolts = -.5;
+	public static final double suckLVolts = .7;
+	public static final double suckRVolts = -.7;
 	
 	/**
 	 *Joysticks, Input, and Buttons.

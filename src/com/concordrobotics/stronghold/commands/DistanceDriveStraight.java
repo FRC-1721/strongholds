@@ -10,10 +10,12 @@ import com.concordrobotics.stronghold.subsystems.DriveTrain;
 public class DistanceDriveStraight extends Command {
 	double m_distance;
 	static int kToleranceIterations = 20;
-    public DistanceDriveStraight(double distance) {
+	protected double mSpeed = 0.0;
+    public DistanceDriveStraight(double distance, double speed) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.driveTrain);
+    	mSpeed = speed;
     	m_distance=distance;
     }
 
@@ -22,7 +24,7 @@ public class DistanceDriveStraight extends Command {
     	Robot.distanceDrivePID.enable();
     	Robot.distanceDrivePID.setSetpointRelative(m_distance);
     	Robot.driveTrain.setDriveMode(DriveTrain.DriveMode.distanceMode);
-    	Robot.distanceDrivePID.setOutputRange(-0.5, 0.5);
+    	Robot.distanceDrivePID.setOutputRange(-mSpeed, mSpeed);
 		Robot.distanceDrivePID.setToleranceBuffer(kToleranceIterations);
 		Robot.distanceDrivePID.setAbsoluteTolerance(1.0);	
     }

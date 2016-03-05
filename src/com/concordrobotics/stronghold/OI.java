@@ -48,8 +48,9 @@ public class OI {
 		angleDown.whenPressed(new PitchDownCommand());
 		angleUp.whenReleased(new PitchReleaseCommand());
 		angleDown.whenReleased(new PitchReleaseCommand());
-		sucker.whenPressed(new SuckBallCommand());
+		sucker.whileHeld(new SuckBallCommand());
 		sucker.whenReleased(new ReleaseThrowerCommand());
+		disablePIDShooter.whenPressed(new SetPitchToZero());
 		
 		
 		shooter.whenPressed(new ThrowBallCommand()); //MULTITHREAD THIS.  I WILL FIX YOUR BRACES AFTER
@@ -58,13 +59,13 @@ public class OI {
 		setAngle25.whenPressed(new SetPitchAngle(65));
     	
     	// Drive commands
-    	enableDrivePIDButton = new JoystickButton(jLeft, 2);
+    	enableDrivePIDButton = new JoystickButton(jLeft, 7);
     	enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
-    	disableDrivePIDButton = new JoystickButton(jLeft, 3);
+    	disableDrivePIDButton = new JoystickButton(jLeft, 11);
     	disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());   	
-    	enableDriveHeadingLockButton = new JoystickButton(jLeft, 4);
+    	enableDriveHeadingLockButton = new JoystickButton(jLeft, 8);
     	enableDriveHeadingLockButton.whenPressed(new EnableDriveHeadingLock());
-    	disableDriveHeadingLockButton = new JoystickButton(jLeft, 5);
+    	disableDriveHeadingLockButton = new JoystickButton(jLeft, 12);
     	disableDriveHeadingLockButton.whenPressed(new DisableDriveHeadingLock());    	
 
     }
