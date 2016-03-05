@@ -1,11 +1,11 @@
 package com.concordrobotics.stronghold.subsystems;
 
+import com.concordrobotics.stronghold.CustomPIDSubsystem;
 import com.concordrobotics.stronghold.RobotMap;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.command.PIDSubsystem;
 
-public class Shooter extends PIDSubsystem {
+public class Shooter extends CustomPIDSubsystem {
 
 	public Shooter(double p, double i, double d) {
 		super(p, i, d);
