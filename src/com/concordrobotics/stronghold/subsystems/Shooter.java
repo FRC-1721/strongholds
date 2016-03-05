@@ -35,6 +35,7 @@ public class Shooter extends PIDSubsystem {
 		// Set the ball-throwing motors to full voltage.
 		RobotMap.shootL.set(-1.0);
 		RobotMap.shootR.set(1.0);
+		shootMode = ShootMode.spinUp;
 		shootTimer.reset();
 	}	
 	public boolean waitLoop () {

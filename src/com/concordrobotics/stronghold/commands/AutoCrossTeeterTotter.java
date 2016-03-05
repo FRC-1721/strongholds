@@ -13,13 +13,11 @@ public class AutoCrossTeeterTotter extends CommandGroup {
     	if (!RobotMap.encoderBroken) {
 		addSequential(new EnableDrivePIDCommand());
 	}
-    	addSequential(new SetDriveRate(4.0));
     	addParallel(new SetPitchAngle(50));
     	addSequential(new TurnRelative(0));
-    	addSequential(new DistanceDriveStraight(1.0, 0.2));
+    	addSequential(new PitchDriveStraight(6.0, 0.4, 6.0));
     	addSequential(new SetPitchAngle(3.0));
-    	addSequential(new SetDriveRate(1.0));
-    	addSequential(new DistanceDriveStraight(4.0, 0.4));
+    	addSequential(new DistanceDriveStraight(6.0, 0.2));
     	addParallel(new SetPitchAngle(50));
     	addSequential(new DisableDrivePIDCommand());
     	addSequential(new DriveStop());
