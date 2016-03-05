@@ -24,21 +24,25 @@ public class Shooter extends PIDSubsystem {
 	 */
 	public void shoot() {
 		
-		// Set the ball-throwing motors to full voltage.
-		RobotMap.shootL.set(-1.0);
-		RobotMap.shootR.set(1.0);
+//		// Set the ball-throwing motors to full voltage.
+//		RobotMap.shootL.set(-1.0);
+//		RobotMap.shootR.set(1.0);
+//		
+//		// Wait for .75 seconds for the motors to get to full speed.
+//		Timer.delay(RobotMap.spinUp);
+//		
+//		// Kick the ball forward using the Servo motor.
+//		RobotMap.shootK.setAngle(120);
+//		Timer.delay(1.5);
+//		RobotMap.shootK.setAngle(10);
+//		
+//		// Reset both of the ball throwing motors.
+//		RobotMap.shootL.set(0);
+//		RobotMap.shootR.set(0);
 		
-		// Wait for .75 seconds for the motors to get to full speed.
-		Timer.delay(RobotMap.spinUp);
+		ShooterRunnable sr = new ShooterRunnable("SR");
+		sr.start();
 		
-		// Kick the ball forward using the Servo motor.
-		RobotMap.shootK.setAngle(120);
-		Timer.delay(1.5);
-		RobotMap.shootK.setAngle(10);
-		
-		// Reset both of the ball throwing motors.
-		RobotMap.shootL.set(0);
-		RobotMap.shootR.set(0);
 	}	
 	
 	

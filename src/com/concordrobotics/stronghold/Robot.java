@@ -155,6 +155,9 @@ public class Robot extends IterativeRobot {
 		RobotMap.camera.setQuality(50);
 		RobotMap.camera.startAutomaticCapture(); // Start the video
 		
+		RobotMap.ultrasonic = new Ultrasonic(RobotMap.uOut, RobotMap.uIn);
+		RobotMap.ultrasonic.setAutomaticMode(true);
+		
 		// Create a chooser for auto so it can be set from the DS
 		autonomousCommand = new AutoCrossMoat();
 		autoChooser = new SendableChooser();
@@ -180,11 +183,6 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData(navController);
 		updateSmartDashboard();
 
-		// Set the alliance to invalid for now to make the LEDS have neutral color.
-		RobotMap.alliance = Alliance.Invalid;
-		
-		// Open the I2C wire
-		RobotMap.wire = new I2C(Port.kOnboard, 4);
 		
 		if (RobotMap.loggingEnabled) logger.info ("End robotInit");
     }
@@ -194,8 +192,16 @@ public class Robot extends IterativeRobot {
         //shooter.updateSmartDashboard();
         //navController.updateSmartDashboard();	
         //distanceDrivePID.updateSmartDashboard();
-        //navxUpdateSmartDashboard();
+        navxUpdateSmartDashboard();
+        SmartDashboard.putNumber("Left_Encoder_Distance", RobotMap.dtLeftEnc.getDistance());
+        SmartDashboard.putNumber("Left_Encoder_Rate", RobotMap.dtLeftEnc.getRate());
+        
+        SmartDashboard.putNumber("Right_Encoder_Distance", RobotMap.dtRightEnc.getDistance());
+        SmartDashboard.putNumber("Right_Encoder_Rate", RobotMap.dtRightEnc.getRate());
+
         positionEstimator.updateSmartDashboard();
+        SmartDashboard.putString("Ultrasonic_Distance", Math.floor(RobotMap.ultrasonic.getRangeInches()/12) + "f, " + Math.floor((RobotMap.ultrasonic.getRangeInches() % 12)) + "i");
+   
         allEndOfPeriodic();
     }
     
@@ -254,14 +260,6 @@ public class Robot extends IterativeRobot {
     	positionSetter.set();
     	autonomousCommand.start();
     	
-    	switch (RobotMap.alliance) {
-    		case Invalid:
-    			LEDController.sendLED(RobotMap.patNone);
-    			break;
-    		default:
-    			break;
-    	}
-    	
     }
 
     /**
@@ -279,13 +277,6 @@ public class Robot extends IterativeRobot {
     	autonomousCommand.cancel();
     	allInit(RobotMode.TELEOP);
     	
-    	switch (RobotMap.alliance) {
-    		case Invalid:
-    			LEDController.sendLED(RobotMap.patNone);
-    			break;
-    		default:
-    			break;
-    	}
     }
 
     public void testInit() {
