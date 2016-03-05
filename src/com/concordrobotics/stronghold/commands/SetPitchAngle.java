@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class SetPitchAngle extends Command {
 
 	private double angle;
-	private double p = 1;
 	
 	public SetPitchAngle(double pitch) {
 		requires(Robot.shooter);
@@ -20,8 +19,6 @@ public class SetPitchAngle extends Command {
 	protected void initialize() {
 		Robot.shooter.enable();
 		Robot.shooter.setSetpoint(angle);
-		Robot.shooter.setAbsoluteTolerance(1.0);
-		
 		
 	}
 
@@ -32,11 +29,8 @@ public class SetPitchAngle extends Command {
 
 	@Override
 	protected boolean isFinished() {
-		if(Robot.shooter.onTargetDuringTime()) {
-			return true;
-		} else {
-			return false;
-		}
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override

@@ -1,23 +1,26 @@
 
 package com.concordrobotics.stronghold;
 
-import com.concordrobotics.stronghold.subsystems.*;
-import com.concordrobotics.stronghold.commands.*;
-import com.concordrobotics.stronghold.RobotMap;
-import com.concordrobotics.stronghold.CustomPIDController;
+import com.concordrobotics.stronghold.commands.AutoCrossMoat;
+import com.concordrobotics.stronghold.commands.AutoLowBar;
+import com.concordrobotics.stronghold.subsystems.DistanceDrivePID;
+import com.concordrobotics.stronghold.subsystems.DriveTrain;
+import com.concordrobotics.stronghold.subsystems.NavxController;
+import com.concordrobotics.stronghold.subsystems.Shooter;
 
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.*;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.PIDSourceType;
-import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Concord Robotics FRC Team 1721
@@ -56,10 +59,8 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtRightEnc.setDistancePerPulse(0.0134);
 		LiveWindow.addSensor("LeftRobotDrive", "Encoder", RobotMap.dtLeftEnc);
 	    LiveWindow.addSensor("RightRobotDrive", "Encoder", RobotMap.dtRightEnc);
-	    RobotMap.dtLeftController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
-	    												RobotMap.dtLeftEnc, RobotMap.dtLeft, 0.01);
-	    RobotMap.dtRightController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
-				RobotMap.dtRightEnc, RobotMap.dtRight, 0.01);
+	    RobotMap.dtLeftController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF, RobotMap.dtLeftEnc, RobotMap.dtLeft, 0.01);
+	    RobotMap.dtRightController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF, RobotMap.dtRightEnc, RobotMap.dtRight, 0.01);
 	    
 		//Shooter 
 	    shooter = new Shooter(RobotMap.shooterP, RobotMap.shooterI, RobotMap.shooterD);
@@ -92,6 +93,9 @@ public class Robot extends IterativeRobot {
 		RobotMap.camera = CameraServer.getInstance();
 		RobotMap.camera.setQuality(50);
 		RobotMap.camera.startAutomaticCapture(); // Start the video
+		
+		RobotMap.ultrasonic = new Ultrasonic(RobotMap.uOut, RobotMap.uIn);
+		RobotMap.ultrasonic.setAutomaticMode(true);
 		
 		// Create a chooser for auto so it can be set from the DS
 		autonomousCommand = new AutoCrossMoat();
@@ -180,6 +184,14 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber(   "IMU_Yaw",              RobotMap.navx.getYaw());
         SmartDashboard.putNumber(   "IMU_Pitch",            RobotMap.navx.getPitch());
         SmartDashboard.putNumber(   "IMU_Roll",             RobotMap.navx.getRoll());
+        
+        SmartDashboard.putNumber("Left_Encoder_Distance", RobotMap.dtLeftEnc.getDistance());
+        SmartDashboard.putNumber("Left_Encoder_Rate", RobotMap.dtLeftEnc.getRate());
+        
+        SmartDashboard.putNumber("Right_Encoder_Distance", RobotMap.dtRightEnc.getDistance());
+        SmartDashboard.putNumber("Right_Encoder_Rate", RobotMap.dtRightEnc.getRate());
+        
+        SmartDashboard.putString("Ultrasonic_Distance", Math.floor(RobotMap.ultrasonic.getRangeInches()/12) + "f, " + Math.floor((RobotMap.ultrasonic.getRangeInches() % 12)) + "i");
         
         /* Display tilt-corrected, Magnetometer-based heading (requires             */
         /* magnetometer calibration to be useful)                                   */

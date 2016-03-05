@@ -1,10 +1,9 @@
 package com.concordrobotics.stronghold;
 
-import com.kauailabs.navx.frc.AHRS;
-import com.concordrobotics.stronghold.PositionEstimator;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.VictorSP;
 
 /**
@@ -24,6 +23,10 @@ public class RobotMap {
 	public static Servo shootK;
 	/** Encoders */
 	public static Encoder dtLeftEnc, dtRightEnc, shootEnc;
+	/** Ultrasonic */
+	public static Ultrasonic ultrasonic;
+	public static int uIn = 6;
+	public static int uOut = 7;
 
 	//##############
 	// ROBOT VISION

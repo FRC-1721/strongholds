@@ -49,7 +49,11 @@ public class OI {
 		angleDown.whenReleased(new PitchReleaseCommand());
 		sucker.whenPressed(new SuckBallCommand());
 		sucker.whenReleased(new ReleaseThrowerCommand());
-		shooter.whenPressed(new ThrowBallCommand());
+		
+		
+		shooter.whenPressed(new ThrowBallCommand()); //MULTITHREAD THIS.  I WILL FIX YOUR BRACES AFTER
+		
+		
 		setAngle25.whenPressed(new SetPitchAngle(25));
 		setAngle10.whenPressed(new SetPitchAngle(10));
     	
