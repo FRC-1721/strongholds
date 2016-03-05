@@ -41,7 +41,7 @@ public class AutoLowBar extends CommandGroup {
     	
     	addSequential(new EnableDrivePIDCommand());
     	addSequential(new TurnRelative(0));
-    	addSequential(new DistanceDriveStraight(10.0, false));
+    	addSequential(new DistanceDriveStraight(10.0));
     	
     }
 }

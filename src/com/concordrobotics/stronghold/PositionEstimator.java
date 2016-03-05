@@ -27,7 +27,7 @@ public class PositionEstimator {
 	private Encoder m_ltEncoder;
 	private Encoder m_rtEncoder;
 	private AHRS m_navx;
-	private double encGain = 0.0;
+	private double encGain = 1.0;
 	private double gyroGain = 0.05;
 	private double deltaT = 0.0;
 	
@@ -178,6 +178,10 @@ public class PositionEstimator {
 			  // Update the "last" values
 			  lastHeading = curHeading;
 		  }
+	  }
+	  public void setPosition(double x, double y) {
+		  lastPosEst[0] = x;
+		  lastPosEst[1] = y;
 	  }
 	  
 	  public void zeroVelocity(double gain) {

@@ -97,4 +97,7 @@ public class RobotMap {
 	public static final int jLeftPort = 1;
 	public static final int jRightPort = 2;
 	public static final int jOpPort = 3;
+	
+	// Logging
+	public static final boolean loggingEnabled = false;
 }
