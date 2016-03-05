@@ -464,8 +464,8 @@ public class CustomRobotDrive implements MotorSafety {
         m_rightMotor.set(limit(rightOutput) * m_maxOutput, m_syncGroup); 	
         
     }
-    if ( (Math.abs(leftOutput)  < 0.0001 ) && (Math.abs(rightOutput) < 0.0001 )) {
-    	Robot.positionEstimator.zeroVelocity(0.02);
+    if ( (Math.abs(leftOutput)  < 0.001 ) && (Math.abs(rightOutput) < 0.001 )) {
+    	Robot.positionEstimator.zeroVelocity(0.0);
     }
 
     if (this.m_syncGroup != 0) {

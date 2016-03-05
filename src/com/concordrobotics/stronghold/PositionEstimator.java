@@ -5,7 +5,6 @@ import java.util.TimerTask;
 import com.concordrobotics.stronghold.RobotMap;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -13,23 +12,23 @@ import com.kauailabs.navx.frc.AHRS;
 
 public class PositionEstimator {
 
-	public static final double kDefaultPeriod = .03;
+	public static final double kDefaultPeriod = .01;
 	public static final double kGravity = 32.174;
-	
+	// ToDo get actual wheel base
+	private static final double kWheelBase = 4.0;
 	private double m_period = kDefaultPeriod;
 	java.util.Timer m_peLoop;
 	Timer m_resetTimer;
 	private double lastVelEst[] = new double[2];
 	private double lastPosEst[] = new double[2];
+	private double lastEncS[] = new double[2];
 	private double lastHeading = 0.0;
 	private double lastAccelEst[] = new double[2];
-	private double lastSEnc = 0.0;
 	private Encoder m_ltEncoder;
 	private Encoder m_rtEncoder;
 	private AHRS m_navx;
 	private double encGain = 0.0;
-	private double rDeltaT;
-	private double m_lastTime;
+	private double gyroGain = 0.05;
 	private double deltaT = 0.0;
 	
 	public PositionEstimator (double period) {
@@ -48,6 +47,8 @@ public class PositionEstimator {
 	    	  lastVelEst[i] = 0.0;
 	    	  lastPosEst[i] = 0.0;
 	    	  lastAccelEst[i] = 0.0;
+	    	  lastEncS[0] = m_ltEncoder.getDistance();
+	    	  lastEncS[1] = m_rtEncoder.getDistance();
 	      } 	      
 	      m_peLoop.schedule(new PositionEstimatorTask(this), 0L, (long) (m_period * 1000));
 	      
@@ -74,7 +75,49 @@ public class PositionEstimator {
 		    	m_positionEstimator.calculate();
 		    }
 		  }
-	  
+	 
+	  private void filteredEncoderVelocity(double deltaHeading, double vel[] ) {
+		  double encS[] = new double[2];
+		  encS[0] = m_ltEncoder.getDistance();
+		  encS[1] = m_rtEncoder.getDistance();
+		  vel[0] = (encS[0] - lastEncS[0]);
+		  vel[1] = (encS[1] - lastEncS[1]);
+		  lastEncS[0] = encS[0];
+		  lastEncS[1] = encS[1];
+		  // Check to see if encoders predict a higher turn than actual
+		  // and limit the fast wheel 
+		  double delHeadingEnc = (vel[0] - vel[1]) / kWheelBase; 
+		  
+		  // Turning Right
+		  if (deltaHeading > 0) {
+			  if (delHeadingEnc > deltaHeading) {
+				  // Moving forward and turning faster than gyro, reduce left wheel speed
+				  if (vel[1] > 0) {
+					  vel[0] = vel[1] + deltaHeading*kWheelBase;
+				  // Moving back and turning faster, increase right wheel speed
+				  } else {
+					  vel[1] = vel[0] - deltaHeading*kWheelBase;
+				  }
+				  
+			  } 
+		  } else {
+			  // Turning left
+			  if (delHeadingEnc < deltaHeading) {
+				  // Moving forward and turning faster than gyro, reduce right wheel speed
+				  if (vel[0] > 0) {
+					  vel[1] = vel[0] - deltaHeading*kWheelBase;
+				  // Moving back and turning faster, increase left wheel speed
+				  } else {
+					  vel[0] = vel[1] + deltaHeading*kWheelBase;
+				  }
+				  
+			  } 
+		  }
+		  // Transform to field relative directions
+		  double dSdT = 0.5*(vel[1] + vel[1])/deltaT;
+		  vel[0] = Math.cos(lastHeading)*dSdT;
+		  vel[1] = Math.sin(lastHeading)*dSdT;
+	  }
 
 	  private void calculate() {
 		  // Don't start taking data until calibration is done
@@ -85,19 +128,13 @@ public class PositionEstimator {
 			  return;
 		  }
 		  synchronized(this) {
-			  rDeltaT = 1.0/deltaT;
 			  // Treate the gyro heading as gospel
 			  double curHeading = Math.toRadians(m_navx.getYaw());
 			  
 			  // Calculate Encoders measurements
-			  double encS = 0.5*(m_rtEncoder.getDistance() + m_ltEncoder.getDistance());
-			  double encDelS =  encS - lastSEnc;
-			  lastSEnc = encS;
-			  double speedEnc = encDelS*rDeltaT;
-			  double velEnc[] = new double[2];
 
-			  velEnc[0] = Math.cos(lastHeading)*speedEnc;
-			  velEnc[1] = Math.sin(lastHeading)*speedEnc;
+			  double velEnc[] = new double[2];
+			  filteredEncoderVelocity(curHeading - lastHeading, velEnc);
 			  
 			  double posEnc[] = new double[2];
 			  for ( int i = 0; i < 2; i++ ) {
@@ -106,13 +143,11 @@ public class PositionEstimator {
 			  
 			  // Calculate Gyro's measurements
 			  // Need to handle the sign properly
-			  double rawGyroX = m_navx.getWorldLinearAccelX()*kGravity;
-			 // double rawGyroY = m_navx.getRawAccelY()*kGravity;
 			  double accelGyro[] = new double[2];
-			  // Leave out side accel for now
-			  accelGyro[0] = rawGyroX*Math.cos(curHeading);
-			  accelGyro[1] = rawGyroX*Math.sin(curHeading);
-	
+			  accelGyro[0] = m_navx.getWorldLinearAccelX()*kGravity;
+			  accelGyro[1] = m_navx.getWorldLinearAccelY()*kGravity;
+			  
+
 			  
 			  // Calculate the estimated quantities assuming no other changes
 			  double posEst[] = new double[2];
@@ -127,7 +162,7 @@ public class PositionEstimator {
 			  // Update the estimates based on the gains
 			  for ( int i = 0; i < 2; i++ ) {
 				  // Use gyro directly for accelleration
-				  accelEst[i] = accelGyro[i];
+				  accelEst[i] = (1.0-gyroGain)*accelEst[i] + gyroGain*accelGyro[i];
 				  // Use encoders with gain to adjust the velocity and prevent velocity drift
 				  velEst[i] = velEst[i] + encGain*(velEnc[i] - velEst[i]);
 				  // Adjust position with the encoders
@@ -191,7 +226,8 @@ public class PositionEstimator {
 	  	  SmartDashboard.putNumber("PositionEstVelY", getVelocityY());
 	  	  SmartDashboard.putNumber("PositionEstAccelX", lastAccelEst[0]);
 	  	  SmartDashboard.putNumber("PositionEstAccelY", lastAccelEst[1]);	  	  
-	  	  SmartDashboard.putNumber("PositionEstDeltaT", deltaT);	 
+	  	  SmartDashboard.putNumber("PositionEstDeltaT", deltaT);	
+	  	  SmartDashboard.putNumber("PositionEstYaw", m_navx.getYaw());
 	    }	    
 	    
 }
