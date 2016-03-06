@@ -12,10 +12,12 @@ public class AutoLowBar extends CommandGroup {
     public  AutoLowBar() {
     	addSequential(new SetCurrentYaw(180));
     	if (!RobotMap.encoderBroken) {
-    		addSequential(new EnableDrivePIDCommand());
+    		addSequential(new EnableDrivePIDCommand(true));
+    	} else {
+    		addSequential(new EnableDrivePIDCommand(false));
     	}
     	addParallel(new SetPitchAngle(5));
-    	addSequential(new TurnRelative(0.0));
+    	addParallel(new TurnRelative(0.0));
     	addSequential(new DistanceDriveStraight(-10.0,0.2));
     	//addSequential(new DistanceDriveStraight(-6.0, 0.3));
     	addSequential(new TurnAbsolute(45.0));

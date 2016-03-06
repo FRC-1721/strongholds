@@ -60,7 +60,12 @@ public class OI {
     	
     	// Drive commands
     	enableDrivePIDButton = new JoystickButton(jLeft, 7);
-    	enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
+    	if (RobotMap.encoderBroken) {
+    		enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand(true));
+    	} else {
+    		enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand(false));
+    	}
+    	
     	disableDrivePIDButton = new JoystickButton(jLeft, 11);
     	disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());   	
     	enableDriveHeadingLockButton = new JoystickButton(jLeft, 8);

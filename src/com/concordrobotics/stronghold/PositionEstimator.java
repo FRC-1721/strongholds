@@ -30,6 +30,13 @@ public class PositionEstimator {
 	private double encGain = 1.0;
 	private double gyroGain = 0.05;
 	private double deltaT = 0.0;
+	private int ltEncFaults = 0;
+	private int rtEncFaults = 0;
+	private int shootFaults = 0;
+	public boolean ltEncFail = false;
+	public boolean rtEncFail = false;
+	public boolean shootEncFail = false;
+	private static final int kFaultMax = 20;
 	
 	public PositionEstimator (double period) {
 
@@ -80,13 +87,16 @@ public class PositionEstimator {
 		  double encS[] = new double[2];
 		  encS[0] = m_ltEncoder.getDistance();
 		  encS[1] = m_rtEncoder.getDistance();
-		  if (RobotMap.encoderBroken) {
+		  vel[0] = m_ltEncoder.getRate();
+		  vel[1] = m_rtEncoder.getRate();
+		  if (ltEncFail) {
 			  encS[0] = encS[1];
+			  vel[0] = vel[1];
+		  } else if (rtEncFail) {
+			  encS[1] = encS[0];
+			  vel[1] = vel[0];
 		  }
-		  vel[0] = (encS[0] - lastEncS[0]);
-		  vel[1] = (encS[1] - lastEncS[1]);
-		  lastEncS[0] = encS[0];
-		  lastEncS[1] = encS[1];
+		  /*(
 		  // Check to see if encoders predict a higher turn than actual
 		  // and limit the fast wheel 
 		  double delHeadingEnc = (vel[0] - vel[1]) / kWheelBase; 
@@ -116,16 +126,64 @@ public class PositionEstimator {
 				  
 			  } 
 		  }
+		  
+		  */
 		  // Transform to field relative directions
-		  double dSdT = 0.5*(vel[1] + vel[1])/deltaT;
+		  double dSdT = 0.5*(vel[1] + vel[1]);
 		  vel[0] = Math.cos(lastHeading)*dSdT;
 		  vel[1] = Math.sin(lastHeading)*dSdT;
 	  }
 
+	  private void checkEncoders () {
+		  if (Math.abs(RobotMap.dtRight.get()) > 0.001 ) {
+			  if (Math.abs(RobotMap.dtRightEnc.getRate()) == 0.0) {
+				  rtEncFaults += 1;
+			  } else {
+				  rtEncFaults = 0;
+			  }
+		  }
+		  if (Math.abs(RobotMap.dtLeft.get()) > 0.001 ) {
+			  if (Math.abs(RobotMap.dtLeftEnc.getRate()) == 0.0) {
+				  ltEncFaults += 1;
+			  } else {
+				  ltEncFaults = 0;
+			  }
+		  }
+		  if (Math.abs(RobotMap.shootA.get()) > 0.001 ) {
+			  if (Math.abs(RobotMap.shootEnc.getRate()) == 0.0) {
+				  shootFaults += 1;
+			  }
+		  }
+		  if ((rtEncFaults > kFaultMax) && ( ! rtEncFail ) ) {
+			  RobotMap.dtRightController.setPID(0, 0, 0, RobotMap.dtF);
+			  rtEncFail = true;
+		  } else if ((rtEncFaults < kFaultMax) && (rtEncFail)) {
+			  rtEncFail = false;
+			  RobotMap.dtRightController.setPID(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF);
+		  }
+		  if ((ltEncFaults > kFaultMax) && ( ! ltEncFail ) ) {
+			  RobotMap.dtLeftController.setPID(0, 0, 0, RobotMap.dtF);
+			  ltEncFail = true;
+		  } else if ((ltEncFaults < kFaultMax) && (ltEncFail)) {
+			  ltEncFail = false;
+			  RobotMap.dtLeftController.setPID(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF);
+		  }
+		  if ( (shootFaults > kFaultMax) && (!shootEncFail)) {
+			  Robot.shooter.disable();
+		  } 
+		  if (ltEncFail && rtEncFail) {
+			  encGain = 0.0;
+		  } else {
+			  encGain = 1.0;
+		  }
+	  }
+	  
 	  private void calculate() {
 		  // Don't start taking data until calibration is done
+		  checkEncoders();
 		  deltaT = m_resetTimer.get();
 		  m_resetTimer.reset();
+		  
 		  if (m_navx.isCalibrating()) {
 			  m_resetTimer.reset();
 			  return;
@@ -199,7 +257,10 @@ public class PositionEstimator {
 	    public double getVelocityY() {
 	        return lastVelEst[1];
 	    }
-
+	    
+	    public double getVelocityS() {
+	    	return lastVelEst[0]*Math.cos(lastHeading) + lastVelEst[1]*Math.sin(lastHeading);
+	    }
 	    public double getVelocityZ() {
 	        return 0;
 	    }
@@ -226,14 +287,17 @@ public class PositionEstimator {
 	    
 	    public void updateSmartDashboard(){
 	  	  // Left side
-	      SmartDashboard.putBoolean("PositionEstCalibrating", m_navx.isCalibrating());
+	      //SmartDashboard.putBoolean("PositionEstCalibrating", m_navx.isCalibrating());
 	  	  SmartDashboard.putNumber("PositionEstX", getDisplacementX());
 	  	  SmartDashboard.putNumber("PositionEstY", getDisplacementY());
-	  	  SmartDashboard.putNumber("PositionEstVelX", getVelocityX());
+	  	 /* SmartDashboard.putNumber("PositionEstVelX", getVelocityX());
 	  	  SmartDashboard.putNumber("PositionEstVelY", getVelocityY());
 	  	  SmartDashboard.putNumber("PositionEstAccelX", lastAccelEst[0]);
 	  	  SmartDashboard.putNumber("PositionEstAccelY", lastAccelEst[1]);	  	  
-	  	  SmartDashboard.putNumber("PositionEstDeltaT", deltaT);	
+	  	  SmartDashboard.putNumber("PositionEstDeltaT", deltaT);	 */
+	  	  SmartDashboard.putBoolean("ShootEncFail", shootEncFail);
+	  	  SmartDashboard.putBoolean("leftEncFail", ltEncFail);
+	  	  SmartDashboard.putBoolean("rtEncFail", rtEncFail);
 	  	  SmartDashboard.putNumber("PositionEstYaw", m_navx.getYaw());
 	    }	    
 	    

@@ -8,8 +8,10 @@ import com.concordrobotics.stronghold.Robot;
 public class EnableDrivePIDCommand extends Command {
 
 	protected boolean complete = false;
+	protected boolean useVelController = false;
 	
-    public EnableDrivePIDCommand() {
+    public EnableDrivePIDCommand(boolean useVelController) {
+    	this.useVelController = useVelController;
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }
@@ -21,7 +23,7 @@ public class EnableDrivePIDCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.robotDrive.enablePID();
+    	Robot.robotDrive.enablePID(useVelController);
     	complete = true;
     }
 

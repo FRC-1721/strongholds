@@ -10,11 +10,13 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoCrossTeeterTotter extends CommandGroup {
     
     public  AutoCrossTeeterTotter() {
-    	if (!RobotMap.encoderBroken) {
-		addSequential(new EnableDrivePIDCommand());
-	}
+    	if (RobotMap.encoderBroken) {
+    		addSequential(new EnableDrivePIDCommand(true));
+    	} else {
+    		addSequential(new EnableDrivePIDCommand(false));
+    	}
     	addParallel(new SetPitchAngle(50));
-    	addSequential(new TurnRelative(0));
+    	addParallel(new TurnRelative(0));
     	addSequential(new PitchDriveStraight(6.0, 0.4, 6.0));
     	addSequential(new SetPitchAngle(3.0));
     	addSequential(new DistanceDriveStraight(6.0, 0.2));

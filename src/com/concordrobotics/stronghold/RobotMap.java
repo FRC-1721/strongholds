@@ -62,9 +62,10 @@ public class RobotMap {
 	public static final boolean dtRightEncReversed = false;	
 	// start with this dtP.  Crank up if unresponsive, down if noise.  
 	// Then add dtD to eliminate noise.  dtI doesn't do anything
-	public static double dtP = 2.0, dtI = 0.0, dtD = 0.0, dtF = 0.0;
+	public static double dtP = 2.0, dtI = 0.0, dtD = 0.0, dtF = 0.1;
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;	
+	public static CustomPIDController velDriveController;
 	
 	/**
 	 * NAVX Gyro & PID

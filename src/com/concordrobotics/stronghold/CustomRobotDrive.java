@@ -71,6 +71,8 @@ public class CustomRobotDrive implements MotorSafety {
   protected static boolean kArcadeStandard_Reported = false;
   public CustomPIDController m_leftController;
   public CustomPIDController m_rightController;
+  public CustomPIDController m_velController;
+  protected boolean m_useVelDrive = false;
   // Default PID parameters
   protected boolean m_PIDEnabled = false; 
   // Output from -1 to 1 scaled to give rate in ft/s for PID controller
@@ -108,6 +110,8 @@ public class CustomRobotDrive implements MotorSafety {
     m_leftController.setPIDSourceType(PIDSourceType.kRate);
     m_rightController.setPIDSourceType(PIDSourceType.kRate);
     m_turnController = turnController;
+    m_velController = RobotMap.velDriveController;
+    m_velController.disable();
     setupMotorSafety();
     drive(0, 0);
     
@@ -149,19 +153,25 @@ public class CustomRobotDrive implements MotorSafety {
 	  }
   }
   
-  public void enablePID() {
+  public void enablePID(boolean useVelDrive) {
 	  m_PIDEnabled = true;
-
-	  m_leftController.reset();
-	  m_rightController.reset();
-	  m_leftController.enable();
-	  m_rightController.enable();
+	  m_useVelDrive = useVelDrive;
+	  if (m_useVelDrive) {
+		  m_velController.reset();
+		  m_velController.enable();
+	  } else {
+		  m_leftController.reset();
+		  m_rightController.reset();
+		  m_leftController.enable();
+		  m_rightController.enable();
+	  }
   }
   
   public void disablePID() {
 	  m_PIDEnabled = false;
 	  m_leftController.disable();
 	  m_rightController.disable();
+	  m_velController.disable();
   }
   
   public void enableHeadingLock() {
@@ -454,13 +464,17 @@ public class CustomRobotDrive implements MotorSafety {
     }
 
     if (m_PIDEnabled) {
-        m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * m_rateScale);
-        if (RobotMap.encoderBroken) {
-        	m_leftController.disable();
-        	m_leftMotor.set(limit(leftOutput*m_rateScale/10.0) * m_maxOutput, m_syncGroup);
-        }
-        
-        m_rightController.setSetpoint(limit(rightOutput) * m_maxOutput * m_rateScale);
+    	if (m_useVelDrive) {
+    		double delOutput = 0.5*(rightOutput - leftOutput);
+    		double avgOutput = 0.5*(rightOutput + leftOutput);
+    		m_velController.setSetpoint(avgOutput);
+    		double pidOutput = m_velController.get();
+    		rightOutput = pidOutput + delOutput;
+    		leftOutput = pidOutput - delOutput;
+    	} else {
+    		m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * m_rateScale);
+    		m_rightController.setSetpoint(limit(rightOutput) * m_maxOutput * m_rateScale);
+    	}
         // Provide some deadband to keep motors off when stopped.
         if (Math.abs(leftOutput) < 0.001) m_leftController.zeroOutput();
         if (Math.abs(rightOutput) < 0.001) m_rightController.zeroOutput();

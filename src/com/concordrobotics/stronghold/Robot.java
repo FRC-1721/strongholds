@@ -120,10 +120,11 @@ public class Robot extends IterativeRobot {
 		LiveWindow.addSensor("LeftRobotDrive", "Encoder", RobotMap.dtLeftEnc);
 	    LiveWindow.addSensor("RightRobotDrive", "Encoder", RobotMap.dtRightEnc);
 	    RobotMap.dtLeftController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
-	    												RobotMap.dtLeftEnc, RobotMap.dtLeft, 0.01);
+	    												RobotMap.dtLeftEnc, RobotMap.dtLeft, 0.03);
 	    RobotMap.dtRightController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
-				RobotMap.dtRightEnc, RobotMap.dtRight, 0.01);
-	    
+				RobotMap.dtRightEnc, RobotMap.dtRight, 0.03);
+	    RobotMap.velDriveController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
+				RobotMap.dtRightEnc, RobotMap.dtRight, 0.03);
 		//Shooter 
 	    shooter = new Shooter(RobotMap.shooterP, RobotMap.shooterI, RobotMap.shooterD);
 		RobotMap.shootA = new VictorSP(RobotMap.spShootA);
