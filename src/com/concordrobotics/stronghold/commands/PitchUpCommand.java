@@ -6,6 +6,13 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class PitchUpCommand extends Command {
 
+	public PitchUpCommand() {
+		requires(Robot.shooter);
+	}
+	
+	protected void initialize() {
+		Robot.shooter.disable();
+	}
 	protected void execute() {
 		Robot.shooter.pitch(true); // Pitch up (positive)
 	}
@@ -15,5 +22,4 @@ public class PitchUpCommand extends Command {
 	}
 	protected void end() {}
 	protected void interrupted() {}
-	protected void initialize() {}
 }

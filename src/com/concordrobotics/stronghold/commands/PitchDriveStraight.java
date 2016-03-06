@@ -8,8 +8,8 @@ import com.concordrobotics.stronghold.RobotMap;
 public class PitchDriveStraight extends DistanceDriveStraight {
 	double m_pitch;
 	static int kToleranceIterations = 10;
-    public PitchDriveStraight(double distance, double pitch) {
-    	super(distance);
+    public PitchDriveStraight(double distance, double speed,  double pitch) {
+    	super(distance, speed);
     	m_pitch = pitch;
     }
 

@@ -12,7 +12,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 public class PositionEstimator {
 
-	public static final double kDefaultPeriod = .01;
+	public static final double kDefaultPeriod = .05;
 	public static final double kGravity = 32.174;
 	// ToDo get actual wheel base
 	private static final double kWheelBase = 4.0;

@@ -9,14 +9,17 @@ public class ThrowBallCommand extends Command {
 	private boolean finished = false;
 	
 	protected void execute() {
-		Robot.shooter.shoot();
-		finished = true;
+		finished = Robot.shooter.waitLoop();
 	}
 	protected boolean isFinished() {
 		return finished;
 	}
 	
-	protected void end() {}
+	protected void end() {
+		Robot.shooter.throwerRelease();
+	}
 	protected void interrupted() {}
-	protected void initialize() {	}
+	protected void initialize() {	
+		Robot.shooter.shoot();
+		}
 }

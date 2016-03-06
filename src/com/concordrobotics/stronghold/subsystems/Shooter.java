@@ -4,14 +4,21 @@ import com.concordrobotics.stronghold.RobotMap;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Shooter extends PIDSubsystem {
 	
 	public double servoAngle = 10;
-
+	protected Timer shootTimer;
+	public enum ShootMode {
+		spinUp, sucking, shooting, none
+	}
+	public ShootMode shootMode = ShootMode.none;
 	public Shooter(double p, double i, double d) {
 		super(p, i, d);
 		this.setOutputRange(-.3, .4);
+		shootTimer = new Timer();
+		shootTimer.start();
 		
 	}
 
@@ -29,18 +36,42 @@ public class Shooter extends PIDSubsystem {
 		// Set the ball-throwing motors to full voltage.
 		RobotMap.shootL.set(-1.0);
 		RobotMap.shootR.set(1.0);
-		
-		// Wait for .75 seconds for the motors to get to full speed.
-		Timer.delay(RobotMap.spinUp);	
-		// Kick the ball forward using the Servo motor.
-		RobotMap.shootK.setAngle(120);
-		Timer.delay(1.5);
-		RobotMap.shootK.setAngle(servoAngle);
-		
-		// Reset both of the ball throwing motors.
-		RobotMap.shootL.set(0);
-		RobotMap.shootR.set(0);
+		shootMode = ShootMode.spinUp;
+		shootTimer.reset();
 	}	
+	
+	public boolean waitLoop () {
+		if (shootMode == ShootMode.spinUp) {
+			RobotMap.shootL.set(-1.0);
+			RobotMap.shootR.set(1.0);
+			if (shootTimer.get() > RobotMap.spinUp) {
+				shootMode = ShootMode.shooting;
+				shootTimer.reset();
+			}
+		}
+		 if (shootMode == ShootMode.shooting) {
+				RobotMap.shootL.set(-1.0);
+				RobotMap.shootR.set(1.0);
+				RobotMap.shootK.setAngle(120);
+				if (shootTimer.get() > 1.5 ){
+					shootMode = ShootMode.none;
+					RobotMap.shootK.setAngle(servoAngle);
+					RobotMap.shootL.set(0);
+					RobotMap.shootR.set(0);
+				}
+			}
+		if (shootMode == ShootMode.sucking) {
+			RobotMap.shootL.set(RobotMap.suckLVolts);
+			RobotMap.shootR.set(RobotMap.suckRVolts);	
+		}
+		if (shootMode == ShootMode.none) {
+			RobotMap.shootL.set(0.0);
+			RobotMap.shootR.set(0.0);
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	public void shootLowGoal() {
 		RobotMap.shootL.set(-.8);
@@ -58,6 +89,7 @@ public class Shooter extends PIDSubsystem {
 	 * @return if the command has finished
 	 */
 	public void suck() {
+		shootMode = ShootMode.sucking;
 		RobotMap.shootL.set(RobotMap.suckLVolts);
 		RobotMap.shootR.set(RobotMap.suckRVolts);
 	}
@@ -67,6 +99,7 @@ public class Shooter extends PIDSubsystem {
 	 * @return if the command has finished
 	 */
 	public void throwerRelease() {
+		shootMode = ShootMode.none;
 		RobotMap.shootL.set(0);
 		RobotMap.shootR.set(0);
 	}
@@ -101,7 +134,8 @@ public class Shooter extends PIDSubsystem {
 	}
 	
 	public void updateSmartDashboard() {
-
+		SmartDashboard.putNumber("ShooterEncoder", RobotMap.shootEnc.getDistance());
+		SmartDashboard.putNumber("ShooterTimer", shootTimer.get());
 	}
 	
 }
