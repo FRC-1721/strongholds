@@ -70,7 +70,7 @@ public class RobotMap {
 	 * NAVX Gyro & PID
 	 * 
 	 */
-	public static CustomAHRS navx;
+	public static AHRS navx;
 	public static final byte kNavUpdateHz = 20;
 	// Might want to try some I term in here with new method.
 	public static double navP = 0.05, navI = 0.1, navD = 0.0, navF = 0.0;

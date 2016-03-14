@@ -10,15 +10,15 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoLowBar extends CommandGroup {
     
     public  AutoLowBar() {
-    	addSequential(new SetCurrentYaw(180));
+    	//addSequential(new SetCurrentYaw(180));
     	if (!RobotMap.encoderBroken) {
     		addSequential(new EnableDrivePIDCommand());
     	}
-    	addParallel(new SetPitchAngle(5));
+    	//addParallel(new SetPitchAngle(5));
     	addSequential(new TurnRelative(0.0));
-    	addSequential(new DistanceDriveStraight(-10.0,0.2));
-    	//addSequential(new DistanceDriveStraight(-6.0, 0.3));
-    	addSequential(new TurnAbsolute(45.0));
+    	addSequential(new DistanceDriveStraight(-16.0,-0.6));
+    	//addSequential(new DistanceDriveStraight(-6.0, -0.6));
+    	//addSequential(new TurnAbsolute(45.0));
     	
     	//addSequential(new DistanceDriveStraight(-3.0));
     	//addSequential(new TurnAbsolute(180.0));

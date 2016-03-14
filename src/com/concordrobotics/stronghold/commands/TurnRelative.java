@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj.command.Command;
 public class TurnRelative extends Command{
 	double m_targetHeading;
 	double m_turnAngle;
-	static int kToleranceIterations = 20;
+	static int kToleranceIterations = 1;
+	static boolean finished = false;
 	public TurnRelative(double turnAngle) {
 		requires(Robot.driveTrain);
 		m_turnAngle =  turnAngle;
@@ -18,9 +19,11 @@ public class TurnRelative extends Command{
 		Robot.navController.setSetpointRelative(m_turnAngle);
 		Robot.navController.setAbsoluteTolerance(5.0);
 		Robot.navController.setToleranceBuffer(kToleranceIterations);
+		finished = false;
 	}
 	protected void execute() { 
 		Robot.driveTrain.rawDrive(0, 0); 
+		finished = true;
 		}
 	// Just set to run tank.
 	protected void end() { 
@@ -30,7 +33,8 @@ public class TurnRelative extends Command{
 	
 	/* Unused, required methods. Pfffft */
 	protected boolean isFinished() {
-		return Robot.navController.onTargetDuringTime();
+		return finished;
+		//return Robot.navController.onTargetDuringTime();
 	}
 	
 }

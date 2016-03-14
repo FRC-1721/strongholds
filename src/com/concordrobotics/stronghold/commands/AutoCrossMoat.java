@@ -15,12 +15,12 @@ public class AutoCrossMoat extends CommandGroup {
     	}
     	//addParallel(new SetPitchAngle(50));
     	addSequential(new TurnRelative(0));
-    	addSequential(new DistanceDriveStraight(4.0,0.4));
-    	addSequential(new DistanceDriveStraight(4.0,0.8));
-    	addSequential(new DistanceDriveStraight(-1.0,0.2));
-    	addSequential(new DistanceDriveStraight(4.0,0.8));
+    	addSequential(new DistanceDriveStraight(16.0,0.8));
+    	//addSequential(new DistanceDriveStraight(5.0,0.8));
+    	//addSequential(new DistanceDriveStraight(3.0,0.2));
+    	//addSequential(new DistanceDriveStraight(4.0,0.8));
     	//addSequential(new DistanceDriveStraight(3.0));
-    	addSequential(new DisableDrivePIDCommand());
+    	//addSequential(new DisableDrivePIDCommand());
     	addSequential(new DriveStop());
         // Add Commands here:
         // e.g. addSequential(new Command1());
