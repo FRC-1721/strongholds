@@ -54,8 +54,6 @@ public class OI {
 		
 		
 		shooter.whenPressed(new ThrowBallCommand()); //MULTITHREAD THIS.  I WILL FIX YOUR BRACES AFTER
-		
-		
 		setAngle25.whenPressed(new SetPitchAngle(65));
     	
     	// Drive commands
@@ -69,5 +67,4 @@ public class OI {
     	disableDriveHeadingLockButton.whenPressed(new DisableDriveHeadingLock());    	
 
     }
-
 }

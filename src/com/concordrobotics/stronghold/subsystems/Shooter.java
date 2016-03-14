@@ -18,6 +18,7 @@ public class Shooter extends PIDSubsystem {
 		super(p, i, d);
 		this.setOutputRange(-.3, .4);
 		shootTimer = new Timer();
+		shootTimer.start();
 		
 	}
 
@@ -38,11 +39,12 @@ public class Shooter extends PIDSubsystem {
 		shootMode = ShootMode.spinUp;
 		shootTimer.reset();
 	}	
+	
 	public boolean waitLoop () {
 		if (shootMode == ShootMode.spinUp) {
 			RobotMap.shootL.set(-1.0);
 			RobotMap.shootR.set(1.0);
-			if (shootTimer.hasPeriodPassed(RobotMap.spinUp)) {
+			if (shootTimer.get() > RobotMap.spinUp) {
 				shootMode = ShootMode.shooting;
 				shootTimer.reset();
 			}
@@ -51,7 +53,7 @@ public class Shooter extends PIDSubsystem {
 				RobotMap.shootL.set(-1.0);
 				RobotMap.shootR.set(1.0);
 				RobotMap.shootK.setAngle(120);
-				if (shootTimer.hasPeriodPassed(1.5) ){
+				if (shootTimer.get() > 1.5 ){
 					shootMode = ShootMode.none;
 					RobotMap.shootK.setAngle(servoAngle);
 					RobotMap.shootL.set(0);
@@ -63,6 +65,8 @@ public class Shooter extends PIDSubsystem {
 			RobotMap.shootR.set(RobotMap.suckRVolts);	
 		}
 		if (shootMode == ShootMode.none) {
+			RobotMap.shootL.set(0.0);
+			RobotMap.shootR.set(0.0);
 			return true;
 		} else {
 			return false;
@@ -131,6 +135,7 @@ public class Shooter extends PIDSubsystem {
 	
 	public void updateSmartDashboard() {
 		SmartDashboard.putNumber("ShooterEncoder", RobotMap.shootEnc.getDistance());
+		SmartDashboard.putNumber("ShooterTimer", shootTimer.get());
 	}
 	
 }

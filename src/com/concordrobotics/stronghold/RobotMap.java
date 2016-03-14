@@ -70,10 +70,10 @@ public class RobotMap {
 	 * NAVX Gyro & PID
 	 * 
 	 */
-	public static CustomAHRS navx;
+	public static AHRS navx;
 	public static final byte kNavUpdateHz = 20;
 	// Might want to try some I term in here with new method.
-	public static double navP = 0.02, navI = 0.0, navD = 0.01, navF = 0.0;
+	public static double navP = 0.05, navI = 0.1, navD = 0.0, navF = 0.0;
 
 	/**
 	 * SHOOTER VARIABLES
@@ -93,8 +93,8 @@ public class RobotMap {
 	public static final double spinUp = .75;
 	public static final double pitchUpVolts = .3;  // NOTE: This is reversed!
 	public static final double pitchDownVolts = -.4; // NOTE: This is reversed!
-	public static final double suckLVolts = .7;
-	public static final double suckRVolts = -.7;
+	public static final double suckLVolts = .5;
+	public static final double suckRVolts = -.5;
 	
 	/**
 	 *Joysticks, Input, and Buttons.

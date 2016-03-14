@@ -120,9 +120,10 @@ public class Robot extends IterativeRobot {
 		LiveWindow.addSensor("LeftRobotDrive", "Encoder", RobotMap.dtLeftEnc);
 	    LiveWindow.addSensor("RightRobotDrive", "Encoder", RobotMap.dtRightEnc);
 	    RobotMap.dtLeftController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
-	    												RobotMap.dtLeftEnc, RobotMap.dtLeft, 0.01);
+	    												RobotMap.dtLeftEnc, RobotMap.dtLeft, 0.03);
 	    RobotMap.dtRightController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
-				RobotMap.dtRightEnc, RobotMap.dtRight, 0.01);
+				RobotMap.dtRightEnc, RobotMap.dtRight, 0.03);
+	  //  RobotMap.velDriveController = new VelocityDrivePID(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF);
 	    
 		//Shooter 
 	    shooter = new Shooter(RobotMap.shooterP, RobotMap.shooterI, RobotMap.shooterD);
@@ -136,7 +137,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.shootEnc.setDistancePerPulse(0.1052);
 		
 		// Gyro and controller
-        RobotMap.navx = new CustomAHRS(SPI.Port.kMXP, RobotMap.kNavUpdateHz); 
+        RobotMap.navx = new AHRS(SPI.Port.kMXP, RobotMap.kNavUpdateHz); 
         LiveWindow.addSensor("Gyro", "navx", RobotMap.navx);
         navController = new NavxController("HeadingController", RobotMap.navP, RobotMap.navI, RobotMap.navD,
         		RobotMap.navF, RobotMap.navx, PIDSourceType.kDisplacement);
@@ -148,7 +149,7 @@ public class Robot extends IterativeRobot {
 	    LiveWindow.addActuator("RightRobotDrive", "Controller", RobotMap.dtRightController);	    
 		
 		driveTrain = new DriveTrain(robotDrive);
-		distanceDrivePID = new DistanceDrivePID(4.0, 1.0, 0.03);
+		distanceDrivePID = new DistanceDrivePID(8.0, 1.0, 0.03);
 		distanceDrivePID.disable();
 
 		// Init Robot Vision
@@ -193,11 +194,12 @@ public class Robot extends IterativeRobot {
     public void updateSmartDashboard() {
         //driveTrain.updateSmartDashboard();
         shooter.updateSmartDashboard();
-        //navController.updateSmartDashboard();	
+        navController.updateSmartDashboard();	
         //distanceDrivePID.updateSmartDashboard();
         //navxUpdateSmartDashboard();
         SmartDashboard.putNumber("Left_Encoder_Distance", RobotMap.dtLeftEnc.getDistance());
         SmartDashboard.putNumber("Left_Encoder_Rate", RobotMap.dtLeftEnc.getRate());
+        
         
         SmartDashboard.putNumber("Right_Encoder_Distance", RobotMap.dtRightEnc.getDistance());
         SmartDashboard.putNumber("Right_Encoder_Rate", RobotMap.dtRightEnc.getRate());

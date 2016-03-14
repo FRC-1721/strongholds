@@ -15,7 +15,9 @@ public class ThrowBallCommand extends Command {
 		return finished;
 	}
 	
-	protected void end() {}
+	protected void end() {
+		Robot.shooter.throwerRelease();
+	}
 	protected void interrupted() {}
 	protected void initialize() {	
 		Robot.shooter.shoot();

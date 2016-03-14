@@ -16,6 +16,7 @@ public class DistanceDrivePID extends CustomPIDSubsystem {
 	private Encoder m_rightEncoder;
 	private boolean m_useGyro;
 	private final double kMetersToFeet = 3.28084;
+	private double lastDistance = 0.0;
 	double pidOut = 0.0;;
 	
     // Initialize your subsystem here
@@ -46,7 +47,11 @@ public class DistanceDrivePID extends CustomPIDSubsystem {
     	if (m_useGyro) {
     		return RobotMap.navx.getDisplacementX()*kMetersToFeet;
     	} else {
-    		return 0.5*(m_leftEncoder.getDistance() + m_rightEncoder.getDistance());
+    		double avgDist = 0.5*(m_leftEncoder.getDistance() + m_rightEncoder.getDistance());
+    		if (RobotMap.encoderBroken) {
+    			avgDist = avgDist*2;  			
+    		}
+    		return  avgDist;
     	}
     }
     
