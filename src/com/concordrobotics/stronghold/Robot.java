@@ -485,6 +485,9 @@ public class Robot extends IterativeRobot {
 		RobotMap.distP = preferences.getDouble(PreferencesNames.DIST_PID_P, RobotMap.distP);
 		RobotMap.distI = preferences.getDouble(PreferencesNames.DIST_PID_I, RobotMap.distI);
 		RobotMap.distD = preferences.getDouble(PreferencesNames.DIST_PID_D, RobotMap.distD);
+		CustomPIDController ddController = Robot.distanceDrivePID.getPIDController();
+		ddController.setPID(RobotMap.distP, RobotMap.distI, RobotMap.distD);
+		
 	}
 
 	public static void setPreferences() {
