@@ -1,7 +1,7 @@
 package com.concordrobotics.stronghold;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.concordrobotics.stronghold.PositionEstimator;
+
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Encoder;
@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.interfaces.Potentiometer;
 
 /**
  * The RobotMap is a mapping from the ports sensors and actuators are wired into
@@ -29,8 +30,9 @@ public class RobotMap {
 	public static Encoder dtLeftEnc, dtRightEnc, shootEnc;
 	/** Ultrasonic */
 	public static Ultrasonic ultrasonic;
-	public static int uIn = 8;
-	public static int uOut = 9;
+	public static Potentiometer pot;
+	public static int uIn = 6;
+	public static int uOut = 7;
 
 	//##############
 	// ROBOT VISION
@@ -43,11 +45,11 @@ public class RobotMap {
 	public static Alliance alliance;
 	public static I2C wire;
 	
-	public static final String patWait = "rainbow"; // Swirling rainbow, white chaser
+	public static final String patWait = "rainbow"; // Chroma, white chaser
 	public static final String patBlue = "blue"; // Solid blue
 	public static final String patRed = "red"; // Solid red
 	public static final String patTest = "orangeBlink"; // Orange<-->off slow fade
-	public static final String patNone = "greenBlink";// Green<-->off slow fade
+	public static final String patNone = "yellow"; // Solid yeller
 	
 	/**
      * DRIVE TRAIN VARIABLES
@@ -58,7 +60,7 @@ public class RobotMap {
 	public static final int dtLeftEncPortB = 1;
 	public static final int dtRightEncPortA = 2;
 	public static final int dtRightEncPortB = 3;
-	public static final boolean dtLeftEncReversed = false;
+	public static final boolean dtLeftEncReversed = true;
 	public static final boolean dtRightEncReversed = false;	
 	// start with this dtP.  Crank up if unresponsive, down if noise.  
 	// Then add dtD to eliminate noise.  dtI doesn't do anything
