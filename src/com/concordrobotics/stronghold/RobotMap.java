@@ -109,7 +109,7 @@ public class RobotMap {
 	public static final int jOpPort = 3;
 	
 	public static  boolean leftEncoderDisabled = false;
-	public static  boolean rightEncoderDisabled = false;
+	public static  boolean rightEncoderDisabled = true;
 	public static  boolean useDrivePIDinAuto = false;
 	
 	// Logging
