@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.command.Command;
 import com.concordrobotics.stronghold.Robot;
 import com.concordrobotics.stronghold.RobotMap;
 import com.concordrobotics.stronghold.subsystems.DriveTrain;
+import com.concordrobotics.stronghold.subsystems.DriveTrain.DriveMode;
+import com.concordrobotics.stronghold.subsystems.DriveTrain.GyroMode;
 /**
  *
  */
@@ -13,15 +15,18 @@ public class DriveToCoordinates extends Command {
 	protected double heading;
 	protected double headingErr;
 	protected double distance;
+	protected double mSpeed;
 	protected static final double kRad2Deg = 57.3;
 	protected static final double kDistTol = 1.0;
-	protected static final double angleTol = 15.0;
-	static int kToleranceIterations = 20;
+	protected static final double angleTol = 5.0;
+	static int kToleranceIterations = 5;
+	protected boolean onHeading = false;
 	
-    public DriveToCoordinates(double x, double y) {
+    public DriveToCoordinates(double x, double y, double speed) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     	requires(Robot.driveTrain);
+    	mSpeed = speed;
     	targetX = x;
     	targetY = y;
     }
@@ -33,42 +38,48 @@ public class DriveToCoordinates extends Command {
     	distance = Math.sqrt(delX*delX + delY*delY);
     }
     
-    protected void setSetpoints() {  	
-    	Robot.navController.setSetpoint(heading);
-    	double headingErr = Math.abs(RobotMap.navx.getYaw() - heading);
-    	if (headingErr < angleTol) {
-    		Robot.distanceDrivePID.setSetpointRelative(distance);
-    	}
-    }
+
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.distanceDrivePID.enable();
-    	Robot.navController.enable();
-    	setSetpoints();
-    	Robot.driveTrain.setDriveMode(DriveTrain.DriveMode.distanceMode);
-    	Robot.distanceDrivePID.setOutputRange(-0.5, 0.5);
+    	onHeading = false;
+    	getDistanceAndHeading();
+    	Robot.driveTrain.setGyroMode(GyroMode.heading);
+    	Robot.navController.setSetpoint(heading);
+    	Robot.navController.setAbsoluteTolerance(angleTol);
+    	Robot.navController.setToleranceBuffer(kToleranceIterations);
+
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	getDistanceAndHeading();
-    	setSetpoints();
-    	Robot.driveTrain.rawDrive(0.0, 0.0);
+    	if (! onHeading) {
+    		Robot.driveTrain.rawDrive(0.0, 0.0);
+    		if (Robot.navController.onTargetDuringTime()) {
+    			onHeading = true;
+    			Robot.driveTrain.setDriveMode(DriveTrain.DriveMode.distanceMode);
+    	    	Robot.distanceDrivePID.setAbsoluteTolerance(kDistTol);
+    	    	Robot.distanceDrivePID.setToleranceBuffer(kToleranceIterations);
+    	    	Robot.distanceDrivePID.setOutputRange(-mSpeed, mSpeed);
+    			Robot.distanceDrivePID.setSetpointRelative(distance);
+    		}
+    	} 
+    	if (onHeading) {
+    		Robot.driveTrain.rawDrive(0,0);
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-      if ( distance < kDistTol ) {
-    	   return true;
-       } else {
-    	   return false;
-       } 
+      if (onHeading) {
+    	  return Robot.distanceDrivePID.onTargetDuringTime();
+      } else {
+    	  return false;
+      }
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.distanceDrivePID.disable();
-    	Robot.navController.disable();
+    	Robot.driveTrain.setDriveMode(DriveMode.tankMode);
     	Robot.driveTrain.stop();
     }
 

@@ -109,8 +109,17 @@ public class RobotMap {
 	public static final int jOpPort = 3;
 	
 	public static  boolean leftEncoderDisabled = false;
-	public static  boolean rightEncoderDisabled = true;
+	public static  boolean rightEncoderDisabled = false;
 	public static  boolean useDrivePIDinAuto = false;
+	public static boolean shooterUsePot = false;
+	
+	public static int autoStartStation = 1;
+	public static double xStart = 0.0;
+	public static double yStart = 0.0;
+	public static double xAutoShootPosition = 0.0;
+	public static double yAutoShootPosition = 0.0;
+	public static double autoShootAngle = 10.0;
+	public static double autoDriveAngle = 0.0;
 	
 	// Logging
 	public static final boolean loggingEnabled = false;

@@ -215,14 +215,20 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 	}
 
+	public static double getStationX(int station) {
+		return ((double) station - 0.5)*(4.0 + 2.0/12.0) - 0.5*(26.0 + 7.0/12.0);
+	}
 	/**
 	 * Triggers when auto starts.
 	 */
     public void autonomousInit() {
     	allInit(RobotMode.AUTONOMOUS);
+    	// Reference line is y = 0
+    	// Tower is at x = 0
+    	RobotMap.xStart = getStationX( RobotMap.autoStartStation );
+    	RobotMap.yStart = 2.0;
+    	positionEstimator.setPosition(RobotMap.xStart, RobotMap.yStart);
     	autonomousCommand = (Command) autoChooser.getSelected();
-    	/*positionSetter = (PositionSetter) positionChooser.getSelected();
-    	positionSetter.set(); */
     	autonomousCommand.start();
     	/*
     	switch(RobotMap.alliance) {
@@ -426,6 +432,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.useDrivePIDinAuto = preferences.getBoolean(PreferencesNames.AUTONOMOUS_USE_DRIVE_PID, RobotMap.useDrivePIDinAuto);
 		RobotMap.leftEncoderDisabled = preferences.getBoolean(PreferencesNames.LEFT_DRIVE_ENCODER_DISABLED, RobotMap.leftEncoderDisabled);
 		RobotMap.rightEncoderDisabled = preferences.getBoolean(PreferencesNames.RIGHT_DRIVE_ENCODER_DISABLED, RobotMap.rightEncoderDisabled);
+		RobotMap.shooterUsePot = preferences.getBoolean(PreferencesNames.SHOOTER_USE_POT, RobotMap.shooterUsePot);
 		
 		RobotMap.dtP = preferences.getDouble(PreferencesNames.DRIVE_PID_P, RobotMap.dtP);
 		RobotMap.dtD = preferences.getDouble(PreferencesNames.DRIVE_PID_D, RobotMap.dtD);
@@ -439,6 +446,11 @@ public class Robot extends IterativeRobot {
 		CustomPIDController ddController = Robot.distanceDrivePID.getPIDController();
 		ddController.setPID(RobotMap.distP, RobotMap.distI, RobotMap.distD);
 		
+		RobotMap.autoStartStation = preferences.getInt(PreferencesNames.AUTONOMOUS_START_STATION, RobotMap.autoStartStation);
+		RobotMap.autoDriveAngle = preferences.getDouble(PreferencesNames.AUTONOMOUS_DRIVE_ANGLE, RobotMap.autoDriveAngle);
+		RobotMap.autoShootAngle = preferences.getDouble(PreferencesNames.AUTONOMOUS_SHOOTER_ANGLE, RobotMap.autoShootAngle);
+		RobotMap.xAutoShootPosition = preferences.getDouble(PreferencesNames.AUTONOMOUS_SHOOT_X, RobotMap.xAutoShootPosition);
+		RobotMap.yAutoShootPosition = preferences.getDouble(PreferencesNames.AUTONOMOUS_SHOOT_Y, RobotMap.yAutoShootPosition);
 	}
 
 	public static void setPreferences() {
@@ -453,6 +465,7 @@ public class Robot extends IterativeRobot {
 		preferences.putBoolean(PreferencesNames.AUTONOMOUS_USE_DRIVE_PID, RobotMap.useDrivePIDinAuto);
 		preferences.putBoolean(PreferencesNames.LEFT_DRIVE_ENCODER_DISABLED, RobotMap.leftEncoderDisabled);
 		preferences.putBoolean(PreferencesNames.RIGHT_DRIVE_ENCODER_DISABLED, RobotMap.rightEncoderDisabled);
+		preferences.putBoolean(PreferencesNames.SHOOTER_USE_POT, RobotMap.shooterUsePot);
 		
 		preferences.putDouble(PreferencesNames.DRIVE_PID_P, RobotMap.dtP);
 		preferences.putDouble(PreferencesNames.DRIVE_PID_D, RobotMap.dtD);
@@ -461,7 +474,13 @@ public class Robot extends IterativeRobot {
 		preferences.putDouble(PreferencesNames.DIST_PID_P, RobotMap.distP);
 		preferences.putDouble(PreferencesNames.DIST_PID_I, RobotMap.distI);
 		preferences.putDouble(PreferencesNames.DIST_PID_D, RobotMap.distD);
+		preferences.putInt(PreferencesNames.AUTONOMOUS_START_STATION, RobotMap.autoStartStation);
 		
+		preferences.putInt(PreferencesNames.AUTONOMOUS_START_STATION, RobotMap.autoStartStation);
+		preferences.putDouble(PreferencesNames.AUTONOMOUS_DRIVE_ANGLE, RobotMap.autoDriveAngle);
+		preferences.putDouble(PreferencesNames.AUTONOMOUS_SHOOTER_ANGLE, RobotMap.autoShootAngle);
+		preferences.putDouble(PreferencesNames.AUTONOMOUS_SHOOT_X, RobotMap.xAutoShootPosition);
+		preferences.putDouble(PreferencesNames.AUTONOMOUS_SHOOT_Y, RobotMap.yAutoShootPosition);
 	}
 	
 	public static void dumpPreferences()

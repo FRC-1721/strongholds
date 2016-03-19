@@ -10,6 +10,10 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoCrossTeeterTotter extends CommandGroup {
     
     public  AutoCrossTeeterTotter() {
+
+    }
+    
+    public void initialize() {
     	if (RobotMap.useDrivePIDinAuto) {
     		addSequential(new EnableDrivePIDCommand());
     	}
