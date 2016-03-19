@@ -1,12 +1,13 @@
 package com.concordrobotics.stronghold.subsystems;
 
+import com.concordrobotics.stronghold.CustomPIDSubsystem;
 import com.concordrobotics.stronghold.RobotMap;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Shooter extends PIDSubsystem {
+public class Shooter extends CustomPIDSubsystem {
 	
 	public double servoAngle = 10;
 	protected Timer shootTimer;

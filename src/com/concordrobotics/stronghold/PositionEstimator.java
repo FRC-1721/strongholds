@@ -80,8 +80,10 @@ public class PositionEstimator {
 		  double encS[] = new double[2];
 		  encS[0] = m_ltEncoder.getDistance();
 		  encS[1] = m_rtEncoder.getDistance();
-		  if (RobotMap.encoderBroken) {
+		  if (RobotMap.leftEncoderDisabled) {
 			  encS[0] = encS[1];
+		  } else if (RobotMap.rightEncoderDisabled) {
+			  encS[1] = encS[0];
 		  }
 		  vel[0] = (encS[0] - lastEncS[0]);
 		  vel[1] = (encS[1] - lastEncS[1]);
@@ -89,6 +91,7 @@ public class PositionEstimator {
 		  lastEncS[1] = encS[1];
 		  // Check to see if encoders predict a higher turn than actual
 		  // and limit the fast wheel 
+		  /*
 		  double delHeadingEnc = (vel[0] - vel[1]) / kWheelBase; 
 		  
 		  // Turning Right
@@ -116,6 +119,7 @@ public class PositionEstimator {
 				  
 			  } 
 		  }
+		  */
 		  // Transform to field relative directions
 		  double dSdT = 0.5*(vel[1] + vel[1])/deltaT;
 		  vel[0] = Math.cos(lastHeading)*dSdT;
@@ -223,7 +227,12 @@ public class PositionEstimator {
 	    public double getDisplacementZ() {
 	         return 0;
 	    } 
-	    
+	    public double getDistanceFromPoint(double x, double y) {
+	    	double dx = getDisplacementX() - x;
+	    	double dy = getDisplacementY() - y;
+	    	double distance = Math.sqrt(dx*dx + dy*dy);
+	    	return distance;
+	    }
 	    public void updateSmartDashboard(){
 	  	  // Left side
 	      SmartDashboard.putBoolean("PositionEstCalibrating", m_navx.isCalibrating());

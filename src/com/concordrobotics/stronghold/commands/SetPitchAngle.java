@@ -1,14 +1,15 @@
 package com.concordrobotics.stronghold.commands;
 
 import com.concordrobotics.stronghold.Robot;
-import com.concordrobotics.stronghold.RobotMap;
-
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SetPitchAngle extends Command {
 
 	private double angle;
+	private static int kToleranceIterations = 5;
+
+
 	
 	public SetPitchAngle(double pitch) {
 		requires(Robot.shooter);
@@ -19,6 +20,8 @@ public class SetPitchAngle extends Command {
 	protected void initialize() {
 		Robot.shooter.enable();
 		Robot.shooter.setSetpoint(angle);
+		Robot.shooter.setAbsoluteTolerance(5.0);
+		Robot.shooter.setToleranceBuffer(kToleranceIterations);
 		
 	}
 
@@ -30,12 +33,13 @@ public class SetPitchAngle extends Command {
 	@Override
 	protected boolean isFinished() {
 		// TODO Auto-generated method stub
-		return false;
+		return Robot.shooter.onTargetDuringTime();
 	}
 
 	@Override
 	protected void end() {
 		// TODO Auto-generated method stub
+		// Let the controller continue controlling
 		
 	}
 

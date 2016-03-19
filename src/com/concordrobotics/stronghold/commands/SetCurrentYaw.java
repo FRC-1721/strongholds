@@ -2,14 +2,17 @@ package com.concordrobotics.stronghold.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import com.concordrobotics.stronghold.Robot;
+import com.concordrobotics.stronghold.RobotMap;
 /**
  *
  */
-public class EnableDriveHeadingLock extends Command {
+public class SetCurrentYaw extends Command {
 
 	protected boolean complete = false;
+	private float m_yawOffset = 0;
 	
-    public EnableDriveHeadingLock() {
+    public SetCurrentYaw(float yawOffset) {
+    	m_yawOffset = yawOffset;
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }
@@ -21,7 +24,8 @@ public class EnableDriveHeadingLock extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.robotDrive.enableHeadingLock();
+    	RobotMap.yawOffset = m_yawOffset;
+    	RobotMap.navx.reset();
     	complete = true;
     }
 

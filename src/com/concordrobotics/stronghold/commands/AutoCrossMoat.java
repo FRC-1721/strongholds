@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class AutoCrossMoat extends CommandGroup {
     
     public  AutoCrossMoat() {
-    	if (!RobotMap.encoderBroken) {
+    	if (RobotMap.useDrivePIDinAuto) {
     		addSequential(new EnableDrivePIDCommand());
     	}
     	//addParallel(new SetPitchAngle(50));
-    	addSequential(new TurnRelative(0));
+    	addSequential(new TurnRelative(0, 1));
     	addSequential(new DistanceDriveStraight(16.0,0.8));
     	//addSequential(new DistanceDriveStraight(5.0,0.8));
     	//addSequential(new DistanceDriveStraight(3.0,0.2));

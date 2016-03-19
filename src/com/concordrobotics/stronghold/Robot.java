@@ -5,9 +5,11 @@ package com.concordrobotics.stronghold;
 
 
 import com.concordrobotics.stronghold.subsystems.*;
+import com.concordrobotics.stronghold.subsystems.DriveTrain.GyroMode;
 import com.concordrobotics.stronghold.commands.*;
 import com.concordrobotics.stronghold.RobotMap;
 import com.concordrobotics.stronghold.CustomPIDController;
+import com.concordrobotics.stronghold.PreferencesNames;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +33,6 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.PIDSourceType;
@@ -39,7 +40,6 @@ import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.CameraServer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
 
 /**
@@ -149,7 +149,7 @@ public class Robot extends IterativeRobot {
 	    LiveWindow.addActuator("RightRobotDrive", "Controller", RobotMap.dtRightController);	    
 		
 		driveTrain = new DriveTrain(robotDrive);
-		distanceDrivePID = new DistanceDrivePID(8.0, 1.0, 0.03);
+		distanceDrivePID = new DistanceDrivePID(RobotMap.distP, RobotMap.distI, RobotMap.distD);
 		distanceDrivePID.disable();
 
 		// Init Robot Vision
@@ -280,7 +280,7 @@ public class Robot extends IterativeRobot {
     public void teleopInit() {
     	autonomousCommand.cancel();
     	Robot.robotDrive.disablePID();
-    	Robot.robotDrive.disableHeadingLock();
+    	Robot.driveTrain.setGyroMode(DriveTrain.GyroMode.off);
     	allInit(RobotMode.TELEOP);
     	
     }
@@ -440,11 +440,12 @@ public class Robot extends IterativeRobot {
 	{
 		previousRobotMode = currentRobotMode;
 		currentRobotMode = newMode;
-		
+		getPreferences();
+		setPreferences();
 		if (RobotMap.loggingEnabled) {
 			logger.info("Moving from {} to {}, position = {}, FMS = {}", previousRobotMode, currentRobotMode, driverStation.getAlliance() + " " + driverStation.getLocation(), driverStation.isFMSAttached());
 		}
-		
+		dumpPreferences();
 		// if anyone needs to know about mode changes, let
 		// them know here.
 
@@ -459,6 +460,55 @@ public class Robot extends IterativeRobot {
 		
 		return logDirectory;
 	} 
+	
+	public static void getPreferences() {
+		RobotMap.navP = preferences.getDouble(PreferencesNames.GYRO_HEADING_P, RobotMap.navP);
+		RobotMap.navI = preferences.getDouble(PreferencesNames.GYRO_HEADING_I, RobotMap.navI);
+		RobotMap.navD = preferences.getDouble(PreferencesNames.GYRO_HEADING_D, RobotMap.navD);
+		RobotMap.navRateP = preferences.getDouble(PreferencesNames.GYRO_RATE_P, RobotMap.navRateP);
+		RobotMap.navRateD = preferences.getDouble(PreferencesNames.GYRO_RATE_D, RobotMap.navRateD);		
+		RobotMap.navRateF = preferences.getDouble(PreferencesNames.GYRO_RATE_F, RobotMap.navRateF);
+		// Set the gyro mode to refresh PID parameters
+		GyroMode gMode = Robot.driveTrain.getGyroMode();
+		Robot.driveTrain.setGyroMode(gMode);
+		
+		RobotMap.useDrivePIDinAuto = preferences.getBoolean(PreferencesNames.AUTONOMOUS_USE_DRIVE_PID, RobotMap.useDrivePIDinAuto);
+		RobotMap.leftEncoderDisabled = preferences.getBoolean(PreferencesNames.LEFT_DRIVE_ENCODER_DISABLED, RobotMap.leftEncoderDisabled);
+		RobotMap.rightEncoderDisabled = preferences.getBoolean(PreferencesNames.RIGHT_DRIVE_ENCODER_DISABLED, RobotMap.rightEncoderDisabled);
+		
+		RobotMap.dtP = preferences.getDouble(PreferencesNames.DRIVE_PID_P, RobotMap.dtP);
+		RobotMap.dtD = preferences.getDouble(PreferencesNames.DRIVE_PID_D, RobotMap.dtD);
+		RobotMap.dtF = preferences.getDouble(PreferencesNames.DRIVE_PID_F, RobotMap.dtF);
+		RobotMap.dtLeftController.setPID(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF);
+		RobotMap.dtRightController.setPID(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF);
+		
+		RobotMap.distP = preferences.getDouble(PreferencesNames.DIST_PID_P, RobotMap.distP);
+		RobotMap.distI = preferences.getDouble(PreferencesNames.DIST_PID_I, RobotMap.distI);
+		RobotMap.distD = preferences.getDouble(PreferencesNames.DIST_PID_D, RobotMap.distD);
+	}
+
+	public static void setPreferences() {
+		preferences.putDouble(PreferencesNames.GYRO_HEADING_P, RobotMap.navP);
+		preferences.putDouble(PreferencesNames.GYRO_HEADING_I, RobotMap.navI);
+	    preferences.putDouble(PreferencesNames.GYRO_HEADING_D, RobotMap.navD);
+		preferences.putDouble(PreferencesNames.GYRO_RATE_P, RobotMap.navRateP);
+		preferences.putDouble(PreferencesNames.GYRO_RATE_D, RobotMap.navRateD);		
+		preferences.putDouble(PreferencesNames.GYRO_RATE_F, RobotMap.navRateF);
+
+		
+		preferences.putBoolean(PreferencesNames.AUTONOMOUS_USE_DRIVE_PID, RobotMap.useDrivePIDinAuto);
+		preferences.putBoolean(PreferencesNames.LEFT_DRIVE_ENCODER_DISABLED, RobotMap.leftEncoderDisabled);
+		preferences.putBoolean(PreferencesNames.RIGHT_DRIVE_ENCODER_DISABLED, RobotMap.rightEncoderDisabled);
+		
+		preferences.putDouble(PreferencesNames.DRIVE_PID_P, RobotMap.dtP);
+		preferences.putDouble(PreferencesNames.DRIVE_PID_D, RobotMap.dtD);
+		preferences.putDouble(PreferencesNames.DRIVE_PID_F, RobotMap.dtF);
+
+		preferences.putDouble(PreferencesNames.DIST_PID_P, RobotMap.distP);
+		preferences.putDouble(PreferencesNames.DIST_PID_I, RobotMap.distI);
+		preferences.putDouble(PreferencesNames.DIST_PID_D, RobotMap.distD);
+		
+	}
 	
 	public static void dumpPreferences()
 	{

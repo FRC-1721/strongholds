@@ -1,6 +1,7 @@
 package com.concordrobotics.stronghold;
 
 import com.concordrobotics.stronghold.commands.*;
+import com.concordrobotics.stronghold.subsystems.DriveTrain.GyroMode;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -19,10 +20,12 @@ public class OI {
 	public static JoystickButton lowGoal;
 	
 	// Drive controls
+    public static JoystickButton driveReverseOnButton;
+    public static JoystickButton driveReverseOffButton;
+    public static JoystickButton enableGyroRateButton;
+    public static JoystickButton disableGyroRateButton;
     public static JoystickButton enableDrivePIDButton;
     public static JoystickButton disableDrivePIDButton;
-    public static JoystickButton enableDriveHeadingLockButton;
-    public static JoystickButton disableDriveHeadingLockButton;
     public static JoystickButton disablePIDShooter;
     
     public OI() {
@@ -57,14 +60,17 @@ public class OI {
 		setAngle25.whenPressed(new SetPitchAngle(65));
     	
     	// Drive commands
-    	enableDrivePIDButton = new JoystickButton(jLeft, 7);
+    	driveReverseOnButton = new JoystickButton(jLeft, 7);
+    	driveReverseOnButton.whenPressed(new SetDriveReversed(true));
+    	driveReverseOffButton = new JoystickButton(jLeft, 11);
+    	driveReverseOffButton.whenPressed(new SetDriveReversed(false));  	
+    	enableGyroRateButton = new JoystickButton(jLeft, 8);
+    	enableGyroRateButton.whenPressed(new SetDriveGyroMode(GyroMode.rate));
+    	disableGyroRateButton = new JoystickButton(jLeft, 12);
+    	disableGyroRateButton.whenPressed(new SetDriveGyroMode(GyroMode.off)); 
+    	enableDrivePIDButton = new JoystickButton(jRight, 8);
     	enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
-    	disableDrivePIDButton = new JoystickButton(jLeft, 11);
-    	disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());   	
-    	enableDriveHeadingLockButton = new JoystickButton(jLeft, 8);
-    	enableDriveHeadingLockButton.whenPressed(new EnableDriveHeadingLock());
-    	disableDriveHeadingLockButton = new JoystickButton(jLeft, 12);
-    	disableDriveHeadingLockButton.whenPressed(new DisableDriveHeadingLock());    	
-
+    	disableDrivePIDButton = new JoystickButton(jLeft, 12);
+    	disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
     }
 }

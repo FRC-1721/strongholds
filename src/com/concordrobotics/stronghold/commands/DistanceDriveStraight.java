@@ -9,7 +9,7 @@ import com.concordrobotics.stronghold.subsystems.DriveTrain;
  */
 public class DistanceDriveStraight extends Command {
 	double m_distance;
-	static int kToleranceIterations = 1;
+	static int kToleranceIterations = 5;
 	protected double mSpeed = 0.0;
 	protected double m_startDistance;
     public DistanceDriveStraight(double distance, double speed) {
@@ -28,33 +28,19 @@ public class DistanceDriveStraight extends Command {
     	Robot.distanceDrivePID.setOutputRange(-Math.abs(mSpeed), Math.abs(mSpeed));
 		Robot.distanceDrivePID.setToleranceBuffer(kToleranceIterations);
 		Robot.distanceDrivePID.setAbsoluteTolerance(1.0);
-		m_startDistance = RobotMap.dtRightEnc.getDistance();
+		m_startDistance = Robot.driveTrain.getDistance();
 		
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.driveTrain.rawDrive(mSpeed,mSpeed);
+    	double speed = Robot.distanceDrivePID.getPIDOutput();
+    	Robot.driveTrain.rawDrive(speed,speed);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-    	if (m_distance > 0) {
-    		if (RobotMap.dtRightEnc.getDistance() > m_startDistance + m_distance) {
-    			return true;
-    		}
-    	} else {
-    		if (RobotMap.dtRightEnc.getDistance() < m_startDistance + m_distance) {
-    			return true;
-    		}
-    	}
-    	return false;
-      /*
-
-    	   return true;
-       } else {
-    	   return false;
-       } */
+    	return Robot.distanceDrivePID.onTargetDuringTime();
     }
 
     // Called once after isFinished returns true

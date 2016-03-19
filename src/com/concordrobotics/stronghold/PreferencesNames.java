@@ -11,54 +11,45 @@ package com.concordrobotics.stronghold;
  * @author wegscd
  */
 public class PreferencesNames {
-  public static final String SLEW_LIMIT_VALUE = "Slew_limit_value";
   
-  public static final String LIFT_BOTTOM_POSITION = "lift_bottom_position";
-  public static final String LIFT_MIDDLE_POSITION = "lfit_middle_position";
-  public static final String LIFT_TOP_POSITION = "lfit_top_position";
-  
-    public static final String CRIONAME = "crioname";
-    public static final String AUTONOMOUS_FORWARD_DISTANCE = "autonomous_forward_distance";
+  public static final String SHOOTER_HIGH_POSITION = "shooter_high_position";
+  public static final String SHOOTER_LOW_POSITION = "shooter_low_position";
+
     public static final String AUTONOMOUS_CHOICE = "autonomous_choice";
-    public static final String CHOOCHOO_DELAY = "choochoo_delay";
-    public static final String INTAKE_SPEED = "intake_speed";
-    public static final String HUE_LOWER = "hue_lower";
-    public static final String HUE_UPPER = "hue_upper";
-    public static final String SATURATION_LOWER = "saturation_lower";
-    public static final String SATURATION_UPPER = "saturation_upper";
-    public static final String VALUE_LOWER = "value_lower";
-    public static final String VALUE_UPPER = "value_upper";
+    public static final String AUTONOMOUS_USE_DRIVE_PID = "autonomous_useDrivePID";
+    public static final String LEFT_DRIVE_ENCODER_DISABLED = "left_drive_encoder_disabled";
+    public static final String RIGHT_DRIVE_ENCODER_DISABLED = "right_drive_encoder_disabled";
     
     public static final String AUTONOMOUS_CHOICE_NONE = "None";
-    public static final String AUTONOMOUS_CHOICE_TOTE_AND_BIN = "Tote and bin";
-    public static final String AUTONOMOUS_CHOICE_MOVE_ONLY = "Move Only";
-    public static final String AUTONOMOUS_CHOICE_LAND_FILL_1 = "Land Fill 1";
-    public static final String AUTONOMOUS_CHOICE_LAND_FILL_2 = "Land Fill 2";
-    public static final String AUTONOMOUS_CHOICE_LAND_FILL_3 = "Land Fill 3";
-    public static final String AUTONOMOUS_CHOICE_LAND_FILL_4 = "Land Fill 4";
-    public static final String AUTONOMOUS_CHOICE_LAND_FILL_5 = "Land Fill 5";
+    public static final String AUTONOMOUS_CHOICE_LOW_BAR = "Low Bar";
+    public static final String AUTONOMOUS_CHOICE_ROUGH_TERRAIN = "Rough Terrain";
+    public static final String AUTONOMOUS_CHOICE_TEETER_TOTTER = "Teeter Totter";
+    public static final String AUTONOMOUS_START_STATION = "Auto Starting Station";
     
-    public static final String JOY_STABAL_NONE = "None";
-    public static final String JOY_STABAL_RAISE_TO_POWER = "raise to power";
-    public static final String JOY_STABAL_SLEW_LIMIT = "slew limiter";
-    public static final String JOY_STABAL_CHOICE = "joystick_stabalization_choice";
+    public static final String GYRO_RATE_P = "gyro_rate_p";
+    public static final String GYRO_RATE_D = "gyro_rate_d";
+    public static final String GYRO_RATE_F = "gyro rate_f";
+    
+    public static final String GYRO_HEADING_P = "gyro_heading_p";
+    public static final String GYRO_HEADING_I = "gyro_heading_i";
+    public static final String GYRO_HEADING_D = "gyro_heading_d";
 
+    public static final String DRIVE_PID_P = "drive_pid_p";
+    public static final String DRIVE_PID_D = "drive_pid_d";
+    public static final String DRIVE_PID_F = "drive_pid_f";
+    
+    public static final String DIST_PID_P = "dist_PID_p";
+    public static final String DIST_PID_I = "dist_PID_i";
+    public static final String DIST_PID_D = "dist_PID_d";   
+  
+    
     public static final String[] AUTONOMOUS_ALL_CHOICES = new String[]{
         AUTONOMOUS_CHOICE_NONE,
-        AUTONOMOUS_CHOICE_TOTE_AND_BIN,
-        AUTONOMOUS_CHOICE_MOVE_ONLY,
-        AUTONOMOUS_CHOICE_LAND_FILL_1,
-        AUTONOMOUS_CHOICE_LAND_FILL_2,
-        AUTONOMOUS_CHOICE_LAND_FILL_3,
-        AUTONOMOUS_CHOICE_LAND_FILL_4,
-        AUTONOMOUS_CHOICE_LAND_FILL_5,
+        AUTONOMOUS_CHOICE_LOW_BAR,
+        AUTONOMOUS_CHOICE_ROUGH_TERRAIN,
+        AUTONOMOUS_CHOICE_TEETER_TOTTER
     };
     
-    public static final String[] JOY_STABAL_ALL_CHOICES = new String[]{
-        JOY_STABAL_NONE,
-        JOY_STABAL_RAISE_TO_POWER,
-        JOY_STABAL_SLEW_LIMIT,
-    };
     
   
 }

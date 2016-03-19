@@ -62,7 +62,8 @@ public class RobotMap {
 	public static final boolean dtRightEncReversed = false;	
 	// start with this dtP.  Crank up if unresponsive, down if noise.  
 	// Then add dtD to eliminate noise.  dtI doesn't do anything
-	public static double dtP = 2.0, dtI = 0.0, dtD = 0.0, dtF = 0.0;
+	public static double dtP = 2.0, dtI = 0.0, dtD = 0.0, dtF = 0.02;
+	public static double distP = 1.0, distI = 0.2, distD = 0.0;
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;	
 	
@@ -74,6 +75,8 @@ public class RobotMap {
 	public static final byte kNavUpdateHz = 20;
 	// Might want to try some I term in here with new method.
 	public static double navP = 0.05, navI = 0.1, navD = 0.0, navF = 0.0;
+	public static double navRateP = 0.05, navRateI = 0.0, navRateD = 0.0, navRateF = 0.0;
+	public static double yawOffset = 0.0;
 
 	/**
 	 * SHOOTER VARIABLES
@@ -103,7 +106,9 @@ public class RobotMap {
 	public static final int jRightPort = 2;
 	public static final int jOpPort = 3;
 	
-	public static final boolean encoderBroken = true;
+	public static  boolean leftEncoderDisabled = false;
+	public static  boolean rightEncoderDisabled = false;
+	public static  boolean useDrivePIDinAuto = false;
 	
 	// Logging
 	public static final boolean loggingEnabled = false;

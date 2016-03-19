@@ -9,6 +9,7 @@ package com.concordrobotics.stronghold;
 
 
 import com.concordrobotics.stronghold.subsystems.NavxController;
+import com.concordrobotics.stronghold.subsystems.DriveTrain.GyroMode;
 
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.smartdashboard.*;
@@ -55,7 +56,7 @@ public class CustomRobotDrive implements MotorSafety {
       this.value = value;
     }
   }
-
+  public static boolean m_reversed = false;
   public static final double kDefaultExpirationTime = 0.1;
   public static final double kDefaultSensitivity = 0.5;
   public static final double kDefaultMaxOutput = 1.0;
@@ -74,11 +75,12 @@ public class CustomRobotDrive implements MotorSafety {
   // Default PID parameters
   protected boolean m_PIDEnabled = false; 
   // Output from -1 to 1 scaled to give rate in ft/s for PID controller
-  protected double m_rateScale = 10.0;
+  protected double m_rateScale = 1.0;
   protected NavxController m_turnController;
   protected double m_turnDeadzone = 0.02;
-  protected boolean m_headingLock = false;
- 
+  public double turnRateScale = 30.0;
+  protected GyroMode gyroMode = GyroMode.off;
+  
   /**
    * Constructor for CustomRobotDrive with 2 motors specified as SpeedController
    * objects. The SpeedController version of the constructor enables programs to
@@ -164,17 +166,17 @@ public class CustomRobotDrive implements MotorSafety {
 	  m_rightController.disable();
   }
   
-  public void enableHeadingLock() {
+  public void setGyroMode(GyroMode gMode) {
 	  m_turnController.enable();
-	  m_headingLock = true;
+	  gyroMode = gMode;
 	  // Set the setpoint to the current heading
-	  m_turnController.setSetpointRelative(0.0);
+	  if (gyroMode == GyroMode.rate) {
+		  m_turnController.setSetpoint(0.0);
+	  } else if (gyroMode == GyroMode.heading) {
+		  m_turnController.setSetpointRelative(0.0);
+	  }  
   }
   
-  public void disableHeadingLock() {
-	  m_turnController.disable();
-	  m_headingLock = false;
-  }
   
   /**
    * Provide tank steering using the stored robot configuration. drive the robot
@@ -261,8 +263,14 @@ public class CustomRobotDrive implements MotorSafety {
 
     // square the inputs (while preserving the sign) to increase fine control
     // while permitting full power
-    leftValue = limit(leftValue);
-    rightValue = limit(rightValue);
+	if (m_reversed) {
+		leftValue = limit(-1.0*rightValue);
+		rightValue = limit(-1.0*leftValue);
+	} else {
+	    leftValue = limit(leftValue);
+	    rightValue = limit(rightValue);	
+	}
+
     if (squaredInputs) {
       if (leftValue >= 0.0) {
         leftValue = (leftValue * leftValue);
@@ -275,23 +283,12 @@ public class CustomRobotDrive implements MotorSafety {
         rightValue = -(rightValue * rightValue);
       }
     }
-    if (m_headingLock) {
-    	// Check if turn requested is in the deadzone, if so, use the PID control output on top
-    	// of the average value
-    	if (Math.abs(leftValue - rightValue) < m_turnDeadzone) {
-    		double avgValue = 0.5*(leftValue + rightValue);
-    		double pidOutput = m_turnController.getPIDOutput();
-    		
-    		leftValue = limit(avgValue + pidOutput);
-    		rightValue = limit(avgValue - pidOutput);
-    	} else {
-    		// A turn is requested, so set the setpoint to the current heading, and don't use the pidOutput.
-    		m_turnController.setSetpointRelative(0.0);
-    	}
-    }
     setLeftRightMotorOutputs(leftValue, rightValue);
   }
 
+  public void setReversed(boolean reversed) {
+	  m_reversed = reversed;
+  }
   /**
    * Provide tank steering using the stored robot configuration. This function
    * lets you directly provide joystick values from any source.
@@ -390,15 +387,8 @@ public class CustomRobotDrive implements MotorSafety {
 
     moveValue = limit(moveValue);
     rotateValue = limit(rotateValue);
-    if (m_headingLock) {
-    	// Check if turn requested is in the deadzone, if so, use the PID control output for 
-    	// the turn value
-    	if (Math.abs(rotateValue) < m_turnDeadzone) {
-    		rotateValue = m_turnController.getPIDOutput();
-    	} else {
-    		// A turn is requested, so set the setpoint to the current heading, and don't use the pidOutput.
-    		m_turnController.setSetpointRelative(0.0);
-    	}
+    if (m_reversed) {
+    	moveValue = - moveValue;
     }
     if (squaredInputs) {
       // square the inputs (while preserving the sign) to increase fine control
@@ -453,25 +443,41 @@ public class CustomRobotDrive implements MotorSafety {
       throw new NullPointerException("Null motor provided");
     }
 
+    if (gyroMode != GyroMode.off) {
+    	double avgOutput = 0.5*(leftOutput + rightOutput);
+    	double diffOutput = leftOutput - rightOutput;
+    	if (gyroMode == GyroMode.rate) {
+    		m_turnController.setSetpoint(diffOutput*turnRateScale);
+    	}
+    	diffOutput = m_turnController.getPIDOutput();
+    	leftOutput = limit(avgOutput + diffOutput);
+    	rightOutput = limit(avgOutput - diffOutput);
+    		
+    }
+    
     if (m_PIDEnabled) {
-        m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * m_rateScale);
-        if (RobotMap.encoderBroken) {
+        if (RobotMap.leftEncoderDisabled) {
         	m_leftController.disable();
-        	m_leftMotor.set(limit(leftOutput*m_rateScale/10.0) * m_maxOutput, m_syncGroup);
+        	m_leftMotor.set(limit(leftOutput) * m_maxOutput, m_syncGroup);
+        } else {
+        	m_leftController.setSetpoint(limit(leftOutput) * m_maxOutput * m_rateScale);
+        	if (Math.abs(leftOutput) < 0.001) m_leftController.zeroOutput();
         }
-        
-        m_rightController.setSetpoint(limit(rightOutput) * m_maxOutput * m_rateScale);
-        // Provide some deadband to keep motors off when stopped.
-        if (Math.abs(leftOutput) < 0.001) m_leftController.zeroOutput();
-        if (Math.abs(rightOutput) < 0.001) m_rightController.zeroOutput();
+        if (RobotMap.rightEncoderDisabled) {
+        	m_rightController.disable();
+        	m_rightMotor.set(limit(rightOutput) * m_maxOutput, m_syncGroup);
+        } else {
+        	m_rightController.setSetpoint(limit(rightOutput) * m_maxOutput * m_rateScale);
+        	if (Math.abs(rightOutput) < 0.001) m_rightController.zeroOutput();
+        }
     } else {
         m_leftMotor.set(limit(leftOutput) * m_maxOutput, m_syncGroup);
         m_rightMotor.set(limit(rightOutput) * m_maxOutput, m_syncGroup); 	
         
     }
-    if ( (Math.abs(leftOutput)  < 0.001 ) && (Math.abs(rightOutput) < 0.001 )) {
+    /*if ( (Math.abs(leftOutput)  < 0.001 ) && (Math.abs(rightOutput) < 0.001 )) {
     	Robot.positionEstimator.zeroVelocity(0.0);
-    }
+    } */
 
     if (this.m_syncGroup != 0) {
       CANJaguar.updateSyncGroup(m_syncGroup);
