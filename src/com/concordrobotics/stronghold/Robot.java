@@ -1,36 +1,35 @@
 
 package com.concordrobotics.stronghold;
 
-import com.concordrobotics.stronghold.subsystems.*;
+import com.concordrobotics.stronghold.commands.AutoCrossMoat;
+import com.concordrobotics.stronghold.commands.AutoCrossTeeterTotter;
+import com.concordrobotics.stronghold.commands.AutoLowBar;
+import com.concordrobotics.stronghold.commands.AutoNone;
+import com.concordrobotics.stronghold.subsystems.DistanceDrivePID;
+import com.concordrobotics.stronghold.subsystems.DriveTrain;
 import com.concordrobotics.stronghold.subsystems.DriveTrain.GyroMode;
-import com.concordrobotics.stronghold.commands.*;
-import com.concordrobotics.stronghold.RobotMap;
-import com.concordrobotics.stronghold.CustomPIDController;
-import com.concordrobotics.stronghold.PreferencesNames;
-
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.I2C.Port;
-
-import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.VictorSP;
-import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.*;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
-
+import com.concordrobotics.stronghold.subsystems.NavxController;
+import com.concordrobotics.stronghold.subsystems.Shooter;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Concord Robotics FRC Team 1721
@@ -121,6 +120,8 @@ public class Robot extends IterativeRobot {
 		
 		RobotMap.pot = new AnalogPotentiometer(0,312.5,0);
 		
+		RobotMap.wire = new I2C(I2C.Port.kOnboard, 4);
+		
 		
 		// Create a chooser for auto so it can be set from the DS
 		autonomousCommand = new AutoCrossMoat();
@@ -178,40 +179,36 @@ public class Robot extends IterativeRobot {
      */
     public void disabledInit(){
     	
-    	//LEDController.sendLED(RobotMap.patWait);
+    	LEDController.sendLED(RobotMap.patWait);
     }
     
     /**
      * Loops while the robot is disabled.
      */
 	public void disabledPeriodic() {
-		
-		/*if (ds.isFMSAttached()) {
-			RobotMap.alliance = ds.getAlliance();
+		RobotMap.alliance = ds.getAlliance();
 			
-			switch (RobotMap.alliance) {
-				case Red:
-					if (!(currentLEDMode == 1)) {
-						// Throw a RED ALLIANCE packet via I2C
-						LEDController.sendLED(RobotMap.patRed);
-						currentLEDMode = 1;
-					}
-					break;
-				case Blue:
-					if (!(currentLEDMode == 2)) {
-						LEDController.sendLED(RobotMap.patBlue);
-						currentLEDMode = 2;
-					}
-					break;
-				case Invalid:
-					// DO NOTHING
-					break;
-				default:
-					// Won't ever happen
-					break;
-			}
-		}*/
-		
+		switch (RobotMap.alliance) {
+			case Red:
+				if (!(currentLEDMode == 1)) {
+					// Throw a RED ALLIANCE packet via I2C
+					LEDController.sendLED(RobotMap.patRed);
+					currentLEDMode = 1;
+				}
+				break;
+			case Blue:
+				if (!(currentLEDMode == 2)) {
+					LEDController.sendLED(RobotMap.patBlue);
+					currentLEDMode = 2;
+				}
+				break;
+			case Invalid:
+				// DO NOTHING
+				break;
+			default:
+				// Won't ever happen
+				break;
+		}
 		Scheduler.getInstance().run();
 	}
 
@@ -224,7 +221,7 @@ public class Robot extends IterativeRobot {
     	/*positionSetter = (PositionSetter) positionChooser.getSelected();
     	positionSetter.set(); */
     	autonomousCommand.start();
-    	/*
+    	
     	switch(RobotMap.alliance) {
     		case Invalid:
     			// No alliance was chosen, and auto is starting.
@@ -234,8 +231,7 @@ public class Robot extends IterativeRobot {
     			break;
     		default:
     			break;
-    	}*/
-    	
+    	}
     }
 
     /**
@@ -255,7 +251,7 @@ public class Robot extends IterativeRobot {
     	Robot.driveTrain.setGyroMode(DriveTrain.GyroMode.off);
     	allInit(RobotMode.TELEOP);
     	
-    	/*switch(RobotMap.alliance) {
+    	switch(RobotMap.alliance) {
     		case Invalid:
     			// Just in case auto was kill.
     			// We'll give it safety
@@ -266,16 +262,16 @@ public class Robot extends IterativeRobot {
     			break;
     		default:
     			break;
-    	}*/
+    	}
     	
     }
 
     public void testInit() {
     	allInit(RobotMode.TEST);
-    	/*if (!(currentLEDMode == 4)) {
+    	if (!(currentLEDMode == 4)) {
     		LEDController.sendLED(RobotMap.patTest);
     		currentLEDMode = 4;
-    	}*/
+    	}
     }
     /**
      * Loops during teleop.
@@ -283,7 +279,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         updateSmartDashboard();
-//        LEDController.sendLED(RobotMap.patTest);
+        LEDController.sendLED(RobotMap.patTest);
     }
 
     /**

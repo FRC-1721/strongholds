@@ -15,7 +15,7 @@ public class LEDController {
 			data[i] = (byte) send[i];	
 		}
 		
-		//RobotMap.wire.transaction(data, data.length, null, 0);
+		RobotMap.wire.transaction(data, data.length, null, 0);
 	}
 	
 	
