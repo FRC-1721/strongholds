@@ -60,17 +60,17 @@ public class OI {
 		setAngle25.whenPressed(new SetPitchAngle(65));
     	
     	// Drive commands
-    	driveReverseOnButton = new JoystickButton(jLeft, 7);
+    	driveReverseOnButton = new JoystickButton(jLeft, 11);
     	driveReverseOnButton.whenPressed(new SetDriveReversed(true));
-    	driveReverseOffButton = new JoystickButton(jLeft, 11);
+    	driveReverseOffButton = new JoystickButton(jLeft, 12);
     	driveReverseOffButton.whenPressed(new SetDriveReversed(false));  	
-    	enableGyroRateButton = new JoystickButton(jLeft, 8);
+    	enableGyroRateButton = new JoystickButton(jLeft, 10);
     	enableGyroRateButton.whenPressed(new SetDriveGyroMode(GyroMode.rate));
-    	disableGyroRateButton = new JoystickButton(jLeft, 12);
+    	disableGyroRateButton = new JoystickButton(jLeft, 9);
     	disableGyroRateButton.whenPressed(new SetDriveGyroMode(GyroMode.off)); 
-    	enableDrivePIDButton = new JoystickButton(jRight, 8);
+    	enableDrivePIDButton = new JoystickButton(jLeft, 8);
     	enableDrivePIDButton.whenPressed(new EnableDrivePIDCommand());
-    	disableDrivePIDButton = new JoystickButton(jLeft, 12);
+    	disableDrivePIDButton = new JoystickButton(jLeft, 7);
     	disableDrivePIDButton.whenPressed(new DisableDrivePIDCommand());
     }
 }

@@ -28,7 +28,7 @@ public class PositionEstimator {
 	private Encoder m_rtEncoder;
 	private AHRS m_navx;
 	private double encGain = 1.0;
-	private double gyroGain = 0.05;
+	private double gyroGain = 0.0;
 	private double deltaT = 0.0;
 	
 	public PositionEstimator (double period) {
@@ -126,6 +126,11 @@ public class PositionEstimator {
 		  vel[1] = Math.sin(lastHeading)*dSdT;
 	  }
 
+	  private double getHeading() {
+		  return Math.toRadians(m_navx.getYaw() + RobotMap.yawOffset);
+	  }
+	  
+	  
 	  private void calculate() {
 		  // Don't start taking data until calibration is done
 		  deltaT = m_resetTimer.get();
@@ -136,7 +141,7 @@ public class PositionEstimator {
 		  }
 		  synchronized(this) {
 			  // Treate the gyro heading as gospel
-			  double curHeading = Math.toRadians(m_navx.getYaw());
+			  double curHeading = getHeading();
 			  
 			  // Calculate Encoders measurements
 

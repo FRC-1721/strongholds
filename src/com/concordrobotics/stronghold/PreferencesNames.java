@@ -19,12 +19,10 @@ public class PreferencesNames {
     public static final String AUTONOMOUS_USE_DRIVE_PID = "autonomous_useDrivePID";
     public static final String LEFT_DRIVE_ENCODER_DISABLED = "left_drive_encoder_disabled";
     public static final String RIGHT_DRIVE_ENCODER_DISABLED = "right_drive_encoder_disabled";
-    
-    public static final String AUTONOMOUS_CHOICE_NONE = "None";
-    public static final String AUTONOMOUS_CHOICE_LOW_BAR = "Low Bar";
-    public static final String AUTONOMOUS_CHOICE_ROUGH_TERRAIN = "Rough Terrain";
-    public static final String AUTONOMOUS_CHOICE_TEETER_TOTTER = "Teeter Totter";
     public static final String AUTONOMOUS_START_STATION = "Auto Starting Station";
+    
+    public static final String SHOOTER_USE_POT = "shooter_use_pot";
+    public static final String TELEOP_ARCADE_DRIVE = "teleop_arcade_drive";
     
     public static final String GYRO_RATE_P = "gyro_rate_p";
     public static final String GYRO_RATE_D = "gyro_rate_d";
@@ -42,14 +40,8 @@ public class PreferencesNames {
     public static final String DIST_PID_I = "dist_PID_i";
     public static final String DIST_PID_D = "dist_PID_d";   
   
-    
-    public static final String[] AUTONOMOUS_ALL_CHOICES = new String[]{
-        AUTONOMOUS_CHOICE_NONE,
-        AUTONOMOUS_CHOICE_LOW_BAR,
-        AUTONOMOUS_CHOICE_ROUGH_TERRAIN,
-        AUTONOMOUS_CHOICE_TEETER_TOTTER
-    };
-    
-    
-  
+    public static final String AUTONOMOUS_SHOOT_X = "autonomous_shoot_x";
+    public static final String AUTONOMOUS_SHOOT_Y = "autonomous_shoot_y";
+    public static final String AUTONOMOUS_DRIVE_ANGLE = "autonomous_drive_angle";
+    public static final String AUTONOMOUS_SHOOTER_ANGLE = "autonomous_shooter_angle";
 }

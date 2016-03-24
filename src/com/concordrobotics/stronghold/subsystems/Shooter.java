@@ -126,7 +126,11 @@ public class Shooter extends CustomPIDSubsystem {
 	
 	@Override
 	protected double returnPIDInput() {
-		return RobotMap.shootEnc.getDistance();
+		if (RobotMap.shooterUsePot) {
+			return RobotMap.pot.get();
+		} else {
+			return RobotMap.shootEnc.getDistance();
+		}
 	}
 
 	@Override

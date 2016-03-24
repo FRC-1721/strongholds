@@ -1,7 +1,7 @@
 package com.concordrobotics.stronghold;
 
 import com.kauailabs.navx.frc.AHRS;
-
+import com.concordrobotics.stronghold.subsystems.DriveTrain.DriveMode;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Encoder;
@@ -68,7 +68,8 @@ public class RobotMap {
 	public static double distP = 1.0, distI = 0.2, distD = 0.0;
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;	
-	
+	public static DriveMode teleopDriveMode = DriveMode.arcadeMode;
+	public static boolean teleopArcadeDrive = true;
 	/**
 	 * NAVX Gyro & PID
 	 * 
@@ -109,8 +110,17 @@ public class RobotMap {
 	public static final int jOpPort = 3;
 	
 	public static  boolean leftEncoderDisabled = false;
-	public static  boolean rightEncoderDisabled = true;
+	public static  boolean rightEncoderDisabled = false;
 	public static  boolean useDrivePIDinAuto = false;
+	public static boolean shooterUsePot = false;
+	
+	public static int autoStartStation = 1;
+	public static double xStart = 0.0;
+	public static double yStart = 0.0;
+	public static double xAutoShootPosition = 0.0;
+	public static double yAutoShootPosition = 0.0;
+	public static double autoShootAngle = 10.0;
+	public static double autoDriveAngle = 0.0;
 	
 	// Logging
 	public static final boolean loggingEnabled = false;

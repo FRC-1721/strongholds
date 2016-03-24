@@ -32,7 +32,7 @@ public class DriveTrain extends Subsystem {
 		off, rate, heading
 	}
 	protected boolean m_reversed = false;
-	protected DriveMode mode = DriveMode.tankMode;
+	protected DriveMode mode = DriveMode.arcadeMode;
 	protected GyroMode gyroMode = GyroMode.off;
 	protected NavxController navController;
 	
@@ -67,10 +67,12 @@ public class DriveTrain extends Subsystem {
 			if (gyroMode == GyroMode.off) {
 				navController.disable();
 			} else if (gyroMode == GyroMode.heading) {
+				navController.enable();
 				navController.setPIDSourceType(PIDSourceType.kDisplacement);
 				CustomPIDController gyroController = navController.getPIDController();
 				gyroController.setPID(RobotMap.navP, RobotMap.navI, RobotMap.navD, RobotMap.navF);
 			} else {
+				navController.enable();
 				navController.setPIDSourceType(PIDSourceType.kRate);
 				CustomPIDController gyroController = navController.getPIDController();
 				gyroController.setPID(RobotMap.navRateP, RobotMap.navRateI, RobotMap.navRateD, RobotMap.navRateF);
@@ -131,6 +133,11 @@ public class DriveTrain extends Subsystem {
 	
 	public void setDriveMode(DriveMode dMode) {
 		mode = dMode;
+		if (mode == DriveMode.distanceMode) {
+			Robot.distanceDrivePID.enable();
+		} else {
+			Robot.distanceDrivePID.disable();
+		}
 	}
 	
 	public void updateSmartDashboard () {
