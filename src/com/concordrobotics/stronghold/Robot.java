@@ -2,6 +2,7 @@
 package com.concordrobotics.stronghold;
 
 import com.concordrobotics.stronghold.subsystems.*;
+import com.concordrobotics.stronghold.subsystems.DriveTrain.DriveMode;
 import com.concordrobotics.stronghold.subsystems.DriveTrain.GyroMode;
 import com.concordrobotics.stronghold.commands.*;
 import com.concordrobotics.stronghold.RobotMap;
@@ -42,9 +43,8 @@ import edu.wpi.first.wpilibj.Preferences;
  */
 public class Robot extends IterativeRobot {
 	// Autonomous commad
-    Command autonomousCommand;
+    CustomCommandGroup autonomousCommand;
     SendableChooser autoChooser;
-    SendableChooser positionChooser;
 	// Subsystems
 	public static DriveTrain driveTrain;
 	public static CustomRobotDrive robotDrive;
@@ -55,7 +55,6 @@ public class Robot extends IterativeRobot {
     private final double kMetersToFeet = 3.28084;
     DriverStation ds;
 	public static PositionEstimator positionEstimator;
-	public static PositionSetter positionSetter ;
 	public static Preferences preferences;
 	static private RobotMode currentRobotMode = RobotMode.INIT, previousRobotMode;
 	PowerDistributionPanel pdp;
@@ -131,13 +130,6 @@ public class Robot extends IterativeRobot {
 		autoChooser.addObject("None", new AutoNone());
 		SmartDashboard.putData("Auto Chooser", autoChooser);
 		
-		// Create a chooser for field position
-		positionChooser = new SendableChooser();
-		positionChooser.addDefault("1", new PositionSetter(1));
-		positionChooser.addObject("2", new PositionSetter(2));
-		positionChooser.addObject("3", new PositionSetter(3));
-		positionChooser.addObject("4", new PositionSetter(4));	
-		positionChooser.addObject("5", new PositionSetter(5));
 		
 		
     	//Init OI last so all systems initialized
@@ -228,7 +220,8 @@ public class Robot extends IterativeRobot {
     	RobotMap.xStart = getStationX( RobotMap.autoStartStation );
     	RobotMap.yStart = 2.0;
     	positionEstimator.setPosition(RobotMap.xStart, RobotMap.yStart);
-    	autonomousCommand = (Command) autoChooser.getSelected();
+    	autonomousCommand = (CustomCommandGroup) autoChooser.getSelected();
+    	autonomousCommand.addCommands();
     	autonomousCommand.start();
     	/*
     	switch(RobotMap.alliance) {
@@ -451,6 +444,13 @@ public class Robot extends IterativeRobot {
 		RobotMap.autoShootAngle = preferences.getDouble(PreferencesNames.AUTONOMOUS_SHOOTER_ANGLE, RobotMap.autoShootAngle);
 		RobotMap.xAutoShootPosition = preferences.getDouble(PreferencesNames.AUTONOMOUS_SHOOT_X, RobotMap.xAutoShootPosition);
 		RobotMap.yAutoShootPosition = preferences.getDouble(PreferencesNames.AUTONOMOUS_SHOOT_Y, RobotMap.yAutoShootPosition);
+		
+		RobotMap.teleopArcadeDrive = preferences.getBoolean(PreferencesNames.TELEOP_ARCADE_DRIVE, RobotMap.teleopArcadeDrive);
+		if (RobotMap.teleopArcadeDrive) {
+			RobotMap.teleopDriveMode = DriveMode.arcadeMode;
+		} else {
+			RobotMap.teleopDriveMode = DriveMode.tankMode;
+		}
 	}
 
 	public static void setPreferences() {

@@ -7,13 +7,13 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class AutoCrossMoat extends CommandGroup {
-    
+public class AutoCrossMoat extends CustomCommandGroup {
     public  AutoCrossMoat() {
 
     }
     
-    public void initialize() {
+    public void addCommands() {
+    	if (commandsAdded) return;
     	if (RobotMap.useDrivePIDinAuto) {
     		addSequential(new EnableDrivePIDCommand());
     	}
@@ -43,4 +43,5 @@ public class AutoCrossMoat extends CommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     }
+
 }

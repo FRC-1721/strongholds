@@ -19,10 +19,10 @@ public class PreferencesNames {
     public static final String AUTONOMOUS_USE_DRIVE_PID = "autonomous_useDrivePID";
     public static final String LEFT_DRIVE_ENCODER_DISABLED = "left_drive_encoder_disabled";
     public static final String RIGHT_DRIVE_ENCODER_DISABLED = "right_drive_encoder_disabled";
-    
     public static final String AUTONOMOUS_START_STATION = "Auto Starting Station";
     
     public static final String SHOOTER_USE_POT = "shooter_use_pot";
+    public static final String TELEOP_ARCADE_DRIVE = "teleop_arcade_drive";
     
     public static final String GYRO_RATE_P = "gyro_rate_p";
     public static final String GYRO_RATE_D = "gyro_rate_d";

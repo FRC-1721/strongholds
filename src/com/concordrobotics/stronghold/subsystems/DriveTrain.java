@@ -32,7 +32,7 @@ public class DriveTrain extends Subsystem {
 		off, rate, heading
 	}
 	protected boolean m_reversed = false;
-	protected DriveMode mode = DriveMode.tankMode;
+	protected DriveMode mode = DriveMode.arcadeMode;
 	protected GyroMode gyroMode = GyroMode.off;
 	protected NavxController navController;
 	

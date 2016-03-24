@@ -1,7 +1,7 @@
 package com.concordrobotics.stronghold;
 
 import com.kauailabs.navx.frc.AHRS;
-
+import com.concordrobotics.stronghold.subsystems.DriveTrain.DriveMode;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Encoder;
@@ -68,7 +68,8 @@ public class RobotMap {
 	public static double distP = 1.0, distI = 0.2, distD = 0.0;
 	public static CustomPIDController dtLeftController;
 	public static CustomPIDController dtRightController;	
-	
+	public static DriveMode teleopDriveMode = DriveMode.arcadeMode;
+	public static boolean teleopArcadeDrive = true;
 	/**
 	 * NAVX Gyro & PID
 	 * 

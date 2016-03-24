@@ -2,6 +2,7 @@ package com.concordrobotics.stronghold.commands;
 
 import com.concordrobotics.stronghold.subsystems.DriveTrain;
 import com.concordrobotics.stronghold.Robot;
+import com.concordrobotics.stronghold.RobotMap;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -17,7 +18,7 @@ public class DriveInTeleop extends Command{
 	
 	/* Unused, required methods. Pfffft */
 	protected void initialize() { 
-		Robot.driveTrain.setDriveMode(DriveTrain.DriveMode.tankMode);
+		Robot.driveTrain.setDriveMode(RobotMap.teleopDriveMode);
 		}
 	
 	protected boolean isFinished() {return false;}

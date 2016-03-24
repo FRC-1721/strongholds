@@ -3,18 +3,17 @@ package com.concordrobotics.stronghold.commands;
 import com.concordrobotics.stronghold.Robot;
 import com.concordrobotics.stronghold.RobotMap;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
-
 /**
  *
  */
-public class AutoLowBar extends CommandGroup {
-    
+public class AutoLowBar extends CustomCommandGroup {
+
     public  AutoLowBar() {
 
     }
     
-    public void initialize() {
+    public void addCommands() {
+    	if (commandsAdded) return;
     	if (RobotMap.useDrivePIDinAuto) {
     		addSequential(new EnableDrivePIDCommand());
     	}
@@ -28,6 +27,6 @@ public class AutoLowBar extends CommandGroup {
     	addSequential(new TurnAbsolute(RobotMap.autoDriveAngle, 3));
     	addSequential(new ThrowBallCommand());
     	addParallel(new SetPitchAngle(5.0));
-    	addSequential(new DriveToCoordinates(Robot.getStationX(1), 10.0, 0.8) );
+    	addSequential(new DriveToCoordinates(Robot.getStationX(1), 10.0, -0.8) );
     }
 }

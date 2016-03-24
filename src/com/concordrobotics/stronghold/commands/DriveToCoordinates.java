@@ -30,12 +30,19 @@ public class DriveToCoordinates extends Command {
     	targetX = x;
     	targetY = y;
     }
-
+    
+    
     protected void getDistanceAndHeading() {
+
     	double delX = targetX - Robot.positionEstimator.getDisplacementX();
     	double delY = targetY - Robot.positionEstimator.getDisplacementY();
     	heading = Math.atan2(delY, delX)*kRad2Deg;
     	distance = Math.sqrt(delX*delX + delY*delY);
+    	if (mSpeed < 0 ) {
+    		// Driving backwards
+    		heading = heading + 180.0;
+    		distance = -distance;
+    	}
     }
     
 
@@ -79,7 +86,7 @@ public class DriveToCoordinates extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.driveTrain.setDriveMode(DriveMode.tankMode);
+    	Robot.driveTrain.setDriveMode(RobotMap.teleopDriveMode);
     	Robot.driveTrain.stop();
     }
 
