@@ -178,7 +178,8 @@ public class Robot extends IterativeRobot {
      * Triggered when the robot is disabled (every time).
      */
     public void disabledInit(){
-    	
+    	// This should trigger technodubstepmode when the robot is disabled
+    	// I.E. End of a match
     	LEDController.sendLED(RobotMap.patWait);
     }
     
@@ -198,6 +199,7 @@ public class Robot extends IterativeRobot {
 				break;
 			case Blue:
 				if (!(currentLEDMode == 2)) {
+					// Throw a BLUE ALLIANCE packet via I2C
 					LEDController.sendLED(RobotMap.patBlue);
 					currentLEDMode = 2;
 				}
@@ -206,7 +208,7 @@ public class Robot extends IterativeRobot {
 				// DO NOTHING
 				break;
 			default:
-				// Won't ever happen
+				// Won't ever happen.... I hope
 				break;
 		}
 		Scheduler.getInstance().run();
@@ -254,7 +256,8 @@ public class Robot extends IterativeRobot {
     	switch(RobotMap.alliance) {
     		case Invalid:
     			// Just in case auto was kill.
-    			// We'll give it safety
+    			// We'll give it safety because why the hell not.
+    			// I mean the Arduino Should be able to work without it, but I mean... No harm done.
     			if (!(currentLEDMode == 3)) {
     				LEDController.sendLED(RobotMap.patNone);
     				currentLEDMode = 3;
