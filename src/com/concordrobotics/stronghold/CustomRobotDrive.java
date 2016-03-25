@@ -167,7 +167,7 @@ public class CustomRobotDrive implements MotorSafety {
   }
   
   public void setGyroMode(GyroMode gMode) {
-	  m_turnController.enable();
+	  ;
 	  gyroMode = gMode;
 	  // Set the setpoint to the current heading
 	  if (gyroMode == GyroMode.rate) {
@@ -314,7 +314,7 @@ public class CustomRobotDrive implements MotorSafety {
    */
   public void arcadeDrive(GenericHID stick, boolean squaredInputs) {
     // simply call the full-featured arcadeDrive with the appropriate values
-    arcadeDrive(-stick.getY(), -stick.getX(), squaredInputs);
+    arcadeDrive(-stick.getY(), -stick.getTwist(), squaredInputs);
   }
 
   /**

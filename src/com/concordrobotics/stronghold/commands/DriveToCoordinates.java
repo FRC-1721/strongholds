@@ -15,6 +15,7 @@ public class DriveToCoordinates extends Command {
 	protected double heading;
 	protected double headingErr;
 	protected double distance;
+	protected double m_startDistance;
 	protected double mSpeed;
 	protected static final double kRad2Deg = 57.3;
 	protected static final double kDistTol = 1.0;
@@ -63,22 +64,32 @@ public class DriveToCoordinates extends Command {
     		Robot.driveTrain.rawDrive(0.0, 0.0);
     		if (Robot.navController.onTargetDuringTime()) {
     			onHeading = true;
-    			Robot.driveTrain.setDriveMode(DriveTrain.DriveMode.distanceMode);
-    	    	Robot.distanceDrivePID.setAbsoluteTolerance(kDistTol);
-    	    	Robot.distanceDrivePID.setToleranceBuffer(kToleranceIterations);
-    	    	Robot.distanceDrivePID.setOutputRange(-mSpeed, mSpeed);
-    			Robot.distanceDrivePID.setSetpointRelative(distance);
+    			m_startDistance = Robot.driveTrain.getDistance();
+    			//Robot.driveTrain.setDriveMode(DriveTrain.DriveMode.distanceMode);
+    	    	//Robot.distanceDrivePID.setAbsoluteTolerance(kDistTol);
+    	    	//Robot.distanceDrivePID.setToleranceBuffer(kToleranceIterations);
+    	    	//Robot.distanceDrivePID.setOutputRange(-mSpeed, mSpeed);
+    			//Robot.distanceDrivePID.setSetpointRelative(distance);
     		}
     	} 
     	if (onHeading) {
-    		Robot.driveTrain.rawDrive(0,0);
+    		Robot.driveTrain.rawDrive(mSpeed,mSpeed);
     	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
       if (onHeading) {
-    	  return Robot.distanceDrivePID.onTargetDuringTime();
+      	if (distance > 0) {
+    		if (Robot.driveTrain.getDistance() > m_startDistance + distance) {
+    			return true;
+    		}
+    	} else {
+    		if (Robot.driveTrain.getDistance() < m_startDistance + distance) {
+    			return true;
+    		}
+    	}
+    	return false;
       } else {
     	  return false;
       }

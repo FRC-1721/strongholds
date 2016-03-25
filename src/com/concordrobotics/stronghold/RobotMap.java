@@ -124,4 +124,5 @@ public class RobotMap {
 	
 	// Logging
 	public static final boolean loggingEnabled = false;
+	public static boolean redAlliance = false;
 }

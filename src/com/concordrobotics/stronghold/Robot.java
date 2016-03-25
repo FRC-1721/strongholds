@@ -17,6 +17,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -58,7 +59,6 @@ public class Robot extends IterativeRobot {
 	public static Preferences preferences;
 	static private RobotMode currentRobotMode = RobotMode.INIT, previousRobotMode;
 	PowerDistributionPanel pdp;
-	
 	DriverStation driverStation = DriverStation.getInstance();
 	
 	private int currentLEDMode = 0;
@@ -81,7 +81,7 @@ public class Robot extends IterativeRobot {
 	    RobotMap.dtRightController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
 				RobotMap.dtRightEnc, RobotMap.dtRight, 0.03);
 	  //  RobotMap.velDriveController = new VelocityDrivePID(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF);
-	    
+
 		//Shooter 
 	    shooter = new Shooter(RobotMap.shooterP, RobotMap.shooterI, RobotMap.shooterD);
 		RobotMap.shootA = new VictorSP(RobotMap.spShootA);
@@ -141,6 +141,9 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData(driveTrain);
         SmartDashboard.putData(shooter);
         SmartDashboard.putData(navController);
+        preferences =Preferences.getInstance();
+        getPreferences();
+        setPreferences();
 		updateSmartDashboard();
 
 		
@@ -180,8 +183,7 @@ public class Robot extends IterativeRobot {
      * Loops while the robot is disabled.
      */
 	public void disabledPeriodic() {
-		RobotMap.alliance = ds.getAlliance();
-			
+		getPreferences();	
 		switch (RobotMap.alliance) {
 			case Red:
 				if (!(currentLEDMode == 1)) {
@@ -217,23 +219,12 @@ public class Robot extends IterativeRobot {
     	allInit(RobotMode.AUTONOMOUS);
     	// Reference line is y = 0
     	// Tower is at x = 0
-    	RobotMap.xStart = getStationX( RobotMap.autoStartStation );
-    	RobotMap.yStart = 2.0;
+    	RobotMap.yStart = getStationX( RobotMap.autoStartStation );
+    	RobotMap.xStart = 2.0;
     	positionEstimator.setPosition(RobotMap.xStart, RobotMap.yStart);
     	autonomousCommand = (CustomCommandGroup) autoChooser.getSelected();
     	autonomousCommand.addCommands();
     	autonomousCommand.start();
-    	
-    	switch(RobotMap.alliance) {
-    		case Invalid:
-    			// No alliance was chosen, and auto is starting.
-    			// Just default to a nice color
-    			LEDController.sendLED(RobotMap.patNone);
-    			currentLEDMode = 3;
-    			break;
-    		default:
-    			break;
-    	}
     }
 
     /**
@@ -252,19 +243,9 @@ public class Robot extends IterativeRobot {
     	Robot.robotDrive.disablePID();
     	Robot.driveTrain.setGyroMode(DriveTrain.GyroMode.off);
     	allInit(RobotMode.TELEOP);
-    	
-    	switch(RobotMap.alliance) {
-    		case Invalid:
-    			// Just in case auto was kill.
-    			// We'll give it safety because why the hell not.
-    			// I mean the Arduino Should be able to work without it, but I mean... No harm done.
-    			if (!(currentLEDMode == 3)) {
-    				LEDController.sendLED(RobotMap.patNone);
-    				currentLEDMode = 3;
-    			}
-    			break;
-    		default:
-    			break;
+    	if (!(currentLEDMode == 3)) {
+    		LEDController.sendLED(RobotMap.patNone);
+    		currentLEDMode = 3;
     	}
     	
     }
@@ -450,6 +431,12 @@ public class Robot extends IterativeRobot {
 			RobotMap.teleopDriveMode = DriveMode.arcadeMode;
 		} else {
 			RobotMap.teleopDriveMode = DriveMode.tankMode;
+		}
+		RobotMap.redAlliance = preferences.getBoolean(PreferencesNames.RED_ALLIANCE, RobotMap.redAlliance);
+		if (RobotMap.redAlliance) {
+			RobotMap.alliance = Alliance.Red;
+		} else {
+			RobotMap.alliance = Alliance.Blue;
 		}
 	}
 

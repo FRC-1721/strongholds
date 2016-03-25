@@ -71,6 +71,7 @@ public class DriveTrain extends Subsystem {
 				navController.setPIDSourceType(PIDSourceType.kDisplacement);
 				CustomPIDController gyroController = navController.getPIDController();
 				gyroController.setPID(RobotMap.navP, RobotMap.navI, RobotMap.navD, RobotMap.navF);
+
 			} else {
 				navController.enable();
 				navController.setPIDSourceType(PIDSourceType.kRate);
@@ -78,6 +79,7 @@ public class DriveTrain extends Subsystem {
 				gyroController.setPID(RobotMap.navRateP, RobotMap.navRateI, RobotMap.navRateD, RobotMap.navRateF);
 			}
 		}
+		m_robotDrive.setGyroMode(gMode); 
 	}
 	
 	public void jInput(Joystick left, Joystick right) {
