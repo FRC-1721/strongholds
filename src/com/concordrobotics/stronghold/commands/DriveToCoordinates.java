@@ -39,7 +39,7 @@ public class DriveToCoordinates extends Command {
 
     	double delX = targetX - Robot.positionEstimator.getDisplacementX();
     	double delY = targetY - Robot.positionEstimator.getDisplacementY();
-    	heading = Math.atan2(delY, delX)*kRad2Deg;
+    	heading = Math.atan2(delY, delX)*kRad2Deg + RobotMap.yawOffset;
     	distance = Math.sqrt(delX*delX + delY*delY);
     	if (mSpeed < 0 ) {
     		// Driving backwards

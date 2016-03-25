@@ -62,7 +62,7 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void setGyroMode (GyroMode gMode) {
-		if (gyroMode != gMode) {
+	
 			gyroMode = gMode;
 			if (gyroMode == GyroMode.off) {
 				navController.disable();
@@ -78,7 +78,7 @@ public class DriveTrain extends Subsystem {
 				CustomPIDController gyroController = navController.getPIDController();
 				gyroController.setPID(RobotMap.navRateP, RobotMap.navRateI, RobotMap.navRateD, RobotMap.navRateF);
 			}
-		}
+		
 		m_robotDrive.setGyroMode(gMode); 
 	}
 	
