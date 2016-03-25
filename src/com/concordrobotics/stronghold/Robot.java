@@ -185,7 +185,7 @@ public class Robot extends IterativeRobot {
      * Loops while the robot is disabled.
      */
 	public void disabledPeriodic() {
-		getPreferences();	
+		//getPreferences();	
 		switch (RobotMap.alliance) {
 			case Red:
 				if (!(currentLEDMode == 1)) {
@@ -424,6 +424,9 @@ public class Robot extends IterativeRobot {
 		
 		RobotMap.autoStartStation = preferences.getInt(PreferencesNames.AUTONOMOUS_START_STATION, RobotMap.autoStartStation);
 		RobotMap.autoDriveAngle = preferences.getDouble(PreferencesNames.AUTONOMOUS_DRIVE_ANGLE, RobotMap.autoDriveAngle);
+		RobotMap.autoDriveAngle2 = preferences.getDouble(PreferencesNames.AUTONOMOUS_DRIVE_ANGLE2, RobotMap.autoDriveAngle2);
+		RobotMap.autoDriveDistance = preferences.getDouble(PreferencesNames.AUTONOMOUS_DRIVE_DISTANCE, RobotMap.autoDriveDistance);
+		
 		RobotMap.autoShootAngle = preferences.getDouble(PreferencesNames.AUTONOMOUS_SHOOTER_ANGLE, RobotMap.autoShootAngle);
 		RobotMap.xAutoShootPosition = preferences.getDouble(PreferencesNames.AUTONOMOUS_SHOOT_X, RobotMap.xAutoShootPosition);
 		RobotMap.yAutoShootPosition = preferences.getDouble(PreferencesNames.AUTONOMOUS_SHOOT_Y, RobotMap.yAutoShootPosition);
@@ -466,10 +469,13 @@ public class Robot extends IterativeRobot {
 		preferences.putInt(PreferencesNames.AUTONOMOUS_START_STATION, RobotMap.autoStartStation);
 		
 		preferences.putInt(PreferencesNames.AUTONOMOUS_START_STATION, RobotMap.autoStartStation);
-		preferences.putDouble(PreferencesNames.AUTONOMOUS_DRIVE_ANGLE, RobotMap.autoDriveAngle);
 		preferences.putDouble(PreferencesNames.AUTONOMOUS_SHOOTER_ANGLE, RobotMap.autoShootAngle);
 		preferences.putDouble(PreferencesNames.AUTONOMOUS_SHOOT_X, RobotMap.xAutoShootPosition);
 		preferences.putDouble(PreferencesNames.AUTONOMOUS_SHOOT_Y, RobotMap.yAutoShootPosition);
+		
+		preferences.putDouble(PreferencesNames.AUTONOMOUS_DRIVE_ANGLE, RobotMap.autoDriveAngle);
+		preferences.putDouble(PreferencesNames.AUTONOMOUS_DRIVE_ANGLE2, RobotMap.autoDriveAngle2);
+		preferences.putDouble(PreferencesNames.AUTONOMOUS_DRIVE_DISTANCE, RobotMap.autoDriveDistance);
 	}
 	
 	public static void dumpPreferences()

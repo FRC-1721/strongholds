@@ -44,4 +44,6 @@ public class PreferencesNames {
     public static final String AUTONOMOUS_SHOOT_Y = "autonomous_shoot_y";
     public static final String AUTONOMOUS_DRIVE_ANGLE = "autonomous_drive_angle";
     public static final String AUTONOMOUS_SHOOTER_ANGLE = "autonomous_shooter_angle";
+    public static final String AUTONOMOUS_DRIVE_ANGLE2 = "autonomous_drive_angle2";
+    public static final String AUTONOMOUS_DRIVE_DISTANCE = "autonomous_drive_distance";
 }

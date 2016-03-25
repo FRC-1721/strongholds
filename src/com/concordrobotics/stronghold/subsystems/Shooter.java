@@ -2,6 +2,8 @@ package com.concordrobotics.stronghold.subsystems;
 
 import com.concordrobotics.stronghold.CustomPIDSubsystem;
 import com.concordrobotics.stronghold.RobotMap;
+import com.concordrobotics.stronghold.commands.DriveInTeleop;
+import com.concordrobotics.stronghold.commands.HoldShooterCommand;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.PIDSubsystem;
@@ -25,7 +27,7 @@ public class Shooter extends CustomPIDSubsystem {
 	}
 
 	protected void initDefaultCommand() {
-		
+		setDefaultCommand(new HoldShooterCommand());
 	}
 	
 	/**

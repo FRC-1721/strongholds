@@ -120,7 +120,9 @@ public class RobotMap {
 	public static double xAutoShootPosition = 0.0;
 	public static double yAutoShootPosition = 0.0;
 	public static double autoShootAngle = 10.0;
-	public static double autoDriveAngle = 0.0;
+	public static double autoDriveAngle = 10.0;
+	public static double autoDriveAngle2 = 80.0;
+	public static double autoDriveDistance = 5.0;
 	
 	// Logging
 	public static final boolean loggingEnabled = false;

@@ -1,19 +1,30 @@
 package com.concordrobotics.stronghold.commands;
 
+import com.concordrobotics.stronghold.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class HoldShooterCommand extends Command {
 
+	private static int kToleranceIterations = 5;
+
+
+	
+	public HoldShooterCommand() {
+		requires(Robot.shooter);
+	}
+	
 	@Override
 	protected void initialize() {
-		// TODO Auto-generated method stub
+		Robot.shooter.enable();
+		Robot.shooter.setSetpointRelative(0.0);
 		
 	}
 
 	@Override
 	protected void execute() {
-		// TODO Auto-generated method stub
-		
+		SmartDashboard.putNumber("Pitch Angle: SETPOINT", Robot.shooter.getSetpoint());
 	}
 
 	@Override
@@ -25,13 +36,15 @@ public class HoldShooterCommand extends Command {
 	@Override
 	protected void end() {
 		// TODO Auto-generated method stub
+		// Let the controller continue controlling
+		//Robot.shooter.disable();
 		
 	}
 
 	@Override
 	protected void interrupted() {
 		// TODO Auto-generated method stub
-		
+		end();
 	}
 
 }
