@@ -13,13 +13,13 @@ public class TurnRelative extends Command{
 	public TurnRelative(double turnAngle, int tolIter) {
 		requires(Robot.driveTrain);
 		kToleranceIterations = tolIter;
+		if (kToleranceIterations <= 1) kToleranceIterations = 2;
 		m_turnAngle =  turnAngle;
 	}
 	
 	protected void initialize() { 
 		m_targetHeading = RobotMap.navx.getYaw() + m_turnAngle;
-		Robot.navController.reset();
-		Robot.robotDrive.setGyroMode(GyroMode.heading);
+		Robot.driveTrain.setGyroMode(GyroMode.heading);
 		Robot.navController.setSetpointRelative(m_turnAngle);
 		Robot.navController.setAbsoluteTolerance(5.0);
 		Robot.navController.setToleranceBuffer(kToleranceIterations);

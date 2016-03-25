@@ -77,7 +77,7 @@ public class RobotMap {
 	public static AHRS navx;
 	public static final byte kNavUpdateHz = 20;
 	// Might want to try some I term in here with new method.
-	public static double navP = 0.05, navI = 0.1, navD = 0.0, navF = 0.0;
+	public static double navP = 0.05, navI = 0.01, navD = 0.0, navF = 0.0;
 	public static double navRateP = 0.05, navRateI = 0.0, navRateD = 0.0, navRateF = 0.0;
 	public static double yawOffset = 0.0;
 
@@ -92,8 +92,8 @@ public class RobotMap {
 	public static final int encShootA = 4;
 	public static final int encShootB = 5;
 	
-	public static final double shooterP = 0.1;
-	public static final double shooterI = 0.002;
+	public static final double shooterP = 0.2;
+	public static final double shooterI = 0.004;
 	public static final double shooterD = 0.001;
 	
 	public static final double spinUp = .75;

@@ -1,6 +1,8 @@
 package com.concordrobotics.stronghold.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.concordrobotics.stronghold.Robot;
 import com.concordrobotics.stronghold.RobotMap;
 import com.concordrobotics.stronghold.subsystems.DriveTrain;
@@ -60,6 +62,9 @@ public class DriveToCoordinates extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	SmartDashboard.putNumber("dtcDistance", distance);
+    	SmartDashboard.putNumber("dtcHeading", heading);
+    	SmartDashboard.putBoolean("dtcOnHeading", onHeading);
     	if (! onHeading) {
     		Robot.driveTrain.rawDrive(0.0, 0.0);
     		if (Robot.navController.onTargetDuringTime()) {
@@ -75,6 +80,7 @@ public class DriveToCoordinates extends Command {
     	if (onHeading) {
     		Robot.driveTrain.rawDrive(mSpeed,mSpeed);
     	}
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()

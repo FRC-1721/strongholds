@@ -11,13 +11,14 @@ public class Shooter extends CustomPIDSubsystem {
 	
 	public double servoAngle = 10;
 	protected Timer shootTimer;
+	protected double shootPower = 0.0;
 	public enum ShootMode {
 		spinUp, sucking, shooting, none
 	}
 	public ShootMode shootMode = ShootMode.none;
 	public Shooter(double p, double i, double d) {
 		super(p, i, d);
-		this.setOutputRange(-.3, .4);
+		this.setOutputRange(-.8, .8);
 		shootTimer = new Timer();
 		shootTimer.start();
 		
@@ -136,11 +137,13 @@ public class Shooter extends CustomPIDSubsystem {
 	@Override
 	protected void usePIDOutput(double output) {
 		RobotMap.shootA.set(output);
+		shootPower=output;
 	}
 	
 	public void updateSmartDashboard() {
 		SmartDashboard.putNumber("ShooterEncoder", RobotMap.shootEnc.getDistance());
 		SmartDashboard.putNumber("ShooterTimer", shootTimer.get());
+		SmartDashboard.putNumber("ShooterPower", shootPower);
 	}
 	
 }

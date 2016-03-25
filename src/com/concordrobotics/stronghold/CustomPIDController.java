@@ -160,7 +160,6 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
     m_P = Kp;
     m_I = Ki;
     m_D = Kd;
-    
 
     m_pidInput = source;
     m_pidOutput = output;
@@ -318,7 +317,7 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
         newOutput = m_prevOutput + m_Pdt*(dsdt - dxdt) - m_D*ddxdt;
         // Don't include the i term for rate control
         if (!rateControl) {
-        	newOutput = newOutput + m_Idt*m_error;
+        	newOutput = newOutput + m_I*m_error;
         }
         if (newOutput > m_maximumOutput) {
         	newOutput = m_maximumOutput;

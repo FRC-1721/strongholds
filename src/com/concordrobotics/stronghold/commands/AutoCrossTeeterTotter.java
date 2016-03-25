@@ -7,14 +7,9 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 /**
  *
  */
-public class AutoCrossTeeterTotter extends CustomCommandGroup {
+public class AutoCrossTeeterTotter extends CommandGroup {
 
     public  AutoCrossTeeterTotter() {
-
-    }
-    
-    public void addCommands() {
-    	if (commandsAdded) return;
     	if (RobotMap.useDrivePIDinAuto) {
     		addSequential(new EnableDrivePIDCommand());
     	}
@@ -43,4 +38,6 @@ public class AutoCrossTeeterTotter extends CustomCommandGroup {
         // a CommandGroup containing them would require both the chassis and the
         // arm.
     }
+    
+
 }

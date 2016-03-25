@@ -167,7 +167,7 @@ public class CustomRobotDrive implements MotorSafety {
   }
   
   public void setGyroMode(GyroMode gMode) {
-	  ;
+	  
 	  gyroMode = gMode;
 	  // Set the setpoint to the current heading
 	  if (gyroMode == GyroMode.rate) {

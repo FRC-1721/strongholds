@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -44,7 +45,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	// Autonomous commad
-    CustomCommandGroup autonomousCommand;
+    CommandGroup autonomousCommand;
     SendableChooser autoChooser;
 	// Subsystems
 	public static DriveTrain driveTrain;
@@ -73,7 +74,7 @@ public class Robot extends IterativeRobot {
 		RobotMap.dtLeftEnc = new Encoder(RobotMap.dtLeftEncPortA, RobotMap.dtLeftEncPortB, RobotMap.dtLeftEncReversed);	  
 		RobotMap.dtRightEnc = new Encoder(RobotMap.dtRightEncPortA, RobotMap.dtRightEncPortB, RobotMap.dtRightEncReversed);
 		RobotMap.dtLeftEnc.setDistancePerPulse(0.00931);
-		RobotMap.dtRightEnc.setDistancePerPulse(0.0134);
+		RobotMap.dtRightEnc.setDistancePerPulse(0.0065);
 		LiveWindow.addSensor("LeftRobotDrive", "Encoder", RobotMap.dtLeftEnc);
 	    LiveWindow.addSensor("RightRobotDrive", "Encoder", RobotMap.dtRightEnc);
 	    RobotMap.dtLeftController = new CustomPIDController(RobotMap.dtP, RobotMap.dtI, RobotMap.dtD, RobotMap.dtF,
@@ -122,7 +123,10 @@ public class Robot extends IterativeRobot {
 		
 		RobotMap.wire = new I2C(I2C.Port.kOnboard, 4);
 		
-		
+        preferences =Preferences.getInstance();
+        getPreferences();
+        setPreferences();
+        
 		// Create a chooser for auto so it can be set from the DS
 		autonomousCommand = new AutoCrossMoat();
 		autoChooser = new SendableChooser();
@@ -141,9 +145,7 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putData(driveTrain);
         SmartDashboard.putData(shooter);
         SmartDashboard.putData(navController);
-        preferences =Preferences.getInstance();
-        getPreferences();
-        setPreferences();
+
 		updateSmartDashboard();
 
 		
@@ -222,8 +224,8 @@ public class Robot extends IterativeRobot {
     	RobotMap.yStart = getStationX( RobotMap.autoStartStation );
     	RobotMap.xStart = 2.0;
     	positionEstimator.setPosition(RobotMap.xStart, RobotMap.yStart);
-    	autonomousCommand = (CustomCommandGroup) autoChooser.getSelected();
-    	autonomousCommand.addCommands();
+    	autonomousCommand = (CommandGroup) autoChooser.getSelected();
+    	//autonomousCommand.addCommands();
     	autonomousCommand.start();
     }
 

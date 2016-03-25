@@ -40,13 +40,13 @@ public class SetPitchAngle extends Command {
 	protected void end() {
 		// TODO Auto-generated method stub
 		// Let the controller continue controlling
-		
+		//Robot.shooter.disable();
 	}
 
 	@Override
 	protected void interrupted() {
 		// TODO Auto-generated method stub
-		
+		end();
 	}
 
 }
