@@ -11,6 +11,7 @@ import com.concordrobotics.stronghold.CustomPIDSubsystem;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
@@ -30,9 +31,11 @@ public class NavxController extends CustomPIDSubsystem  {
 
   double pidOut;
   private AHRS mGyro;
-
+  private double lastHeading = 0.0;
   static final double kToleranceDegrees = 2.0f;
-  
+  private Timer gyroTimer;
+  private final double kMinPeriod = 0.01;
+  private double gyroRate = 0.0;
 
 
   /**
@@ -48,6 +51,8 @@ public class NavxController extends CustomPIDSubsystem  {
     super(name, p, i, d, f);
     mGyro = gyro;
     setPIDSourceType(pidSourceType);
+    gyroTimer = new Timer();
+    gyroTimer.start();
   }
 
   public void setPIDSourceType (PIDSourceType pidSourceType) {
@@ -59,6 +64,9 @@ public class NavxController extends CustomPIDSubsystem  {
 	  } else {
 		  controller.setInputRange(0.0, 0.0);
 		  controller.setContinuous(false);
+		  lastHeading = mGyro.getYaw();
+		  gyroTimer.reset();
+		  
 	  }	  
   } 
   
@@ -74,7 +82,15 @@ public class NavxController extends CustomPIDSubsystem  {
   	if (m_pidSourceType == PIDSourceType.kDisplacement) {
   		return mGyro.getYaw();
   	} else {
-  		return mGyro.getRawGyroZ();
+  		double deltaT = gyroTimer.get();
+  		if (deltaT > kMinPeriod ) {
+  			gyroTimer.reset();
+  			double heading = mGyro.getYaw();
+  			gyroRate = (heading - lastHeading)/deltaT;
+  			lastHeading = heading;
+  			gyroTimer.reset();
+  		}
+  		return gyroRate;
   	}
   }
   
