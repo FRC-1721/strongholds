@@ -92,9 +92,9 @@ public class RobotMap {
 	public static final int encShootA = 4;
 	public static final int encShootB = 5;
 	
-	public static final double shooterP = 0.2;
-	public static final double shooterI = 0.004;
-	public static final double shooterD = 0.001;
+	public static final double shooterP = 0.1;
+	public static final double shooterI = 0.01;
+	public static final double shooterD = 0.004;
 	
 	public static final double spinUp = .75;
 	public static final double pitchUpVolts = .3;  // NOTE: This is reversed!
@@ -113,7 +113,7 @@ public class RobotMap {
 	public static  boolean rightEncoderDisabled = false;
 	public static  boolean useDrivePIDinAuto = false;
 	public static boolean shooterUsePot = false;
-	
+	public static boolean teleopUseGyro = true;
 	public static int autoStartStation = 1;
 	public static double xStart = 0.0;
 	public static double yStart = 0.0;

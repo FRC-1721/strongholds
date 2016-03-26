@@ -62,23 +62,25 @@ public class DriveTrain extends Subsystem {
 	}
 	
 	public void setGyroMode (GyroMode gMode) {
-	
+		if (gyroMode != gMode) {
 			gyroMode = gMode;
 			if (gyroMode == GyroMode.off) {
 				navController.disable();
 			} else if (gyroMode == GyroMode.heading) {
+				navController.reset();
 				navController.enable();
 				navController.setPIDSourceType(PIDSourceType.kDisplacement);
 				CustomPIDController gyroController = navController.getPIDController();
 				gyroController.setPID(RobotMap.navP, RobotMap.navI, RobotMap.navD, RobotMap.navF);
 
 			} else {
+				navController.reset();
 				navController.enable();
 				navController.setPIDSourceType(PIDSourceType.kRate);
 				CustomPIDController gyroController = navController.getPIDController();
 				gyroController.setPID(RobotMap.navRateP, RobotMap.navRateI, RobotMap.navRateD, RobotMap.navRateF);
 			}
-		
+		}
 		m_robotDrive.setGyroMode(gMode); 
 	}
 	

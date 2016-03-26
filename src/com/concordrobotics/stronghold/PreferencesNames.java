@@ -23,6 +23,7 @@ public class PreferencesNames {
     
     public static final String SHOOTER_USE_POT = "shooter_use_pot";
     public static final String TELEOP_ARCADE_DRIVE = "teleop_arcade_drive";
+    public static final String TELEOP_USE_GYRO = "teleop_use_gyro";
     public static final String RED_ALLIANCE = "red_alliance";
     public static final String GYRO_RATE_P = "gyro_rate_p";
     public static final String GYRO_RATE_D = "gyro_rate_d";

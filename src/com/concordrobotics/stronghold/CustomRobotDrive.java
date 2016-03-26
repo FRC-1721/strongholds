@@ -398,17 +398,20 @@ public class CustomRobotDrive implements MotorSafety {
       } else {
         moveValue = -(moveValue * moveValue);
       }
+      
       if (rotateValue >= 0.0) {
         rotateValue = (rotateValue * rotateValue);
       } else {
         rotateValue = -(rotateValue * rotateValue);
-      }
+      } 
     }
-
+    //leftMotorSpeed = moveValue - rotateValue;
+    //rightMotorSpeed = moveValue + rotateValue;
+    
     if (moveValue > 0.0) {
       if (rotateValue > 0.0) {
         leftMotorSpeed = moveValue - rotateValue;
-        rightMotorSpeed = Math.max(moveValue, rotateValue);
+        rightMotorSpeed = moveValue + rotateValue; //Math.max(moveValue, rotateValue);
       } else {
         leftMotorSpeed = Math.max(moveValue, -rotateValue);
         rightMotorSpeed = moveValue + rotateValue;
@@ -422,7 +425,7 @@ public class CustomRobotDrive implements MotorSafety {
         rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
       }
     }
-
+   
     setLeftRightMotorOutputs(leftMotorSpeed, rightMotorSpeed);
   }
 

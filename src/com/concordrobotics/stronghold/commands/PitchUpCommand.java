@@ -18,7 +18,7 @@ public class PitchUpCommand extends Command {
 	}
 
 	protected boolean isFinished() {
-		return true;
+		return false;
 	}
 	protected void end() {}
 	protected void interrupted() {}

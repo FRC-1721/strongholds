@@ -57,15 +57,13 @@ public class NavxController extends CustomPIDSubsystem  {
 
   public void setPIDSourceType (PIDSourceType pidSourceType) {
 	  super.setPIDSourceType(pidSourceType);
-	  controller.setOutputRange(-0.3, 0.3);
+	  controller.setOutputRange(-0.8, 0.8);
 	  if (pidSourceType == PIDSourceType.kDisplacement) {
 		  controller.setInputRange(-180.0, 180.0);
 		  controller.setContinuous();
-		  controller.reset();
 	  } else {
 		  controller.setInputRange(0.0, 0.0);
 		  controller.setContinuous(false);
-		  controller.reset();
 		  lastHeading = mGyro.getYaw();
 		  gyroTimer.reset();
 		  gyroRate = 0.0;

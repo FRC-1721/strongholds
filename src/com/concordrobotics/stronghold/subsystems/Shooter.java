@@ -14,6 +14,7 @@ public class Shooter extends CustomPIDSubsystem {
 	public double servoAngle = 10;
 	protected Timer shootTimer;
 	protected double shootPower = 0.0;
+	public double lastPower = 0.0;
 	public enum ShootMode {
 		spinUp, sucking, shooting, none
 	}
@@ -38,8 +39,13 @@ public class Shooter extends CustomPIDSubsystem {
 	public void shoot() {
 		
 		// Set the ball-throwing motors to full voltage.
-		RobotMap.shootL.set(-1.0);
-		RobotMap.shootR.set(1.0);
+	 	if (RobotMap.shootEnc.getDistance() < 45.0) {
+	 		RobotMap.shootL.set(-0.5);
+			RobotMap.shootR.set(0.5);
+	 	} else {
+	 		RobotMap.shootL.set(-0.9);
+			RobotMap.shootR.set(0.9);
+	 	}
 		shootMode = ShootMode.spinUp;
 		shootTimer.reset();
 	}	
@@ -54,9 +60,15 @@ public class Shooter extends CustomPIDSubsystem {
 			}
 		}
 		 if (shootMode == ShootMode.shooting) {
-				RobotMap.shootL.set(-1.0);
-				RobotMap.shootR.set(1.0);
-				RobotMap.shootK.setAngle(120);
+			 	if (RobotMap.shootEnc.getDistance() < 45.0) {
+			 		RobotMap.shootL.set(-0.5);
+					RobotMap.shootR.set(0.5);
+			 	} else {
+			 		RobotMap.shootL.set(-0.9);
+					RobotMap.shootR.set(0.9);
+			 	}
+				
+				RobotMap.shootK.setAngle(110);
 				if (shootTimer.get() > 1.5 ){
 					shootMode = ShootMode.none;
 					RobotMap.shootK.setAngle(servoAngle);
@@ -69,6 +81,7 @@ public class Shooter extends CustomPIDSubsystem {
 			RobotMap.shootR.set(RobotMap.suckRVolts);	
 		}
 		if (shootMode == ShootMode.none) {
+			RobotMap.shootK.setAngle(servoAngle);
 			RobotMap.shootL.set(0.0);
 			RobotMap.shootR.set(0.0);
 			return true;
@@ -116,8 +129,10 @@ public class Shooter extends CustomPIDSubsystem {
 		
 		if (direction) {
 			RobotMap.shootA.set(RobotMap.pitchUpVolts);
+			lastPower = RobotMap.pitchUpVolts;
 		} else {
 			RobotMap.shootA.set(RobotMap.pitchDownVolts);
+			lastPower = RobotMap.pitchDownVolts;
 		}
 	}
 	

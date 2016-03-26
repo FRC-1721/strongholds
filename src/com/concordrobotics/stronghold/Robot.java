@@ -165,9 +165,9 @@ public class Robot extends IterativeRobot {
         SmartDashboard.putNumber("Right_Encoder_Rate", RobotMap.dtRightEnc.getRate());
 
         positionEstimator.updateSmartDashboard();
-        SmartDashboard.putNumber("Ultrasonic_DistanceIn", RobotMap.ultrasonic.getRangeInches() );
+       // SmartDashboard.putNumber("Ultrasonic_DistanceIn", RobotMap.ultrasonic.getRangeInches() );
         
-        SmartDashboard.putNumber("Pots Value", RobotMap.pot.get());
+      //  SmartDashboard.putNumber("Pots Value", RobotMap.pot.get());
         
         allEndOfPeriodic();
     }
@@ -243,12 +243,16 @@ public class Robot extends IterativeRobot {
     public void teleopInit() {
     	autonomousCommand.cancel();
     	Robot.robotDrive.disablePID();
-    	Robot.driveTrain.setGyroMode(DriveTrain.GyroMode.off);
+    	if (RobotMap.teleopUseGyro) {
+    		Robot.driveTrain.setGyroMode(DriveTrain.GyroMode.rate);
+    	} else {
+    		Robot.driveTrain.setGyroMode(DriveTrain.GyroMode.off);
+    	}
     	allInit(RobotMode.TELEOP);
-    	if (!(currentLEDMode == 3)) {
+    	/*if (!(currentLEDMode == 3)) {
     		LEDController.sendLED(RobotMap.patNone);
     		currentLEDMode = 3;
-    	}
+    	}*/
     	
     }
 
@@ -265,7 +269,7 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
         updateSmartDashboard();
-        LEDController.sendLED(RobotMap.patTest);
+       // LEDController.sendLED(RobotMap.patTest);
     }
 
     /**
@@ -443,6 +447,7 @@ public class Robot extends IterativeRobot {
 		} else {
 			RobotMap.alliance = Alliance.Blue;
 		}
+		RobotMap.teleopUseGyro = preferences.getBoolean(PreferencesNames.TELEOP_USE_GYRO, RobotMap.teleopUseGyro);
 	}
 
 	public static void setPreferences() {
@@ -458,6 +463,7 @@ public class Robot extends IterativeRobot {
 		preferences.putBoolean(PreferencesNames.LEFT_DRIVE_ENCODER_DISABLED, RobotMap.leftEncoderDisabled);
 		preferences.putBoolean(PreferencesNames.RIGHT_DRIVE_ENCODER_DISABLED, RobotMap.rightEncoderDisabled);
 		preferences.putBoolean(PreferencesNames.SHOOTER_USE_POT, RobotMap.shooterUsePot);
+		preferences.putBoolean(PreferencesNames.TELEOP_USE_GYRO, RobotMap.teleopUseGyro);
 		
 		preferences.putDouble(PreferencesNames.DRIVE_PID_P, RobotMap.dtP);
 		preferences.putDouble(PreferencesNames.DRIVE_PID_D, RobotMap.dtD);

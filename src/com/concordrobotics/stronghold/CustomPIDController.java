@@ -372,7 +372,9 @@ public class CustomPIDController implements PIDInterface, LiveWindowSendable {
 	  m_prevOutput = 0.0;
 	  m_pidOutput.pidWrite(0.0);
   }
-  
+  public void setOutput(double output) {
+	  m_pidOutput.pidWrite(output);
+  }
   public boolean onTargetDuringTime () {
 	  if (m_bufLength <= 1) return false;
 	  if (m_onTarget && (m_iterOnTarget >= m_bufLength) ) {

@@ -47,8 +47,8 @@ public class OI {
 		//####################
 		// COMMAND ACTIVATION 
 		//####################
-		angleUp.whenPressed(new PitchUpCommand());
-		angleDown.whenPressed(new PitchDownCommand());
+		angleUp.whileHeld(new PitchUpCommand());
+		angleDown.whileHeld(new PitchDownCommand());
 		angleUp.whenReleased(new PitchReleaseCommand());
 		angleDown.whenReleased(new PitchReleaseCommand());
 		sucker.whileHeld(new SuckBallCommand());
@@ -57,7 +57,8 @@ public class OI {
 		
 		
 		shooter.whenPressed(new ThrowBallCommand()); //MULTITHREAD THIS.  I WILL FIX YOUR BRACES AFTER
-		setAngle25.whenPressed(new SetPitchAngle(65));
+		setAngle25.whenPressed(new SetPitchAngle(70));
+		lowGoal.whenPressed(new SetPitchAngle(25));
     	
     	// Drive commands
     	driveReverseOnButton = new JoystickButton(jLeft, 11);
