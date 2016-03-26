@@ -29,7 +29,7 @@ public class RobotMap {
 	/** Encoders */
 	public static Encoder dtLeftEnc, dtRightEnc, shootEnc;
 	/** Ultrasonic */
-	public static Ultrasonic ultrasonic;
+	public static CustomUltrasonic backPing, leftPing;
 	public static Potentiometer pot;
 	public static int uIn = 6;
 	public static int uOut = 7;

@@ -115,13 +115,13 @@ public class Robot extends IterativeRobot {
 		RobotMap.camera.setQuality(50);
 		RobotMap.camera.startAutomaticCapture(); // Start the video
 		
-		RobotMap.ultrasonic = new Ultrasonic(RobotMap.uOut, RobotMap.uIn);
-		RobotMap.ultrasonic.setAutomaticMode(true);
-		RobotMap.ultrasonic.setEnabled(true);
+		RobotMap.backPing = new CustomUltrasonic(0);
+		RobotMap.leftPing = new CustomUltrasonic(1);
+	
 		
-		RobotMap.pot = new AnalogPotentiometer(0,312.5,0);
+		//RobotMap.pot = new AnalogPotentiometer(0,312.5,0);
 		
-		RobotMap.wire = new I2C(I2C.Port.kOnboard, 4);
+		//RobotMap.wire = new I2C(I2C.Port.kOnboard, 4);
 		
         preferences =Preferences.getInstance();
         getPreferences();
@@ -163,7 +163,8 @@ public class Robot extends IterativeRobot {
         
         SmartDashboard.putNumber("Right_Encoder_Distance", RobotMap.dtRightEnc.getDistance());
         SmartDashboard.putNumber("Right_Encoder_Rate", RobotMap.dtRightEnc.getRate());
-
+        SmartDashboard.putNumber("leftPing", RobotMap.leftPing.getDistance());
+        SmartDashboard.putNumber("backPing", RobotMap.backPing.getDistance());
         positionEstimator.updateSmartDashboard();
        // SmartDashboard.putNumber("Ultrasonic_DistanceIn", RobotMap.ultrasonic.getRangeInches() );
         
@@ -178,7 +179,7 @@ public class Robot extends IterativeRobot {
     public void disabledInit(){
     	// This should trigger technodubstepmode when the robot is disabled
     	// I.E. End of a match
-    	LEDController.sendLED(RobotMap.patWait);
+    //	LEDController.sendLED(RobotMap.patWait);
     }
     
     /**
@@ -190,14 +191,14 @@ public class Robot extends IterativeRobot {
 			case Red:
 				if (!(currentLEDMode == 1)) {
 					// Throw a RED ALLIANCE packet via I2C
-					LEDController.sendLED(RobotMap.patRed);
+					//LEDController.sendLED(RobotMap.patRed);
 					currentLEDMode = 1;
 				}
 				break;
 			case Blue:
 				if (!(currentLEDMode == 2)) {
 					// Throw a BLUE ALLIANCE packet via I2C
-					LEDController.sendLED(RobotMap.patBlue);
+					//LEDController.sendLED(RobotMap.patBlue);
 					currentLEDMode = 2;
 				}
 				break;
@@ -259,7 +260,7 @@ public class Robot extends IterativeRobot {
     public void testInit() {
     	allInit(RobotMode.TEST);
     	if (!(currentLEDMode == 4)) {
-    		LEDController.sendLED(RobotMap.patTest);
+    		//LEDController.sendLED(RobotMap.patTest);
     		currentLEDMode = 4;
     	}
     }

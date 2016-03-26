@@ -28,9 +28,9 @@ public class AutoLowBar extends CustomCommandGroup {
     	addSequential(new TurnAbsolute(RobotMap.autoDriveAngle, 3));
     	addSequential(new DistanceDriveStraight(RobotMap.autoDriveDistance, 0.8));
     	addSequential(new TurnAbsolute(RobotMap.autoDriveAngle2, 3));
-    	addSequential(new ThrowBallCommand());
+    	/*addSequential(new ThrowBallCommand());
     	addParallel(new SetPitchAngle(5.0));
-    	addSequential(new DriveToCoordinates(Robot.getStationX(1), 10.0, -0.8) );
+    	addSequential(new DriveToCoordinates(Robot.getStationX(1), 10.0, -0.8) ); */
     }
     
     public void addCommands() {
