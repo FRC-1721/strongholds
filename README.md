@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # FIRST Strongholds, Team 1721 #
 
 ### What is this repository for? ###
