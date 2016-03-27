@@ -1,0 +1,12 @@
+sudo: false
+language: java
+install:
+- git clone https://github.com/Team236/wpilib-mirror.git ~/wpilib
+- git clone https://github.com/Team236/NavX-Assets.git ~/navx-mxp/java
+script: ant jar
+jdk: oraclejdk8
+
+cards:
+  enabled:
+    - "master"
+  title: "2016 Robot"
