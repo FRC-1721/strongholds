@@ -9,11 +9,3 @@ cards:
   enabled:
   - master
   title: 2016 Robot
-deploy:
-  provider: releases
-  skip_cleanup: true
-  api_key:
-    secure: rzMeLvZOXa19NwCL51T1QwbvdeNSrpYriv0opMamMfImr2JoCmRE42wjtpCUPmQtkU8Ih+KrtHnhTw2DG0YN9N+WU0sbbta0shmbq3JhOjqCFfsus+AtpNKUMqYcV8BpUCbwuEWi8pFWUhD7HSlBNM3rCQkzUFy0ckjFvkSXmS0XfDcfLQEdFCkpunIviedR+49CLzc3TJXZZron8T6J1p2tpc+xFryZwhA9C/xkcA+7vkGTvMkf31STgVY4DOexe/NaON1kRaYLFpvI+vH24xiveyCw5/0TfAVfxdWzMw7fZHn5+PmMuQO+s/6ygTsm8Lq6ZZRZGC0nMYVykUPmv+48B0o68eHBH3JS/fxKfJvPJ7X0fTfcm8dIJlggqm3D3RceynKlS9Vjsc7LR36wx09PNfgxlI75jCjtcHAH/bBAbmwBkgkiFFbhgukk5371I3Gi+qmTnRohskg9Ol1b+VAlcbBPgSXy/jcQo3BBEhoE7Xhk3t/RnV0WpXB9MnryRH4LU5CZLqCMnoXHSI4rbwBxauf442i8VGEhNnk+QSgGk2tSA6b26pPCISI8sJN4Z2E4EqXdpx+EfEdhK4uRdXNZeyabQL1oJ8UMbUXGarGFUFHkR/DJBmjVW9RRNXKb1OHaBHpTj3n55rkITU70qs52QfZ4Ud1gM3A5CCXWRTU=
-  file: "/dist/FRCUserProgram.jar"
-  on:
-    repo: brennan-macaig/1721-FlatToaster
